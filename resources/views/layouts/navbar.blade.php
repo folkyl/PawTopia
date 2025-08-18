@@ -19,9 +19,9 @@
             </a>
         </li>
         <li>
-            <a href="{{ url('/booking') }}"
-               style="text-decoration: none; font-weight: {{ Request::is('booking') ? '700' : '500' }}; 
-                      color: {{ Request::is('booking') ? $activeColor : $inactiveColor }};">
+            <a href="{{ url('/calendar') }}"
+               style="text-decoration: none; font-weight: {{ Request::is('calendar') ? '700' : '500' }}; 
+                      color: {{ Request::is('calendar') ? $activeColor : $inactiveColor }};">
                 Booking
             </a>
         </li>
@@ -43,9 +43,8 @@
             <a href="{{ url('/register') }}"
                style="text-decoration: none; font-weight: {{ Request::is('register') ? '700' : '500' }}; 
                       color: {{ Request::is('register') ? $activeColor : $inactiveColor }};">
-                Register
+                Member
             </a>
         </li>
-        
     </ul>
 </nav>

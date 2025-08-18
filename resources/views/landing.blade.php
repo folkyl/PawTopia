@@ -553,7 +553,7 @@
             <div class="hero-text">
                 <h1>PAWFECTLY<br><span class="cozy">COZY</span></h1>
                 <p>Your pet's happy place</p>
-                <a href="{{ route('login') }}" class="cta-action">
+                <a href="{{ route('register') }}" class="cta-action">
                     <span>Get Started</span>
                 </a>
             </div>
@@ -658,15 +658,16 @@
         </div>
     </section>
 
-    <section class="cozy-container">
+<section class="cozy-container">
     <div class="cozy-left">
         <p>Your pet deserves the best—reserve their cozy stay today!</p>
-        <button class="book-btn">Book a Spot</button>
+        <a href="{{ route('booking') }}" class="book-btn">Book a Spot</a>
     </div>
     <div class="cozy-right">
-        <img src="images/orang.svg" alt="Woman holding cat" />
+        <img src="{{ asset('images/orang.svg') }}" alt="Woman holding cat" />
     </div>
-    </section>
+</section>
+
 
     @include ('layouts.footer')
 

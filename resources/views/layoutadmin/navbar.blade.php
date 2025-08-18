@@ -1,3 +1,8 @@
+@php
+    $activeColor = '#4B2E2B';  // warna teks aktif
+    $inactiveColor = '#4B2E2B'; // warna teks nonaktif
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +22,10 @@
             height: 100vh;
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
         }
         .logo {
             display: flex;
@@ -50,10 +59,11 @@
             align-items: center;
             padding: 10px 15px;
             border-radius: 8px;
-            color: #4B2E2B;
             font-weight: 500;
             text-decoration: none;
-            transition: all 0.3s ease;
+            color: #4B2E2B;
+            position: relative;
+            transition: background 0.4s ease, color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
         }
         ul li a i {
             margin-right: 10px;
@@ -68,11 +78,27 @@
             transform: rotate(8deg) scale(1.1);
             color: #F28C48;
         }
+        /* Efek garis vertikal + transisi smooth */
         ul li a.active {
             background: #FDD8A8;
             color: #5C3B28;
             font-weight: 600;
-            box-shadow: inset 3px 0 0 #F28C48;
+            box-shadow: inset 3px 0 0 transparent;
+        }
+        ul li a.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: #F28C48;
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.4s ease;
+        }
+        ul li a.active::before {
+            transform: scaleY(1);
         }
         button.logout {
             display: flex;
@@ -108,24 +134,56 @@
 </head>
 <body>
 
-    <aside class="sidebar">
-        <!-- Logo -->
-        <div class="logo">
-            <img src="{{ asset('images/logo.svg') }}" alt="Pawtopia Logo">
-        </div>
+<aside class="sidebar">
+    <!-- Logo -->
+    <div class="logo">
+        <img src="{{ asset('images/logo.svg') }}" alt="Pawtopia Logo">
+    </div>
 
-        <!-- Menu -->
-        <ul>
-            <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="#"><i class="fas fa-file-alt"></i> Manage Product</a></li>
-            <li><a href="#"><i class="fas fa-user"></i> Customer</a></li>
-            <li><a href="#"><i class="fas fa-edit"></i> Manage Booking</a></li>
-            <li><a href="#"><i class="fas fa-calendar-alt"></i> Daycare Schedule</a></li>
-            <li><a href="#"><i class="fas fa-comment"></i> Customer Testimonial</a></li>
-            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-            <li><button class="logout"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
-        </ul>
-    </aside>
+    <!-- Menu -->
+    <ul>
+        <li>
+            <a href="{{ url('/admin/dashboard') }}" class="{{ Request::is('admin/dashboard') ? 'active' : '' }}">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/admin/productmanagement') }}" class="{{ Request::is('admin/productmanagement*') ? 'active' : '' }}">
+                <i class="fas fa-box"></i> Product Management
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/admin/customer') }}" class="{{ Request::is('customer*') ? 'admin/active' : '' }}">
+                <i class="fas fa-user"></i> Customer
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/admin/managebooking') }}" class="{{ Request::is('admin/managebooking*') ? 'active' : '' }}">
+                <i class="fas fa-edit"></i> Manage Booking
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/admin/schedule') }}" class="{{ Request::is('admin/schedule*') ? 'active' : '' }}">
+                <i class="fas fa-calendar-alt"></i> Daycare Schedule
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/admin/testimonial') }}" class="{{ Request::is('admin/testimonial*') ? 'active' : '' }}">
+                <i class="fas fa-comment"></i> Customer Testimonial
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/admin/settings') }}" class="{{ Request::is('admin/settings*') ? 'active' : '' }}">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </li>
+        <li>
+            <button class="logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </li>
+    </ul>
+</aside>
 
 </body>
 </html>

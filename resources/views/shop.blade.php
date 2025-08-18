@@ -190,6 +190,7 @@ body {
 }
 </style>
 
+
 <div class="shop-hero">
     <div class="shop-hero-content">
         <h2>Pet Supplies Catalog</h2>

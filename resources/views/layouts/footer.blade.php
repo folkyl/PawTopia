@@ -28,8 +28,8 @@
       color: #fffbe9;
       padding-top: 30px;
       position: relative;
-      overflow: hidden;
       min-height: 320px;
+      height: auto;
     }
     /* Logo */
     .footerLogo {
@@ -162,8 +162,8 @@
     </div>
 
     <nav class="footerNav">
-      <a href="#" class="footerNavLink">Home</a>
-      <a href="#" class="footerNavLink">Booking</a>
+    <a href="{{ route('home') }}" class="footerNavLink">Home</a>
+    <a href="{{ route('booking') }}" class="footerNavLink">Booking</a>
       <button class="footerCta" id="rateUsBtn">Rate us</button>
     </nav>
 

@@ -1,27 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 
-Route::get('/', function () {
-    return view('landing'); // Halaman Home
-})->name('home');
+Route::get('/', [UserController::class, 'home'])->name('home');
+Route::get('/booking', [UserController::class, 'booking'])->name('booking');
+Route::get('/shop', [UserController::class, 'shop'])->name('shop');
+Route::get('/contact', [UserController::class, 'contact'])->name('contact');
+Route::get('/register', [UserController::class, 'register'])->name('register');
+Route::get('/login', [UserController::class, 'login'])->name('login');
+Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+Route::get('/calendar', [UserController::class, 'calendar'])->name('calendar');
 
-Route::get('/booking', function () {
-    return view('booking'); // Halaman Booking
-})->name('booking');
 
-Route::get('/shop', function () {
-    return view('shop'); // Halaman Shop
-})->name('shop');
-
-Route::get('/contact', function () {
-    return view('contact'); // Halaman Contact
-})->name('contact');
-
-Route::get('/register', function () {
-    return view('register'); // Halaman register
-})->name('register');
-
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
+Route::get('/admin/productmanagement', [AdminController::class, 'productmanagement']);
+Route::get('/admin/customer', [AdminController::class, 'customer']);
+Route::get('/admin/managebooking', [AdminController::class, 'managebooking']);
+Route::get('/admin/schedule', [AdminController::class, 'schedule']);
+Route::get('/admin/testimonial', [AdminController::class, 'testimonial']);
+Route::get('/admin/settings', [AdminController::class, 'settings']);
