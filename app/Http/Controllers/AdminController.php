@@ -40,4 +40,20 @@ class AdminController extends Controller
     {
         return view('admin.settings');
     }
+
+    public function petfood()
+    {
+        return view('admin.petfood');
+    }
+
+    public function petsupplies()
+    {
+        return view('admin.petsupplies');
+    }
+
+    public function petvitamins()
+    {
+        return view('admin.petvitamins');
+    }
 }
+

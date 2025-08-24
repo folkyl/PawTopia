@@ -11,58 +11,6 @@
         padding: 0;
         color: #5a3b2e;
     }
-
-    /* Hero Section */
-.hero {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 40px 60px;
-    background: linear-gradient(to right, #f6b4a2, #f6dbb2);
-    height: 250px;
-    gap: 40px;
-}
-
-.hero img {
-    position: absolute;
-    left: 30px;
-    bottom: 0; /* benar-benar nempel bawah hero */
-    height: 300px; /* samakan tinggi hero agar pas */
-    object-fit: contain;
-     display: block;
-}
-
-.hero-text {
-    color: #5b402e;
-    text-align: center;
-    flex: 1;
-    margin-left: 450px; /* jarak dari gambar */
-}
-
-.hero-text h1 {
-    font-weight: 600;
-    font-size: 40px;
-    margin-bottom: 5px; /* kecilkan biar sejajar sama paragraf */
-    line-height: 1.2; /* rapatin sedikit */
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.hero-text h1::after {
-    content: "🐾";
-    font-size: 30px;
-}
-
-.hero-text p {
-    font-weight: 400;
-    font-size: 14px;
-    color: #5b402e;
-    max-width: 420px;
-    margin: 0 auto;
-}
-
 .section-title {
     text-align: center;
     margin-top: 40px;
@@ -81,71 +29,189 @@
     }
 }
 
-    /* Calendar Container */
-    .calendar-container {
-        display: flex;
-        justify-content: center;
-        margin: 40px 0;
-    }
-    .calendar-box {
-        background: #fcd8b6;
-        padding: 20px;
-        border-radius: 15px;
-        text-align: center;
-        width: 320px;
-    }
-    .calendar-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-weight: bold;
-        font-size: 18px;
-        margin-bottom: 15px;
-    }
-    .calendar-header button {
-        background: #f8a07d;
-        border: none;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 14px;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    th {
-        color: white;
-        background-color: #f47b60;
-        padding: 5px;
-        border-radius: 5px;
-    }
-    td {
-        height: 45px;
-        text-align: center;
-        cursor: pointer;
-        border-radius: 5px;
-        position: relative;
-    }
-    td:hover {
-        background-color: rgba(244, 123, 96, 0.2);
-    }
-    td.selected {
-        background-color: #f47b60;
-        color: white;
-    }
-    td.full-book {
-        cursor: not-allowed;
-        color: #aaa;
-    }
-    td.full-book::after {
-        content: "🐾";
-        position: absolute;
-        bottom: 2px;
-        right: 2px;
-        font-size: 14px;
-    }
+/* Calendar Container */
+.calendar-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.calendar-box {
+    background: #fcd8b6;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    width: 500px; /* diperbesar dari 320px */
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 22px; /* lebih besar */
+    margin-bottom: 20px;
+}
+
+.calendar-header button {
+    background: #f8a07d;
+    border: none;
+    color: white;
+    padding: 8px 12px; /* lebih besar */
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px; /* lebih besar */
+}
+
+table {
+    width: 100%;
+    border-collapse: separate; /* ubah ke separate supaya spacing bisa jalan */
+    border-spacing: 4px; /* jarak antar cell */
+}
+
+th {
+    color: white;
+    background-color: #f47b60;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+td {
+    height: 65px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 8px;
+    position: relative;
+    font-size: 16px;
+    background: white; /* kasih background biar jarak keliatan */
+}
+
+
+td:hover {
+    background-color: rgba(244, 123, 96, 0.2);
+}
+
+td.selected {
+    background-color: #f47b60;
+    color: white;
+    font-weight: bold;
+}
+
+td.full-book {
+    cursor: not-allowed;
+    color: #aaa;
+}
+
+td.full-book::after {
+    content: "🐾";
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 18px; /* icon lebih besar */
+}
+
+        .booking-tutorial {
+            max-width: 520px;
+            margin: 30px auto 60px;
+            background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+            border: 1px solid rgba(232, 180, 160, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .booking-tutorial::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f47b60, #f8a07d, #e8b4a0);
+        }
+
+        .booking-tutorial h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #5a3b2e;
+            font-weight: 600;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .booking-tutorial h3::before {
+            
+            font-size: 22px;
+        }
+
+        .booking-tutorial-content {
+            position: relative;
+        }
+
+        .booking-tutorial ol {
+            list-style: none;
+            counter-reset: step-counter;
+            padding: 0;
+            margin: 0;
+        }
+
+        .booking-tutorial li {
+            counter-increment: step-counter;
+            margin-bottom: 16px;
+            background: #f8fafb;
+            padding: 18px 20px 18px 55px;
+            border-radius: 12px;
+            border-left: 4px solid #e8b4a0;
+            position: relative;
+            transition: all 0.3s ease;
+            color: #9C6F4B;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .booking-tutorial li:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(232, 180, 160, 0.15);
+        }
+
+        .booking-tutorial li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(135deg, #e8b4a0, #f8a07d);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(232, 180, 160, 0.3);
+        }
+
+        .booking-tutorial li:last-child {
+            margin-bottom: 0;
+        }
+
+        .booking-tutorial .tutorial-footer {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(232, 180, 160, 0.2);
+            text-align: center;
+        }
+
+
 
     /* Modal */
     .modal {
@@ -236,21 +302,10 @@
     }
 </style>
 </head>
-
-@include('layouts.navbar')
-
-<!-- Hero Section -->
-<section class="hero">
-        <div class="hero-content">
-            <img src="{{ asset('images/pets.png') }}" alt="Pets">
-            <div class="hero-text">
-                <h1>Schedule Your Pet’s Day</h1>
-                <p>Book the perfect daycare experience for your furry friend with our easy online scheduling system</p>
-            </div>
-        </div>
-    </section>
-
+<body>
+@include ('layouts.navbar')
     <h2 class="section-title">Calendar</h2>
+
 
 <!-- Calendar -->
 <div class="calendar-container">
@@ -273,6 +328,19 @@
         </table>
     </div>
 </div>
+
+<!-- Booking Tutorial -->
+<div class="booking-tutorial">
+    <h3>How to Book Your Paw-some Day 🐾</h3>
+    <ol>
+        <li>Pilih tanggal pada kalender yang tersedia.</li>
+        <li>Pastikan tanggal yang dipilih tidak memiliki tanda 🐾 (sudah penuh).</li>
+        <li>Klik dan seret jika ingin memilih lebih dari 1 hari.</li>
+        <li>Lepaskan klik untuk membuka form pemesanan.</li>
+        <li>Isi data sesuai kebutuhan lalu klik <b>Submit Booking</b>.</li>
+    </ol>
+</div>
+
 
 <!-- Why Choose Pawtopia -->
 <div class="why-choose">
@@ -316,11 +384,11 @@
 <div class="modal" id="booking-modal">
     <div class="modal-content">
         <h2>Book Your Appointment Now!</h2>
-        <button onclick="window.location.href='{{ route('booking') }}'">Book</button>
+        <button onclick="closeModal()">Book</button>
     </div>
 </div>
 
-@include('layouts.footer')
+@include ('layouts.footer')
 
 <script>
     const calendarBody = document.getElementById('calendar-body');

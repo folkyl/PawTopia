@@ -1,6 +1,5 @@
 @include('layoutadmin.navbar')
 
-@extends('layouts.app')
 <style>
     body {
         font-family: 'Poppins', sans-serif;
@@ -42,6 +41,29 @@
     .btn-add:hover {
         background: #7a5242;
         transform: translateY(-2px);
+    }
+
+    /* Filter Section */
+    .filter-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    select, input {
+        padding: 9px 14px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+    select:focus, input:focus {
+        border-color: #5A3B2E;
+        outline: none;
+        box-shadow: 0 0 6px rgba(90,59,46,0.2);
     }
 
     /* Table Section Title */
@@ -132,7 +154,8 @@
 
     /* See More Button */
     .btn-see-more {
-        margin: 15px 0 100px 800px;
+        display: block;
+        margin: 20px auto;
         padding: 10px 20px;
         border-radius: 8px;
         border: none;
@@ -150,7 +173,36 @@
         transform: translateY(-2px);
     }
 
-    .modal {
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-top: 25px;
+    }
+
+    .pagination button {
+        padding: 7px 14px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        background: white;
+        cursor: pointer;
+        font-size: 13px;
+        transition: 0.3s;
+    }
+
+    .pagination button.active {
+        background: #5A3B2E;
+        color: white;
+        border-color: #5A3B2E;
+    }
+
+    .pagination button:hover {
+        background: #eee;
+    }
+
+        .modal {
         display: none; 
         position: fixed; 
         z-index: 1000; 
@@ -286,14 +338,38 @@
 
 </style>
 
+
+
 <div class="content">
     <div class="header">
-        <h2>Product Management</h2>
-        <button class="btn-add" onclick="openAddProductModal()">+ Add Product</button>
+        <h2>All Listed Vitamins</h2>
+        <button class="btn-add" onclick="openAddProductModal()">+ Add Vitamin</button>
     </div>
 
-    <!-- ================= TABLE PET FOOD ================= -->
-    <h3 class="table-title">Pet Food</h3>
+    <!-- FILTER -->
+    <div class="filter-container">
+        <select>
+            <option>Filter by Category</option>
+            <option>Vitamin A</option>
+            <option>Vitamin B</option>
+            <option>Vitamin C</option>
+            <option>Vitamin D</option>
+            <option>Vitamin E</option>
+            <option>Vitamin K</option>
+        </select>
+
+        <select>
+            <option>Sort by Benefit</option>
+            <option>Immune System</option>
+            <option>Skin & Hair</option>
+            <option>Bone Health</option>
+        </select>
+
+        <input type="text" placeholder="Search vitamin...">
+    </div>
+
+    <!-- TABLE -->
+    <h3 class="table-title">Vitamin List</h3>
     <div class="table-container">
         <table>
             <thead>
@@ -301,113 +377,43 @@
                     <th>Image</th>
                     <th>Name</th>
                     <th>Category</th>
-                    <th>Price</th>
+                    <th>Benefit</th>
                     <th style="text-align:center;">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Whiskas"></td>
-                    <td>Whiskas</td>
-                    <td>Cat Food</td>
-                    <td>Rp. 200.000</td>
+                    <td><img src="{{ asset('images/vitamin-c.png') }}" alt="Vitamin C"></td>
+                    <td>Vitamin C</td>
+                    <td>Water-Soluble</td>
+                    <td>Boosts immunity, improves skin health</td>
                     <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Whiskas','Rp. 200.000','Pet Food',10)">Edit</button>
+                        <button class="btn-edit" onclick="openEditProductModal('Vitamin C','Boosts immunity, improves skin health','Water-Soluble',100)">Edit</button>
                         <button class="btn-delete">Delete</button>
                     </td>
                 </tr>
                 <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Pedigree"></td>
-                    <td>Pedigree</td>
-                    <td>Dog Food</td>
-                    <td>Rp. 180.000</td>
+                    <td><img src="{{ asset('images/vitamin-d.png') }}" alt="Vitamin D"></td>
+                    <td>Vitamin D</td>
+                    <td>Fat-Soluble</td>
+                    <td>Strengthens bones and teeth</td>
                     <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Pedigree','Rp. 180.000','Dog Food',10)">Edit</button>
+                        <button class="btn-edit" onclick="openEditProductModal('Vitamin D','Strengthens bones and teeth','Fat-Soluble',50)">Edit</button>
                         <button class="btn-delete">Delete</button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <a href="{{ route('admin.petfood') }}" class="btn-see-more">See More</a>
 
-    <!-- ================= TABLE PET SUPPLIES ================= -->
-    <h3 class="table-title">Pet Supplies</h3>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th style="text-align:center;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Pet Shampoo"></td>
-                    <td>Pet Shampoo</td>
-                    <td>Supplies</td>
-                    <td>Rp. 75.000</td>
-                    <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Pet Shampoo','Rp. 75.000','Supplies',10)">Edit</button>
-                        <button class="btn-delete">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Litter Box"></td>
-                    <td>Litter Box</td>
-                    <td>Supplies</td>
-                    <td>Rp. 150.000</td>
-                    <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Litter Box','Rp. 150.000','Supplies',10)">Edit</button>
-                        <button class="btn-delete">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- PAGINATION -->
+    <div class="pagination">
+        <button>&laquo;</button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>&raquo;</button>
     </div>
-    <a href="{{ route('admin.petsupplies') }}" class="btn-see-more">See More</a>
-
-    <!-- ================= TABLE PET VITAMINS ================= -->
-    <h3 class="table-title">Pet Vitamins</h3>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th style="text-align:center;">Actions</th>
-                </tr>
-            </thead>    
-            <tbody>
-                <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Vitamin A"></td>
-                    <td>Vitamin A</td>
-                    <td>Vitamin</td>
-                    <td>Rp. 50.000</td>
-                    <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Vitamin A','Rp. 50.000','Vitamin',10)">Edit</button>
-                        <button class="btn-delete">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Vitamin B"></td>
-                    <td>Vitamin B Complex</td>
-                    <td>Vitamin</td>
-                    <td>Rp. 85.000</td>
-                    <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Vitamin B Complex','Rp. 85.000','Vitamin',10)">Edit</button>
-                        <button class="btn-delete">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <a href="{{ route('admin.petvitamins') }}" class="btn-see-more">See More</a>
 </div>
 
 <!-- ====== Modal Add Product ====== -->
