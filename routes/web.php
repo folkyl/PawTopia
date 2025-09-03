@@ -24,3 +24,5 @@ Route::get('/admin/settings', [AdminController::class, 'settings']);
 Route::get('/admin/petfood', [AdminController::class, 'petfood'])->name('admin.petfood');
 Route::get('/admin/petsupplies', [AdminController::class, 'petfood'])->name('admin.petsupplies'); 
 Route::get('/admin/petvitamins', [AdminController::class, 'petvitamins'])->name('admin.petvitamins');
+Route::get('/admin/feedback', [AdminController::class, 'feedback'])->name('admin.feedback');
+Route::get('/admin/testimoni', [AdminController::class, 'testimoni'])->name('admin.testimoni');

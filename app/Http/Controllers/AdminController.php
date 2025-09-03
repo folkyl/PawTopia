@@ -31,9 +31,14 @@ class AdminController extends Controller
         return view('admin.schedule');
     }
 
-    public function testimonial()
+    public function testimoni()
     {
-        return view('admin.testimonial');
+        return view('admin.testimoni');
+    }
+
+    public function feedback() 
+    {
+        return view('admin.feedback');
     }
 
     public function settings()

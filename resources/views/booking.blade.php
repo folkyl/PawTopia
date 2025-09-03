@@ -6,20 +6,20 @@
 <title>Pet Daycare Booking</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    .booking-page {
+    body {
         font-family: 'Poppins', sans-serif;
         background-color: #fff;
         margin: 0;
         padding: 0;
         color: #674337;
     }
-    .booking-page .container {
+    .container {
         max-width: 700px;
         margin: auto;
         padding: 20px;
     }
     /* Header */
-    .booking-page .hero {
+    .hero {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -27,13 +27,13 @@
       background: linear-gradient(to right, #fbe1c3, #fff);
     }
 
-    .booking-page .hero-text {
-      max-width: 60%;
-      text-align: center;
-      margin: 0 auto;
-    }
+    .hero-text {
+  max-width: 60%;
+  text-align: center;   /* ✅ ini yang bikin teks center */
+  margin: 0 auto;       /* ✅ supaya benar-benar ke tengah */
+}
 
-    .booking-page .hero-title {
+    .hero-title {
       font-size: 50px;
       font-weight: 750;
       color: #9C6F4B;
@@ -42,68 +42,68 @@
       gap: 8px;
     }
 
-    .booking-page .hero-title img {
+    .hero-title img {
       width: 20px;
     }
 
-    .booking-page .hero-subtitle {
+    .hero-subtitle {
       margin-top: 8px;
       font-size: 20px;
       color: #9C6F4B;
       font-weight: 400;
     }
 
-    .booking-page .hero-image img { 
+    .hero-image img { 
       display: block;  
       max-height: 180px;
     }
 
     /* Section */
-    .booking-page .section {
+    .section {
         margin-top: 20px;
         padding: 20px;
         border: 1px solid #f0e6e2;
         border-radius: 10px;
     }
-    .booking-page .section-title {
+    .section-title {
         display: flex;
         align-items: center;
         font-weight: 600;
         font-size: 16px;
         margin-bottom: 15px;
     }
-    .booking-page .section-title img {
+    .section-title img {
         width: 30px;
         height: auto;
         margin-right: 8px;
     }
-    .booking-page .form-group {
+    .form-group {
         display: flex;
         gap: 20px;
         margin-bottom: 15px;
     }
 
-    .booking-page .form-field {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-    }
+.form-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
 
-    .booking-page .form-field label {
-        margin-bottom: 5px;
-        font-weight: 500;
-        font-size: 14px;
-        color: #674337;
-    }
+.form-field label {
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #674337;
+}
 
-    .booking-page .form-field input {
-        padding: 8px;
-        border: 1px solid #9C6F4B;
-        border-radius: 6px;
-        font-size: 14px;
-    }
+.form-field input {
+    padding: 8px;
+    border: 1px solid #9C6F4B;
+    border-radius: 6px;
+    font-size: 14px;
+}
 
-    .booking-page .form-group input {
+    .form-group input {
         flex: 1;
         padding: 10px;
         border-radius: 8px;
@@ -112,23 +112,23 @@
         font-size: 14px;
     }
 
-    .booking-page .form-group textarea {
-        width: 100%;
-        padding: 10px;
-        border: 2px solid #ddd;
-        border-radius: 8px;
-        font-size: 14px;
-        font-family: 'Poppins', sans-serif;
-        resize: none;
-        box-sizing: border-box;
-    }
-    .booking-page .form-group textarea:focus {
-        outline: none;
-        border-color: #ddd;
-    }
+    .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    resize: none; /* Biar user tidak bisa drag ukuran */
+    box-sizing: border-box;
+}
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ddd;
+}
 
     /* Cost Estimation */
-    .booking-page .cost {
+    .cost {
         margin-top: 20px;
         text-align: center;
         padding: 20px;
@@ -136,14 +136,22 @@
         border-radius: 12px;
         font-size: 14px;
     }
-    .booking-page .cost strong {
+    .cost-title {
+    display: flex;
+    justify-content: center; /* center horizontal */
+    align-items: center;      /* center vertical */
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+    .cost strong {
         font-size: 16px;
         display: block;
         margin-bottom: 5px;
     }
 
     /* Button */
-    .booking-page .submit-btn {
+    .submit-btn {
         display: block;
         margin: 20px auto 10px;
         padding: 12px 30px;
@@ -156,14 +164,13 @@
         cursor: pointer;
     }
 
-    .booking-page .note {
+    .note {
         text-align: center;
         font-size: 12px;
         color: #9C6F4B;
     }
-
-    /* Modal */
-    .booking-page .modal {
+/* Modal */
+    .modal {
         display: none;
         position: fixed;
         z-index: 1000;
@@ -175,17 +182,17 @@
         font-family: 'Poppins', sans-serif;
     }
 
-    .booking-page .modal-content {
+    .modal-content {
         background: white;
         padding: 30px;
         border-radius: 15px;
         text-align: center;
-        max-width: 650px;
+        max-width: 650px;  /* sesuai mockup */
         width: 100%;
         position: relative;
     }
 
-    .booking-page .close-btn {
+    .close-btn {
         position: absolute;
         top: 15px;
         right: 15px;
@@ -194,25 +201,25 @@
         color: #999;
     }
 
-    .booking-page .modal-content img {
+    .modal-content img {
         height: 60px;
         margin-bottom: 15px;
     }
 
-    .booking-page .modal-title {
+    .modal-title {
         font-weight: 700;
         font-size: 18px;
         margin-bottom: 8px;
     }
 
-    .booking-page .modal-desc {
+    .modal-desc {
         font-size: 14px;
         color: #9C6F4B;
         margin-bottom: 25px;
     }
 
     /* Booking Info Grid */
-    .booking-page .booking-info { 
+    .booking-info { 
         display: grid; 
         grid-template-columns: repeat(2, 1fr); 
         gap: 20px 40px;
@@ -221,51 +228,51 @@
     }
 
     /* Info Card */
-    .booking-page .info-card { 
+    .info-card { 
         background: #fff; 
         border-radius: 10px;
         padding: 14px 20px;
         box-shadow: 2px 2px 0px #f4a28c;
         border: 1px solid #eee;
         width: 220px;
-        text-align: center;
+        text-align: center;  /* ✅ align kiri sesuai mockup */
     }
 
-    .booking-page .info-card .title { 
+    .info-card .title { 
         font-weight: 600;
         font-size: 13px;
         margin-bottom: 5px;
     }
 
-    .booking-page .info-card .subtitle { 
+    .info-card .subtitle { 
         font-size: 14px;
         font-weight: 400;
         color: #9C6F4B;
     }
 
-    .booking-page .info-card .subtitle i {
+    .info-card .subtitle i {
         font-size: 12px;
         color: #9C6F4B;
     }
 
     /* Next Section */
-    .booking-page .next-section {
+    .next-section {
         background: #f4a28c;
         border-radius: 12px;
         padding: 20px;
         text-align: center;
-        width: calc(100% - 60px);
+        width: calc(100% - 60px); /* ✅ sejajar card, tidak overflow */
         margin: 0 auto;
     }
 
-    .booking-page .next-section h3 {
+    .next-section h3 {
         font-size: 16px;
         font-weight: 600;
         margin-bottom: 12px;
         color: #674337;
     }
 
-    .booking-page .next-steps {
+    .next-steps {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 8px 20px;
@@ -274,95 +281,84 @@
         color: #9C6F4B;
     }
 
-    .booking-page .next-steps p {
+    .next-steps p {
         margin: 0;
         text-align: center;
     }
 </style>
 </head>
 <body>
-@include('layouts.navbar')
 
-<div class="booking-page">
-    <!-- Header -->
+    @include ('layouts.navbar')
+<!-- Header -->
     <section class="hero">
-        <div class="hero-text">
-          <div class="hero-title">
-            Pet Daycare Booking 
-            <span>🐾</span>
-          </div>
-          <div class="hero-subtitle">The best place for your beloved pets</div>
-        </div>
-        <div class="hero-image">
-          <img src="{{ asset('images/cute.png') }}" alt="cat and dog">
-        </div>
-    </section>
-
-    <div class="container">
-        <!-- Booking Schedule -->
-        <div class="section">
-            <div class="section-title"><img src="{{ asset('images/Schedule.svg') }}" alt="">Booking Schedule</div>
-            <div class="form-group">
-                <div class="form-field">
-                    <label>Start Date</label>
-                    <input type="date" id="startDate" readonly>
-                </div>
-
-                <div class="form-field">
-                    <label>End Date</label>
-                    <input type="date" id="endDate" readonly>
-                </div>
-            </div>
-            <div class="form-group">
-                <input type="text" placeholder="Drop-off Time">
-                <input type="text" placeholder="Pick-up Time">
-            </div>
-        </div>
-
-        <!-- Pet Information -->
-        <div class="section">
-            <div class="section-title"><img src="{{ asset('images/Pets.svg') }}" alt="">Pet Information</div>
-            <div class="pet-list">
-                <div class="pet-item">
-                    <input type="checkbox" id="pet1">
-                    <label for="pet1">Buddy (Golden Retriever)</label>
-                </div>
-                <div class="pet-item">
-                    <input type="checkbox" id="pet2">
-                    <label for="pet2">Kitty (Persia)</label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Health Information -->
-        <div class="section">
-            <div class="section-title">
-                <img src="{{ asset('images/Heart with dog paw.svg') }}" alt="">Health Information
-            </div>
-            <div class="form-group">
-                <textarea placeholder="Allergies/Health Issues" rows="3"></textarea>
-                <textarea placeholder="Current Medications" rows="3"></textarea>
-            </div>
-        </div>
-
-        <!-- Special Notes -->
-        <div class="section">
-            <div class="section-title"><img src="{{ asset('images/Edit.svg') }}" alt="">Special Notes</div>
-            <div class="form-group">
-                <textarea placeholder="Pet's Special Instructions" rows="5"></textarea>
-            </div>
-        </div>
-
-        <!-- Cost Estimation -->
-        <div class="cost">
-            <strong>Base Rate: Rp. 50,000/day</strong>
-            Final cost will be calculated based on duration and selected additional services
-        </div>
-
-        <!-- Submit Button -->
-        <button class="submit-btn" onclick="openModal()">Submit Booking</button>
-        <div class="note">Our team will contact you within 24 hours for confirmation</div>
+    <div class="hero-text">
+      <div class="hero-title">
+        Pet Daycare Booking 
+        <span>🐾</span>
+      </div>
+      <div class="hero-subtitle">The best place for your beloved pets</div>
     </div>
+    <div class="hero-image">
+      <img src="{{ asset('images/cute.png') }}" alt="cat and dog">
+    </div>
+  </section>
+
+<div class="container">
+    <!-- Booking Schedule -->
+    <div class="section">
+        <div class="section-title"><img src="{{ asset('images/Schedule.svg') }}" alt="">Booking Schedule</div>
+        <div class="form-group">
+    <div class="form-field">
+        <label>Start Date</label>
+        <input type="date" id="startDate" readonly>
+    </div>
+
+    <div class="form-field">
+        <label>End Date</label>
+        <input type="date" id="endDate" readonly>
+    </div>
+</div>
+        <div class="form-group">
+            <input type="text" placeholder="Drop-off Time">
+            <input type="text" placeholder="Pick-up Time">
+        </div>
+        
+    </div>
+
+    <!-- Pet Information -->
+    <div class="section">
+        <div class="section-title"><img src="{{ asset('images/Pets.svg') }}" alt="">Pet Information</div>
+        <div class="pet-list">
+        <div class="pet-item">
+            <input type="checkbox" id="pet1">
+            <label for="pet1">Buddy (Golden Retriever)</label>
+        </div>
+        <div class="pet-item">
+            <input type="checkbox" id="pet2">
+            <label for="pet2">Kitty (Persia)</label>
+        </div>
+    </div>
+
+    <!-- Special Notes -->
+    <div class="section">
+        <div class="section-title"><img src="{{ asset('images/Edit.svg') }}" alt="">Special Notes</div>
+        <div class="form-group">
+            <textarea placeholder="Pet Special Instructions: Allergies/Health Issues" rows="5"></textarea>
+        </div>
+    </div>
+
+    <!-- Cost Estimation -->
+    <div class="cost">
+        <div class="cost-title">Cost Estimation</div>
+        <strong>Base Rate: Rp. 50,000/day</strong>
+        Final cost will be calculated based on duration and selected additional services
+    </div>
+
+    <!-- Submit Button -->
+    <button class="submit-btn" onclick="openModal()">Submit Booking</button>
+    <div class="note">Our team will contact you within 24 hours for confirmation</div>
+</div>
 </div>
 
 <!-- Modal -->
@@ -404,7 +400,6 @@
     </div>
 </div>
 
-@include('layouts.footer')
 
 <script>
     function openModal(){
@@ -419,5 +414,7 @@
         }
     }
 </script>
-</body>
+@include ('layouts.footer')
+
+</body> 
 </html>

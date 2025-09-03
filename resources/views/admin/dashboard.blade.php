@@ -1,6 +1,5 @@
 @extends('layouts.app')
-@include ('layoutadmin.navbar')
-
+@include('layoutadmin.navbar')
 @section('content')
 <div class="dashboard-root">
     <!-- Main Content -->
@@ -229,6 +228,14 @@
 
 <style>
 /* Root Styles */
+
+.dashboard-main {
+    flex: 1;
+    padding: 40px 32px 32px 32px;
+    max-width: 100%;
+    margin-left: 250px; /* kasih jarak biar nggak ketiban sidebar */
+}
+
 .dashboard-root {
     display: flex;
     min-height: 100vh;
@@ -241,9 +248,7 @@
     flex: 1;
     padding: 40px 32px 32px 32px;
     max-width: 100%;
-    margin-left: 250px;
 }
-
 
 /* Header */
 .dashboard-header {
@@ -355,7 +360,7 @@
 /* Stats Cards */
 .dashboard-stats-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 24px;
     margin-bottom: 32px;
 }
@@ -1025,6 +1030,15 @@
     border: 1px solid #C3E6CB;
 }
 
+/* Sidebar Hover Effects */
+.dashboard-card:hover {
+    transform: translateY(-2px);
+}
+
+.dashboard-sidebar a:hover {
+    transform: translateX(2px);
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
     .content-row {
@@ -1032,8 +1046,19 @@
         gap: 24px;
     }
 
-    .chart-stats {
+    .dashboard-stats-row {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-root {
+        flex-direction: column;
+    }
+
+    .dashboard-sidebar {
+        width: 100%;
+        border-radius: 0;
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
     }
 }
 
