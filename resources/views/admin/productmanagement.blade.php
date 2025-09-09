@@ -1,534 +1,640 @@
+@extends('layouts.app')
 @include('layoutadmin.navbar')
 
-@extends('layouts.app')
 <style>
     body {
-        font-family: 'Poppins', sans-serif;
-        background: #f5f6fa;
-        color: #333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #EAE6E1;
         margin: 0;
+        color: #6B4F3A;
     }
-
-    .content {
-        margin-left: 300px; 
-        padding: 30px;
+    .dashboard-root {
+        display: flex;
+        min-height: 100vh;
+        background: #EAE6E1;
     }
-
-    /* Header */
-    .header {
+    .dashboard-main {
+        flex: 1;
+        padding: 40px 32px 32px 32px;
+        max-width: 100%;
+        margin-left: 250px;
+    }
+    .dashboard-header {
+        background: #fff;
+        border-radius: 24px;
+        padding: 24px 32px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 25px;
+        margin-bottom: 32px;
+        box-shadow: 0 8px 32px rgba(230, 161, 93, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
-
-    .header h2 {
-        font-size: 26px;
-        font-weight: 700;
-        color: #2d3436;
+    .header-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #6B4F3A;
+        letter-spacing: -0.02em;
     }
-
-    .btn-add {
-        background: #5A3B2E;
-        color: #fff;
-        padding: 10px 18px;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 0.3s;
+    .header-subtitle {
+        color: #A97B5D;
+        font-size: 1rem;
         font-weight: 500;
     }
-
-    .btn-add:hover {
-        background: #7a5242;
-        transform: translateY(-2px);
-    }
-
-    /* Table Section Title */
-    .table-title {
-        font-size: 20px;
-        font-weight: 600;
-        margin: 30px 0 15px;
-        color: #444;
-    }
-
-    /* Table Card */
-    .table-container {
-        background: #fff;
+    .btn-add-product {
+        background: #E57300;
+        color: #fff;
+        border: none;
         border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        padding: 12px 20px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+    }
+    .btn-add-product:hover {
+        background: #D16500;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(229, 115, 0, 0.3);
+    }
+    .category-card {
+        background: linear-gradient(135deg, #fff 0%, #fefefe 100%);
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 12px 40px rgba(230, 161, 93, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        margin-bottom: 32px;
+        animation: fadeInUp 0.6s ease forwards;
+    }
+    .category-title {
+        font-weight:800;
+        font-size:1.3rem;
+        color:#6B4F3A;
+        margin-bottom:24px;
+        letter-spacing:-0.01em;
+    }
+    /* Table Styles */
+    .table-container {
+        overflow-x: auto;
+        border-radius: 16px;
         overflow: hidden;
-        margin-bottom: 20px;
-        transition: 0.3s;
+        margin-bottom: 24px;
     }
-
-    .table-container:hover {
-        box-shadow: 0 6px 14px rgba(0,0,0,0.08);
-    }
-
-    table {
+    .product-table {
         width: 100%;
+        min-width: 800px;
+        background: #fff;
         border-collapse: collapse;
     }
-
-    th {
-        background: #fafafa;
-        padding: 14px;
+    .product-table thead tr {
+        background: linear-gradient(135deg, #FFE0B2, #F9D9A7);
+    }
+    .product-table th {
+        color: #6B4F3A;
+        padding: 20px 16px;
+        font-weight: 700;
         text-align: left;
-        font-weight: 600;
-        font-size: 14px;
-        color: #555;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid rgba(169, 123, 93, 0.1);
     }
-
-    td {
-        padding: 14px;
-        border-top: 1px solid #eee;
-        font-size: 14px;
-        color: #444;
+    .product-table td {
+        padding: 20px 16px;
+        border-bottom: 1px solid rgba(240, 240, 240, 0.8);
+        color: #6B4F3A;
+        vertical-align: middle;
+        font-weight: 500;
     }
-
-    td img {
-        width: 55px;
-        height: 55px;
+    .product-table td img {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
         object-fit: cover;
-        border-radius: 8px;
     }
-
     /* Action Buttons */
-    .action-btns {
-        text-align: center;
-    }
-
-    .btn-edit, .btn-delete {
-        border: none;
-        padding: 6px 14px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 500;
-        transition: 0.3s;
-    }
-
-    .btn-edit {
-        background: #F4A261;
-        color: #fff;
-        margin-right: 5px;
-    }
-
-    .btn-edit:hover {
-        background: #e0863a;
-        transform: scale(1.05);
-    }
-
-    .btn-delete {
-        background: #e63946;
-        color: #fff;
-    }
-
-    .btn-delete:hover {
-        background: #c71c2f;
-        transform: scale(1.05);
-    }
-
-    /* See More Button */
-    .btn-see-more {
-        margin: 15px 0 100px 800px;
-        padding: 10px 20px;
-        border-radius: 8px;
-        border: none;
-        background: #5A3B2E;
-        color: #fff;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 500;
-        text-decoration: none;
-        transition: 0.3s;
-    }
-
-    .btn-see-more:hover {
-        background: #7a5242;
-        transform: translateY(-2px);
-    }
-
-    .modal {
-        display: none; 
-        position: fixed; 
-        z-index: 1000; 
-        left: 0;
-        top: 0;
-        width: 100%; 
-        height: 100%; 
-        background-color: rgba(0,0,0,0.6);
-        justify-content: center;
-        align-items: center;
-    }
-
-    .modal-content {
-        background: #fff;
-        border-radius: 14px;
-        padding: 25px 30px;
-        width: 420px;
-        box-shadow: 0px 6px 16px rgba(0,0,0,0.12);
-        animation: fadeIn 0.3s ease-in-out;
-        text-align: left;
-    }
-
-    .modal-content h3 {
-        margin-bottom: 20px;
-        color: #2d3436;
-        font-size: 20px;
-        font-weight: 600;
-        text-align: center;
-    }
-
-    /* Image Upload Box */
-    .image-upload {
-        width: 120px;
-        height: 120px;
-        background: #f1f1f1;
-        border: 2px dashed #ccc;
-        border-radius: 12px;
+    .action-buttons {
         display: flex;
+        gap: 8px;
         justify-content: center;
-        align-items: center;
-        margin: 0 auto 15px auto;
-        font-size: 28px;
-        color: #777;
-        cursor: pointer;
-        transition: 0.3s;
     }
-    .image-upload:hover {
-        background: #fafafa;
-        border-color: #5A3B2E;
-    }
-
-    /* Inputs */
-    .modal-content input {
-        width: 100%;
-        padding: 10px 14px;
-        margin: 8px 0;
+    .action-btn {
+        border: none;
         border-radius: 8px;
-        border: 1px solid #ddd;
-        background: #fff;
-        color: #333;
-        font-size: 14px;
-        transition: 0.3s;
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-transform: capitalize;
+        display: flex;
+        align-items: center;
+        gap: 4px;
     }
-    .modal-content input:focus {
-        border-color: #5A3B2E;
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(90,59,46,0.1);
+    .btn-edit {
+        background: #FF9800;
+        color: #fff;
     }
-
-    /* Category Buttons */
-    .category-btns {
+    .btn-edit:hover {
+        background: #e68a00;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+    }
+    .btn-delete {
+        background: #DC3545;
+        color: #fff;
+    }
+    .btn-delete:hover {
+        background: #C82333;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
+    .btn-see-more {
+        background: #E57300;
+        color:#fff;
+        border:none;
+        border-radius:12px;
+        padding:10px 20px;
+        font-weight:600;
+        cursor:pointer;
+        transition:all 0.3s ease;
+        display:inline-block;
+        margin-top: 10px;
+        margin-left: auto;
+        margin-right: 0;
+        font-size:0.9rem;
+    }
+    .btn-see-more:hover {
+        background: #D16500;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(229, 115, 0, 0.2);
+    }
+    /* Modal Style */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(107, 79, 58, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    .modal-container {
+        background: linear-gradient(135deg, #fff 0%, #fefefe 100%);
+        border-radius: 24px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(107, 79, 58, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        transform: translateY(30px);
+        opacity: 0;
+        transition: all 0.4s ease;
+        padding: 50px;
+    }
+    .modal-overlay.active .modal-container {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    .modal-header {
+        padding: 24px 32px 16px;
+        border-bottom: 1px solid rgba(169, 123, 93, 0.2);
         display: flex;
         justify-content: space-between;
-        margin: 15px 0;
+        align-items: center;
     }
-    .category-btns button {
-        flex: 1;
-        margin: 0 4px;
-        padding: 8px;
-        border-radius: 8px;
-        border: 1px solid #5A3B2E;
-        background: #fff;
-        color: #5A3B2E;
+    .modal-title {
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: #6B4F3A;
+        margin: 0;
+    }
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #A97B5D;
         cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+    .modal-close:hover {
+        background: rgba(169, 123, 93, 0.1);
+        color: #6B4F3A;
+        transform: rotate(90deg);
+    }
+    .modal-body {
+        padding: 24px 32px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #6B4F3A;
+        font-size: 0.9rem;
+    }
+    .form-input, .form-select {
+        width: 100%;
+        background: #F7F5F2;
+        border: 1px solid rgba(169, 123, 93, 0.2);
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 0.9rem;
+        color: #6B4F3A;
+        transition: all 0.3s ease;
         font-weight: 500;
-        transition: 0.3s;
     }
-    .category-btns button:hover {
-        background: #f7f3f2;
+    .form-input:focus, .form-select:focus {
+        outline: none;
+        border-color: #E57300;
+        box-shadow: 0 0 0 3px rgba(229, 115, 0, 0.1);
+        background: #fff;
     }
-    .category-btns button.active {
-        background: #5A3B2E;
-        color: #fff;
-    }
-
-    /* Actions */
-    .modal-actions {
+    .modal-footer {
+        padding: 16px 32px 24px;
+        border-top: 1px solid rgba(169, 123, 93, 0.2);
         display: flex;
         justify-content: flex-end;
-        margin-top: 20px;
-        gap: 10px;
+        gap: 12px;
     }
-    .btn-cancel, .btn-save {
-        padding: 10px 18px;
-        border-radius: 8px;
-        font-size: 14px;
+    .modal-btn {
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 600;
         cursor: pointer;
-        transition: 0.3s;
-        font-weight: 500;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
     }
     .btn-cancel {
-        background: #fff;
-        border: 1px solid #ccc;
-        color: #555;
+        background: #F7F5F2;
+        color: #6B4F3A;
     }
     .btn-cancel:hover {
-        background: #f1f1f1;
+        background: #e8e5e0;
+        transform: translateY(-2px);
     }
     .btn-save {
-        background: #5A3B2E;
-        border: none;
+        background: #E57300;
         color: #fff;
     }
     .btn-save:hover {
-        background: #7a5242;
+        background: #D16500;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(229, 115, 0, 0.3);
     }
-
-    /* Animation */
-    @keyframes fadeIn {
-        from {opacity: 0; transform: translateY(-20px);}
-        to {opacity: 1; transform: translateY(0);}
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px);}
+        to { opacity: 1; transform: translateY(0);}
     }
-
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .dashboard-main { padding: 20px 16px; }
+        .category-card { padding: 20px; }
+        .product-table th, .product-table td { padding: 16px 12px; }
+    }
+    @media (max-width: 768px) {
+        .dashboard-main { padding: 12px 6px;}
+        .dashboard-header { flex-direction: column; gap: 16px; text-align: center; padding: 20px;}
+        .category-card { padding: 16px 10px; border-radius: 16px;}
+        .product-table th, .product-table td { padding: 12px 8px; font-size:0.85rem;}
+    }
 </style>
 
-<div class="content">
-    <div class="header">
-        <h2>Product Management</h2>
-        <button class="btn-add" onclick="openAddProductModal()">+ Add Product</button>
-    </div>
 
-    <!-- ================= TABLE PET FOOD ================= -->
-    <h3 class="table-title">Pet Food</h3>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th style="text-align:center;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Whiskas"></td>
-                    <td>Whiskas</td>
-                    <td>Cat Food</td>
-                    <td>Rp. 200.000</td>
-                    <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Whiskas','Rp. 200.000','Pet Food',10)">Edit</button>
-                        <button class="btn-delete">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Pedigree"></td>
-                    <td>Pedigree</td>
-                    <td>Dog Food</td>
-                    <td>Rp. 180.000</td>
-                    <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Pedigree','Rp. 180.000','Dog Food',10)">Edit</button>
-                        <button class="btn-delete">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <a href="{{ route('admin.petfood') }}" class="btn-see-more">See More</a>
+<div class="dashboard-root">
+    <main class="dashboard-main">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div>
+                <span class="header-title">Product Management</span>
+                <div class="header-subtitle">Kelola produk pet boarding sesuai kategori</div>
+            </div>
+            <button class="btn-add-product" onclick="openAddProductModal()">
+                <i class="bi bi-plus-circle"></i> Tambah Produk
+            </button>
+        </div>
 
-    <!-- ================= TABLE PET SUPPLIES ================= -->
-    <h3 class="table-title">Pet Supplies</h3>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th style="text-align:center;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Pet Shampoo"></td>
-                    <td>Pet Shampoo</td>
-                    <td>Supplies</td>
-                    <td>Rp. 75.000</td>
-                    <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Pet Shampoo','Rp. 75.000','Supplies',10)">Edit</button>
-                        <button class="btn-delete">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Litter Box"></td>
-                    <td>Litter Box</td>
-                    <td>Supplies</td>
-                    <td>Rp. 150.000</td>
-                    <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Litter Box','Rp. 150.000','Supplies',10)">Edit</button>
-                        <button class="btn-delete">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <a href="{{ route('admin.petsupplies') }}" class="btn-see-more">See More</a>
+        <!-- Pet Food Section -->
+        <div class="category-card">
+            <div class="category-title">Pet Food</div>
+            <div class="table-container">
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th style="text-align:center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><img src="{{ asset('images/whiskas.svg') }}" alt="Whiskas"></td>
+                            <td>Whiskas</td>
+                            <td>Cat Food</td>
+                            <td>Rp. 200.000</td>
+                            <td>10</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-edit" onclick="openEditProductModal('Whiskas','Rp. 200.000','Cat Food',10)">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="action-btn btn-delete">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><img src="{{ asset('images/whiskas.svg') }}" alt="Pedigree"></td>
+                            <td>Pedigree</td>
+                            <td>Dog Food</td>
+                            <td>Rp. 180.000</td>
+                            <td>15</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-edit" onclick="openEditProductModal('Pedigree','Rp. 180.000','Dog Food',15)">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="action-btn btn-delete">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <a href="{{ route('admin.petfood') }}" class="btn-see-more">See More</a>
+        </div>
 
-    <!-- ================= TABLE PET VITAMINS ================= -->
-    <h3 class="table-title">Pet Vitamins</h3>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th style="text-align:center;">Actions</th>
-                </tr>
-            </thead>    
-            <tbody>
-                <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Vitamin A"></td>
-                    <td>Vitamin A</td>
-                    <td>Vitamin</td>
-                    <td>Rp. 50.000</td>
-                    <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Vitamin A','Rp. 50.000','Vitamin',10)">Edit</button>
-                        <button class="btn-delete">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Vitamin B"></td>
-                    <td>Vitamin B Complex</td>
-                    <td>Vitamin</td>
-                    <td>Rp. 85.000</td>
-                    <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Vitamin B Complex','Rp. 85.000','Vitamin',10)">Edit</button>
-                        <button class="btn-delete">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <a href="{{ route('admin.petvitamins') }}" class="btn-see-more">See More</a>
+        <!-- Supplies Section -->
+        <div class="category-card">
+            <div class="category-title">Pet Supplies</div>
+            <div class="table-container">
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th style="text-align:center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><img src="{{ asset('images/whiskas.svg') }}" alt="Pet Shampoo"></td>
+                            <td>Pet Shampoo</td>
+                            <td>Supplies</td>
+                            <td>Rp. 75.000</td>
+                            <td>20</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-edit" onclick="openEditProductModal('Pet Shampoo','Rp. 75.000','Supplies',20)">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="action-btn btn-delete">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><img src="{{ asset('images/whiskas.svg') }}" alt="Litter Box"></td>
+                            <td>Litter Box</td>
+                            <td>Supplies</td>
+                            <td>Rp. 150.000</td>
+                            <td>8</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-edit" onclick="openEditProductModal('Litter Box','Rp. 150.000','Supplies',8)">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="action-btn btn-delete">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <a href="{{ route('admin.petsupplies') }}" class="btn-see-more">See More</a>
+        </div>
+
+        <!-- Vitamins Section -->
+        <div class="category-card">
+            <div class="category-title">Pet Vitamins</div>
+            <div class="table-container">
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th style="text-align:center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><img src="{{ asset('images/whiskas.svg') }}" alt="Vitamin A"></td>
+                            <td>Vitamin A</td>
+                            <td>Vitamin</td>
+                            <td>Rp. 50.000</td>
+                            <td>12</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-edit" onclick="openEditProductModal('Vitamin A','Rp. 50.000','Vitamin',12)">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="action-btn btn-delete">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><img src="{{ asset('images/whiskas.svg') }}" alt="Vitamin B"></td>
+                            <td>Vitamin B Complex</td>
+                            <td>Vitamin</td>
+                            <td>Rp. 85.000</td>
+                            <td>7</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-edit" onclick="openEditProductModal('Vitamin B Complex','Rp. 85.000','Vitamin',7)">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="action-btn btn-delete">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <a href="{{ route('admin.petvitamins') }}" class="btn-see-more">See More</a>
+        </div>
+    </main>
 </div>
 
-<!-- ====== Modal Add Product ====== -->
-<div class="modal" id="addProductModal">
-    <div class="modal-content">
-        <h3>New Product</h3>
-        <div class="image-upload" onclick="document.getElementById('addProductImage').click()">
-            <span id="addImagePreview">📷</span>
+<!-- Modal Add Product -->
+<div class="modal-overlay" id="addProductModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2 class="modal-title">Tambah Produk</h2>
+            <button class="modal-close" onclick="closeAddModal()">
+                <i class="bi bi-x"></i>
+            </button>
         </div>
-        <input type="file" id="addProductImage" accept="image/*" style="display:none">        
-        <input type="text" placeholder="Enter product name">
-        <input type="text" placeholder="Enter product price">
-        <div class="category-btns">
-            <button type="button" class="active">Pet Food</button>
-            <button type="button">Supplies</button>
-            <button type="button">Vitamin</button>
+        <div class="modal-body">
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label for="addProductName" class="form-label">Nama Produk</label>
+                    <input type="text" id="addProductName" class="form-input" placeholder="Nama produk" required>
+                </div>
+                <div class="form-group">
+                    <label for="addProductCategory" class="form-label">Kategori</label>
+                    <select id="addProductCategory" class="form-select" required>
+                        <option value="">Pilih kategori</option>
+                        <option value="Cat Food">Cat Food</option>
+                        <option value="Dog Food">Dog Food</option>
+                        <option value="Supplies">Supplies</option>
+                        <option value="Vitamin">Vitamin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addProductPrice" class="form-label">Harga</label>
+                    <input type="text" id="addProductPrice" class="form-input" placeholder="Rp. 0" required>
+                </div>
+                <div class="form-group">
+                    <label for="addProductStock" class="form-label">Stok</label>
+                    <input type="number" id="addProductStock" class="form-input" placeholder="Stok" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="addProductImage" class="form-label">Gambar</label>
+                    <input type="file" id="addProductImage" class="form-input" accept="image/*">
+                </div>
+            </form>
         </div>
-
-        <input type="number" placeholder="Enter stock">
-
-        <div class="modal-actions">
-            <button class="btn-cancel" id="closeModal">Back</button>
-            <button class="btn-save">Add</button>
+        <div class="modal-footer">
+            <button class="modal-btn btn-cancel" onclick="closeAddModal()">Batal</button>
+            <button class="modal-btn btn-save" onclick="submitAddProduct()">Tambah Produk</button>
         </div>
     </div>
 </div>
 
-<!-- ====== Modal Edit Product ====== -->
-<div class="modal" id="editProductModal">
-    <div class="modal-content">
-        <h3>Edit Product</h3>
-        
-        <div class="image-upload" onclick="document.getElementById('addProductImage').click()">
-            <span id="addImagePreview">📷</span>
+<!-- Modal Edit Product -->
+<div class="modal-overlay" id="editProductModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2 class="modal-title">Edit Produk</h2>
+            <button class="modal-close" onclick="closeEditModal()">
+                <i class="bi bi-x"></i>
+            </button>
         </div>
-        
-        <input type="file" id="addProductImage" accept="image/*" style="display:none">        
-        <input type="text" placeholder="Enter product name">
-        <input type="text" placeholder="Enter product price">
-
-        <div class="category-btns">
-            <button type="button" class="active">Pet Food</button>
-            <button type="button">Supplies</button>
-            <button type="button">Vitamin</button>
+        <div class="modal-body">
+            <form id="editProductForm">
+                <div class="form-group">
+                    <label for="editProductName" class="form-label">Nama Produk</label>
+                    <input type="text" id="editProductName" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductCategory" class="form-label">Kategori</label>
+                    <select id="editProductCategory" class="form-select" required>
+                        <option value="Cat Food">Cat Food</option>
+                        <option value="Dog Food">Dog Food</option>
+                        <option value="Supplies">Supplies</option>
+                        <option value="Vitamin">Vitamin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editProductPrice" class="form-label">Harga</label>
+                    <input type="text" id="editProductPrice" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductStock" class="form-label">Stok</label>
+                    <input type="number" id="editProductStock" class="form-input" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductImage" class="form-label">Gambar</label>
+                    <input type="file" id="editProductImage" class="form-input" accept="image/*">
+                </div>
+            </form>
         </div>
-
-        <input type="number" id="editProductStock" placeholder="Enter stock" value="10">
-
-        <div class="modal-actions">
-            <button class="btn-cancel" id="closeEditModal">Back</button>
-            <button class="btn-save">Save Changes</button>
+        <div class="modal-footer">
+            <button class="modal-btn btn-cancel" onclick="closeEditModal()">Batal</button>
+            <button class="modal-btn btn-save" onclick="submitEditProduct()">Simpan Perubahan</button>
         </div>
     </div>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const addModal = document.getElementById("addProductModal");
-    const editModal = document.getElementById("editProductModal");
-
-    const openAddBtn = document.querySelector(".btn-add");
-    const closeAddBtn = document.querySelector("#closeModal");
-    const closeEditBtn = document.querySelector("#closeEditModal");
-
-    // === Buka Modal Tambah Produk ===
-    window.openAddProductModal = function() {
-        addModal.style.display = "flex";
-        document.body.style.overflow = "hidden";
-    };
-
-    // === Tutup Modal Tambah Produk ===
-    closeAddBtn.addEventListener("click", () => {
-        addModal.style.display = "none";
-        document.body.style.overflow = "auto";
-    });
-
-    // === Buka Modal Edit Produk ===
-    window.openEditProductModal = function(name, price, category, stock) {
-        editModal.style.display = "flex";
-        document.body.style.overflow = "hidden";
-
-        // isi data ke input
-        const inputs = editModal.querySelectorAll("input");
-        inputs[1].value = name;   // nama produk
-        inputs[2].value = price;  // harga
-        inputs[3].value = stock;  // stok
-
-        // set kategori aktif
-        editModal.querySelectorAll(".category-btns button").forEach(btn => {
-            btn.classList.remove("active");
-            if (btn.textContent.trim() === category) {
-                btn.classList.add("active");
-            }
-        });
-    };
-
-    // === Tutup Modal Edit Produk ===
-    closeEditBtn.addEventListener("click", () => {
-        editModal.style.display = "none";
-        document.body.style.overflow = "auto";
-    });
-
-    // === Tutup Modal jika klik luar konten ===
-    window.addEventListener("click", (e) => {
-        if (e.target === addModal) {
-            addModal.style.display = "none";
-            document.body.style.overflow = "auto";
-        }
-        if (e.target === editModal) {
-            editModal.style.display = "none";
-            document.body.style.overflow = "auto";
+    function openAddProductModal() {
+        document.getElementById('addProductForm').reset();
+        document.getElementById('addProductModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeAddModal() {
+        document.getElementById('addProductModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    function openEditProductModal(name, price, category, stock) {
+        document.getElementById('editProductName').value = name;
+        document.getElementById('editProductPrice').value = price;
+        document.getElementById('editProductCategory').value = category;
+        document.getElementById('editProductStock').value = stock;
+        document.getElementById('editProductModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeEditModal() {
+        document.getElementById('editProductModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    function submitAddProduct() {
+        // Logic tambah produk (push ke array, refresh tabel, dsb)
+        closeAddModal();
+        alert('Produk baru berhasil ditambahkan!');
+    }
+    function submitEditProduct() {
+        // Logic edit produk (update array, refresh tabel, dsb)
+        closeEditModal();
+        alert('Produk berhasil diupdate!');
+    }
+    // Close modal with ESC key
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeAddModal();
+            closeEditModal();
         }
     });
-
-    // === Ganti kategori (Add/Edit) ===
-    document.querySelectorAll(".category-btns button").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const parent = btn.parentElement;
-            parent.querySelectorAll("button").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-        });
+    // Close modal when click outside
+    document.getElementById('addProductModal').addEventListener('click', function (e) {
+        if (e.target === this) closeAddModal();
     });
-});
+    document.getElementById('editProductModal').addEventListener('click', function (e) {
+        if (e.target === this) closeEditModal();
+    });
 </script>

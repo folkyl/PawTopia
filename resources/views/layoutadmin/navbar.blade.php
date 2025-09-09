@@ -1,6 +1,6 @@
 @php
-$activeColor = '#4B2E2B'; // warna teks aktif
-$inactiveColor = '#4B2E2B'; // warna teks nonaktif
+    $activeColor = '#4B2E2B'; // warna teks aktif
+    $inactiveColor = '#4B2E2B'; // warna teks nonaktif
 @endphp
 
 <!DOCTYPE html>
@@ -128,7 +128,7 @@ $inactiveColor = '#4B2E2B'; // warna teks nonaktif
             cursor: pointer;
             width: 100%;
             text-align: left;
-            margin-top: 130px;
+            margin-top: 70px;
             font-size: 16px;
             transition: background 0.3s, color 0.3s, transform 0.2s;
         }
@@ -168,17 +168,20 @@ $inactiveColor = '#4B2E2B'; // warna teks nonaktif
                 </a>
             </li>
             <li>
-                <a href="{{ url('/admin/productmanagement') }}" class="{{ Request::is('admin/productmanagement*') ? 'active' : '' }}">
+                <a href="{{ url('/admin/productmanagement') }}"
+                    class="{{ Request::is('admin/productmanagement*') ? 'active' : '' }}">
                     <i class="fas fa-box"></i> Product Management
                 </a>
             </li>
             <li>
-                <a href="{{ url('/admin/customer') }}" class="{{ Request::is('customer*') ? 'admin/active' : '' }}">
-                    <i class="fas fa-user"></i> Customer
+                <a href="{{ url('/admin/customer') }}"
+                    class="{{ Request::is('admin/customer*') ? 'active' : '' }}">
+                    <i class="fas fa-person"></i> Customer
                 </a>
             </li>
             <li>
-                <a href="{{ url('/admin/managebooking') }}" class="{{ Request::is('admin/managebooking*') ? 'active' : '' }}">
+                <a href="{{ url('/admin/managebooking') }}"
+                    class="{{ Request::is('admin/managebooking*') ? 'active' : '' }}">
                     <i class="fas fa-edit"></i> Manage Booking
                 </a>
             </li>
@@ -190,22 +193,22 @@ $inactiveColor = '#4B2E2B'; // warna teks nonaktif
             <li>
                 <a href="{{ url('/admin/feedback') }}" class="{{ Request::is('admin/feedback*') ? 'active' : '' }}">
                     <i class="fas fa-comments"></i> Feedback
+                </a>
             </li>
             <li>
                 <a href="{{ url('/admin/testimoni') }}" class="{{ Request::is('admin/testimoni*') ? 'active' : '' }}">
-                    <i class="fas fa-comments"></i> Testimoni
-            </li>
-            <li>
-                <a href="{{ url('/admin/settings') }}" class="{{ Request::is('admin/settings*') ? 'active' : '' }}">
-                    <i class="fas fa-cog"></i> Settings
+                    <i class="fas fa-chart-line"></i> Testimoni
                 </a>
             </li>
-
             <li>
-                <button class="logout">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
             </li>
+
         </ul>
     </aside>
 

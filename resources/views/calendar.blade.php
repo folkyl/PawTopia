@@ -384,9 +384,12 @@ td.full-book::after {
 <div class="modal" id="booking-modal">
     <div class="modal-content">
         <h2>Book Your Appointment Now!</h2>
-        <button onclick="closeModal()">Book</button>
+        <a href="{{ route('booking') }}">
+            <button>Book</button>
+        </a>
     </div>
 </div>
+
 
 @include ('layouts.footer')
 

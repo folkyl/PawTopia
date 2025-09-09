@@ -163,7 +163,7 @@
 
     <nav class="footerNav">
     <a href="{{ route('home') }}" class="footerNavLink">Home</a>
-    <a href="{{ route('booking') }}" class="footerNavLink">Booking</a>
+    <a href="{{ route('calendar') }}" class="footerNavLink">Booking</a>
       <button class="footerCta" id="rateUsBtn">Rate us</button>
     </nav>
 

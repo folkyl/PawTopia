@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @include ('layoutadmin.navbar')
-@section('content')
+{{-- @section('content') --}}
 <div class="dashboard-root">
     <!-- Main Content -->
     <main class="dashboard-main">
@@ -1194,4 +1194,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 100);
 });
 </script>
-@endsection
+{{-- @endsection --}}
