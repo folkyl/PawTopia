@@ -58,20 +58,9 @@
                 </div>
                 <div class="content-controls">
                     <input type="date" id="filterDate" class="filter-select" style="min-width:200px;" />
-                    <select id="filterWeek" class="filter-select">
-                        <option value="">All Weeks</option>
-                        <option value="1">Week 1</option>
-                        <option value="2">Week 2</option>
-                        <option value="3">Week 3</option>
-                        <option value="4">Week 4</option>
-                        <option value="5">Week 5</option>
-                    </select>
-                    <select id="monthFilter" class="filter-select">
-                        <option value="august">August</option>
-                        <option value="september">September</option>
-                        <option value="october">October</option>
-                    </select>
-                    <button id="resetFilters" class="action-btn" style="background:#F7F5F2;color:#6B4F3A;border:1px solid rgba(169,123,93,0.2);">Reset</button>
+                    
+                   
+                    
                     <button id="addScheduleBtn" class="action-btn btn-edit">
                         <i class="bi bi-plus"></i> Add New Schedule
                     </button>
