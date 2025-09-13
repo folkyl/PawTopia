@@ -1,3 +1,4 @@
+@include ('layouts.navbar')
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,11 +30,19 @@
     }
 }
 
-/* Calendar Container */
-.calendar-container {
+/* Wrapper untuk Calendar + Tutorial */
+.calendar-wrapper {
     display: flex;
     justify-content: center;
-    margin: 40px 0;
+    align-items: flex-start;
+    gap: 40px; /* jarak antar box */
+    margin: 40px auto;
+    flex-wrap: wrap; /* biar responsif di layar kecil */
+}
+
+/* Calendar Container */
+.calendar-container {
+    margin: 0;
 }
 
 .calendar-box {
@@ -65,8 +74,9 @@
 
 table {
     width: 100%;
-    border-collapse: separate; /* ubah ke separate supaya spacing bisa jalan */
-    border-spacing: 4px; /* jarak antar cell */
+    border-collapse: separate; 
+    border-spacing: 4px; 
+    table-layout: fixed; /* biar semua kolom sama besar */
 }
 
 th {
@@ -75,18 +85,20 @@ th {
     padding: 12px;
     border-radius: 8px;
     font-size: 16px;
+    width: 14.28%; /* total 7 kolom */
+    text-align: center;
 }
 
 td {
+    width: 14.28%; /* total 7 kolom */
     height: 65px;
     text-align: center;
     cursor: pointer;
     border-radius: 8px;
     position: relative;
     font-size: 16px;
-    background: white; /* kasih background biar jarak keliatan */
+    background: white;
 }
-
 
 td:hover {
     background-color: rgba(244, 123, 96, 0.2);
@@ -112,8 +124,9 @@ td.full-book::after {
 }
 
         .booking-tutorial {
-            max-width: 520px;
-            margin: 30px auto 60px;
+            max-width: 400px;
+            margin: 0;
+            flex: 1;
             background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
             border-radius: 20px;
             padding: 28px;
@@ -243,57 +256,6 @@ td.full-book::after {
         cursor: pointer;
     }
 
-    /* Why Choose Section */
-    .why-choose {
-        text-align: center;
-        padding: 40px 20px;
-        background-color: #f9f9f9;
-    }
-    .why-choose h2 {
-        font-size: 25px;
-        margin-bottom: 20px;
-    }
-    .why-choose span {
-        color: #F6A892;
-    }
- .features-container {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-        max-width: 1000px;
-        margin: 0 auto;
-    }
-
-    .feature-card {
-        background-color: #fff;
-        border-radius: 16px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        box-shadow: 0px 4px 8px rgba(0,0,0,0.05);
-        text-align: left;
-    }
-
-    .feature-icon img {
-    width: 40px;  /* atur sesuai kebutuhan */
-    height: auto; /* supaya proporsinya tetap terjaga */
-}
-
-
-    .feature-title {
-        font-weight: 600;
-        font-size: 18px;
-        color: #674337;
-    }
-
-    .feature-text {
-        font-weight: 400;
-        font-size: 14px;
-        color: #9C6F4B;
-        line-height: 1.5;
-    }
-
     /* Responsive */
     @media (max-width: 768px) {
         .features-container {
@@ -303,95 +265,52 @@ td.full-book::after {
 </style>
 </head>
 <body>
-@include ('layouts.navbar')
     <h2 class="section-title">Calendar</h2>
 
-
-<!-- Calendar -->
-<div class="calendar-container">
-    <div class="calendar-box">
-        <div class="calendar-header">
-            <span>July 2025</span>
-            <div>
-                <button id="prevMonthBtn" aria-label="Previous month">&lt;</button>
-                <button id="nextMonthBtn" aria-label="Next month">&gt;</button>
+<!-- Calendar & Tutorial Side by Side -->
+<div class="calendar-wrapper">
+    <!-- Calendar -->
+    <div class="calendar-container">
+        <div class="calendar-box">
+            <div class="calendar-header">
+                <span>July 2025</span>
+                <div>
+                    <button id="prevMonthBtn" aria-label="Previous month">&lt;</button>
+                    <button id="nextMonthBtn" aria-label="Next month">&gt;</button>
+                </div>
             </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th>
+                        <th>Thu</th><th>Fri</th><th>Sat</th>
+                    </tr>
+                </thead>
+                <tbody id="calendar-body"></tbody>
+            </table>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th>
-                    <th>Thu</th><th>Fri</th><th>Sat</th>
-                </tr>
-            </thead>
-            <tbody id="calendar-body"></tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Booking Tutorial -->
-<div class="booking-tutorial">
-    <h3>How to Book Your Paw-some Day 🐾</h3>
-    <ol>
-        <li>Pilih tanggal pada kalender yang tersedia.</li>
-        <li>Pastikan tanggal yang dipilih tidak memiliki tanda 🐾 (sudah penuh).</li>
-        <li>Klik dan seret jika ingin memilih lebih dari 1 hari.</li>
-        <li>Lepaskan klik untuk membuka form pemesanan.</li>
-        <li>Isi data sesuai kebutuhan lalu klik <b>Submit Booking</b>.</li>
-    </ol>
-</div>
-
-
-<!-- Why Choose Pawtopia -->
-<div class="why-choose">
-    <h2 class="section-title">Why Choose <span>Paw</span>topia ?</h2>
-    <div class="features-container">
-    <div class="feature-card">
-        <div class="feature-icon">
-    <img src="{{ asset('images/Heart with dog paw.svg') }}" alt="Professional Care Icon">
-</div>
-        <div class="feature-title">Professional Care</div>
-        <div class="feature-text">Our trained staff provides professional care and attention to your beloved pets throughout the day</div>
     </div>
 
-    <div class="feature-card">
-        <div class="feature-icon">
-    <img src="{{ asset('images/Schedule.svg') }}" alt="Flexible Scheduling Icon">
-</div>
-        <div class="feature-title">Flexible Scheduling</div>
-        <div class="feature-text">Book appointments easily with our online system. Choose from various time slots that fit your schedule</div>
+    <!-- Booking Tutorial -->
+    <div class="booking-tutorial">
+        <h3>How to Book Your Paw-some Day 🐾</h3>
+        <ol>
+            <li>Pilih tanggal pada kalender yang tersedia.</li>
+            <li>Pastikan tanggal yang dipilih tidak memiliki tanda 🐾 (sudah penuh).</li>
+            <li>Klik dan seret jika ingin memilih lebih dari 1 hari.</li>
+            <li>Lepaskan klik untuk membuka form pemesanan.</li>
+            <li>Isi data sesuai kebutuhan lalu klik <b>Submit Booking</b>.</li>
+        </ol>
     </div>
-
-    <div class="feature-card">
-        <div class="feature-icon">
-    <img src="{{ asset('images/Tennis Ball.svg') }}" alt="Fun Activities Icon">
-</div>
-        <div class="feature-title">Fun Activities</div>
-        <div class="feature-text">Your pets will enjoy various activities, games, and social interaction with other friendly pets</div>
-    </div>
-
-    <div class="feature-card">
-        <div class="feature-icon">
-    <img src="{{ asset('images/In Transit.svg') }}" alt="Pet Shuttle Icon">
-</div>
-        <div class="feature-title">Pet Shuttle</div>
-        <div class="feature-text">Pet pick-up and drop-off available for your convenience — safe, easy, and on time!</div>
-    </div>
-</div>
 </div>
 
 <!-- Modal -->
 <div class="modal" id="booking-modal">
     <div class="modal-content">
         <h2>Book Your Appointment Now!</h2>
-        <a href="{{ route('booking') }}">
-            <button>Book</button>
-        </a>
+        <button onclick="closeModal()">Book</button>
     </div>
 </div>
-
-
-@include ('layouts.footer')
 
 <script>
     const calendarBody = document.getElementById('calendar-body');

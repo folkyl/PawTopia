@@ -18,110 +18,138 @@ body {
     justify-content: space-between;
     align-items: center;
     border-radius: 32px;
-    padding: 36px 48px 36px 48px;
-    margin: 140px auto 24px auto;
-    max-width: 1200px;
-    width: 100%;
-    min-height: 180px;
+    padding: 60px 80px;
+    margin: 150px auto 0 auto; /* Increased top margin */
+    max-width: 1400px;
+    width: 95%;
+    min-height: 250px;
     box-shadow: 0 4px 24px #e6a15d22;
     position: relative;
     overflow: visible;
 }
+.shop-hero-content {
+    max-width: 60%;
+}
+
 .shop-hero-content h2 {
     font-weight: 700;
     color: #8D5B2D;
     font-size: 2.2rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
     letter-spacing: -1px;
+    text-align: left;
 }
 .shop-hero-content p {
     color: #8D5B2D;
-    font-size: 1.13rem;
+    font-size: 1.1rem;
     font-weight: 400;
+    text-align: left;
+    line-height: 1.6;
+    margin: 0;
 }
 .shop-hero-img {
-    height: 300px;
-    margin-left: -48px;
-    margin-bottom: -40px;
+    height: 420px;
     position: absolute;
     right: -0px;
-    top: -67%;
-    transform: none;
+    bottom: -1px;
     z-index: 10;
 }
 
-/* Search Section */
+/* ===== Search Section ===== */
 .search-section {
-    max-width: 1200px;
-    margin: 0 auto 32px auto;
-    padding: 0 24px;
+    max-width: 1400px; /* Match hero's max-width */
+    margin: 20px auto 40px auto;
+    padding: 0;
     display: flex;
     justify-content: flex-end;
+    position: relative;
+    z-index: 5;
+    width: 95%; /* Match hero's width */
+    right: 0;
 }
 
 .search-container {
     position: relative;
-    width: 350px;
+    width: 400px;
     max-width: 100%;
+    background: #fff;
+    border-radius: 50px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-container:focus-within {
+    box-shadow: 0 6px 24px rgba(141, 91, 45, 0.15);
+    transform: translateY(-2px);
 }
 
 .search-box {
     width: 100%;
-    padding: 14px 20px 14px 50px;
-    border: 2px solid #E6A15D;
-    border-radius: 25px;
-    font-size: 1rem;
+    padding: 16px 60px 16px 55px;
+    border: 2px solid #F0E6D6;
+    border-radius: 50px;
+    font-size: 1.05rem;
     font-family: 'Poppins', sans-serif;
     background: #fff;
-    color: #333;
+    color: #4A2C12;
     outline: none;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(230, 161, 93, 0.1);
 }
 
 .search-box:focus {
-    border-color: #8D5B2D;
-    box-shadow: 0 4px 16px rgba(141, 91, 45, 0.2);
+    border-color: #E6A15D;
+    box-shadow: 0 0 0 4px rgba(230, 161, 93, 0.2);
 }
 
 .search-box::placeholder {
-    color: #999;
-    font-size: 0.95rem;
+    color: #B7B2AA;
+    font-weight: 400;
+    letter-spacing: 0.3px;
 }
 
 .search-icon {
     position: absolute;
-    left: 18px;
+    left: 22px;
     top: 50%;
     transform: translateY(-50%);
-    color: #8D5B2D;
+    color: #E6A15D;
     font-size: 1.1rem;
     pointer-events: none;
 }
 
 .search-clear {
     position: absolute;
-    right: 15px;
+    right: 18px;
     top: 50%;
     transform: translateY(-50%);
-    background: none;
+    background: #F5F5F5;
     border: none;
-    color: #999;
-    font-size: 1.2rem;
-    cursor: pointer;
-    display: none;
-    padding: 5px;
     border-radius: 50%;
+    color: #B7B2AA;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.2s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.search-clear.visible {
+    opacity: 1;
+    visibility: visible;
 }
 
 .search-clear:hover {
-    color: #8D5B2D;
-    background: rgba(141, 91, 45, 0.1);
+    background: #E6A15D;
+    color: #fff;
 }
 
-.search-clear.show {
-    display: block;
+.search-clear i {
+    font-size: 0.9rem;
 }
 
 /* No Results Message */
@@ -313,26 +341,84 @@ body {
     font-size: 0.85rem;
 }
 
-@media (max-width: 1100px) {
-    .products-grid { grid-template-columns: repeat(2, 1fr);}
-    .shop-hero, .category-section, .search-section { max-width: 100vw; width: 100%; }
+@media (max-width: 1200px) {
+    .products-grid { 
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    .shop-hero, 
+    .category-section, 
+    .search-section { 
+        max-width: 100%; 
+        padding: 0 24px;
+    }
 }
-@media (max-width: 700px) {
-    .shop-hero, .category-section, .search-section { max-width: 100vw; width: 100%; padding: 0 8px;}
-    .products-grid { grid-template-columns: 1fr;}
-    .shop-hero { flex-direction: column; align-items: flex-start; text-align: center;}
-    .shop-hero-img { position: static; transform: none; margin-top: 1rem;}
-    .subcategory-tabs { flex-direction: column;}
-    .product-card { min-height: 320px; }
-    .search-container { width: 100%; }
-    .search-section { justify-content: center; }
+
+@media (max-width: 768px) {
+    .search-section {
+        margin-top: 0;
+        padding: 0 16px;
+    }
+    
+    .search-container {
+        width: 100%;
+    }
+    
+    .search-box {
+        padding: 14px 55px 14px 50px;
+    }
+}
+
+@media (max-width: 576px) {
+    .shop-hero, 
+    .category-section, 
+    .search-section { 
+        padding: 0 16px;
+    }
+    
+    .shop-hero { 
+        flex-direction: column; 
+        text-align: left;
+        padding: 40px 24px;
+        margin-top: 100px;
+    }
+    
+    .shop-hero-content {
+        max-width: 100%;
+    }
+    
+    .shop-hero-img { 
+        position: relative; 
+        right: 0;
+        bottom: 0;
+        margin: 20px auto 0;
+        height: 280px;
+        width: auto;
+    }
+    
+    .search-section {
+        margin: 10px auto 30px;
+    }
+    
+    .search-box {
+        font-size: 1rem;
+        padding: 14px 50px 14px 45px;
+    }
+    
+    .search-icon {
+        left: 18px;
+    }
+    
+    .search-clear {
+        right: 15px;
+    }
 }
 </style>
 
 <div class="shop-hero">
     <div class="shop-hero-content">
         <h2>Pet Supplies Catalog</h2>
-        <p>Take a look at the pet products available in our store.</p>
+        <p>Find a variety of pet products at our shop, ready for you to purchase in person.</p>
     </div>
     <img src="{{ asset('images/anjingkucing.png') }}" class="shop-hero-img" alt="Dog and Cat">
 </div>

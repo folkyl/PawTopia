@@ -19,8 +19,8 @@
             </a>
         </li>
         <li>
-            <a href="{{ url('/calendar') }}" style="text-decoration: none; font-weight: {{ Request::is('calendar') ? '700' : '500' }}; 
-                      color: {{ Request::is('calendar') ? $activeColor : $inactiveColor }};">
+            <a href="{{ url('/calendar') }}" style="text-decoration: none; font-weight: {{ (Request::is('booking') || Request::is('calendar')) ? '700' : '500' }}; 
+                      color: {{ (Request::is('booking') || Request::is('calendar')) ? $activeColor : $inactiveColor }};">
                 Booking
             </a>
         </li>
@@ -34,6 +34,12 @@
             <a href="{{ url('/contact') }}" style="text-decoration: none; font-weight: {{ Request::is('contact') ? '700' : '500' }}; 
                       color: {{ Request::is('contact') ? $activeColor : $inactiveColor }};">
                 Contact
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/history') }}" style="text-decoration: none; font-weight: {{ Request::is('history') ? '700' : '500' }}; 
+                      color: {{ Request::is('history') ? $activeColor : $inactiveColor }};">
+                History
             </a>
         </li>
 

@@ -12,6 +12,9 @@ Route::get('/shop', [UserController::class, 'shop'])->name('shop');
 Route::get('/contact', [UserController::class, 'contact'])->name('contact');
 Route::get('/calendar', [UserController::class, 'calendar'])->name('calendar');
 
+// Booking History (User)
+Route::get('/history', [UserController::class, 'history'])->name('history');
+
 // Member Auth
 Route::get('/register', function () {
     return view('register'); // tampilkan form

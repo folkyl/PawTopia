@@ -6,46 +6,29 @@
 
     <!-- Main Content -->
     <main class="dashboard-main">
-        <div class="dashboard-header">
-            <div class="header-left">
-                <span class="header-title">Daycare Schedule</span>
-                <div class="header-subtitle">Kalender Jadwal & Pengaturan Kapasitas Harian</div>
-            </div>
-            <div class="header-profile">
-                <div class="profile-info">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-image">
-                    <div class="profile-details">
-                        <div class="profile-name">{{ Auth::user()->name ?? 'Admin' }}</div>
-                        <div class="profile-role">Admin</div>
-                    </div>
-                    <div class="profile-notification">
-                        <i class="bi bi-bell notification-icon"></i>
-                        <span class="notification-badge">3</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <x-dashboard-header 
+            title="Schedule"
+            subtitle="Schedule Calendar & Daily Capacity Management"
+            icon="calendar"
+        />
 
-       
+        
+
+        <!-- Calendar Section Title (outside the calendar card) -->
+        <div class="calendar-section-title">Schedule Calendar</div>
 
         <!-- Calendar Section -->
         <div class="calendar-card">
             <div class="calendar-header">
+                <button class="nav-btn nav-btn-compact" id="prevMonth" aria-label="Previous Month">
+                    <img class="nav-img" src="{{ asset('images/kiri.svg') }}" alt="Prev">
+                </button>
                 <div class="calendar-title">
                     <span id="currentMonth">August 2025</span>
-                    <div class="calendar-subtitle">Pet Boarding Schedule</div>
                 </div>
-                <div class="calendar-actions">
-                    <div class="view-toggle">
-                        <button class="toggle-btn active" id="viewMonth">Monthly</button>
-                        <button class="toggle-btn" id="viewWeek">Weekly</button>
-                    </div>
-                    <div class="calendar-nav">
-                        <button class="nav-btn" id="prevMonth"><i class="bi bi-chevron-left"></i></button>
-                        <button class="nav-btn" id="nextMonth"><i class="bi bi-chevron-right"></i></button>
-                    </div>
-                   
-                </div>
+                <button class="nav-btn nav-btn-compact" id="nextMonth" aria-label="Next Month">
+                    <img class="nav-img" src="{{ asset('images/kanan.svg') }}" alt="Next">
+                </button>
             </div>
             <div class="calendar-weekdays" id="calendarWeekdays">
                 <div class="weekday">Mon</div>
@@ -140,14 +123,10 @@
         </div>
 
         <form id="scheduleForm">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+            <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:20px;">
                 <div>
                     <label style="display:block;color:#8A6552;font-weight:600;margin-bottom:8px;">Date</label>
                     <input type="date" id="scheduleDate" style="width:100%;background:#FAFAFA;border:2px solid #FFE0B5;border-radius:12px;padding:12px;font-size:0.9rem;outline:none;">
-                </div>
-                <div>
-                    <label style="display:block;color:#8A6552;font-weight:600;margin-bottom:8px;">Time</label>
-                    <input type="time" id="scheduleTime" style="width:100%;background:#FAFAFA;border:2px solid #FFE0B5;border-radius:12px;padding:12px;font-size:0.9rem;outline:none;">
                 </div>
             </div>
 
@@ -156,20 +135,39 @@
                 <input type="number" id="petCapacity" min="1" value="20" style="width:100%;background:#FAFAFA;border:2px solid #FFE0B5;border-radius:12px;padding:12px;font-size:0.9rem;outline:none;">
             </div>
 
-            <div style="margin-bottom:24px;">
-                <label style="display:block;color:#8A6552;font-weight:600;margin-bottom:8px;">Status</label>
-                <select id="scheduleStatus" style="width:100%;background:#FAFAFA;border:2px solid #FFE0B5;border-radius:12px;padding:12px;font-size:0.9rem;outline:none;">
-                    <option value="available">Available</option>
-                    <option value="full">Full</option>
-                    <option value="unavailable">Unavailable</option>
-                </select>
-            </div>
-
             <div style="display:flex;gap:12px;justify-content:flex-end;">
                 <button type="button" id="cancelBtn" style="background:#f8f9fa;color:#6c757d;border:2px solid #dee2e6;border-radius:12px;padding:12px 24px;font-weight:600;cursor:pointer;">Cancel</button>
                 <button type="submit" style="background:#CA2E55;color:#fff;border:none;border-radius:12px;padding:12px 24px;font-weight:600;cursor:pointer;">Save Schedule</button>
             </div>
         </form>
+    </div>
+</div>
+<!-- MODAL NOTIFICATION -->
+<div class="notification-modal" id="notificationModal">
+    <div class="notification-content">
+        <div class="notification-header">
+            <h3>Notifikasi</h3>
+            <button onclick="toggleNotificationModal()">&times;</button>
+        </div>
+
+        <div id="notificationList">
+            <div class="notification-item unread">
+                <h4>Booking Baru</h4>
+                <p>User melakukan booking hari ini</p>
+            </div>
+            <div class="notification-item unread">
+                <h4>Pembayaran Diterima</h4>
+                <p>Transaksi #123 berhasil</p>
+            </div>
+            <div class="notification-item">
+                <h4>Testimoni Baru</h4>
+                <p>Ada ulasan dari pelanggan</p>
+            </div>
+        </div>
+
+        <div class="notification-footer">
+            <button onclick="markAllAsRead()">Tandai Semua Dibaca</button>
+        </div>
     </div>
 </div>
 
@@ -202,6 +200,281 @@
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
     }
+    .header-profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .notification-icon:hover {
+            background: #f5f5f5;
+        }
+
+        .notification-icon .badge {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background: #E63946;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 16px 6px 6px;
+            border-radius: 50px;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .profile-info:hover {
+            background: #f9f9f9;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-info img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #E57300;
+        }
+
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .profile-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .profile-email {
+            font-size: 0.75rem;
+            color: #888;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        .profile-details {
+            line-height: 1.2;
+        }
+
+        .profile-name {
+            font-weight: 700;
+            color: #6B4F3A;
+            font-size: 1rem;
+            text-transform: capitalize;
+        }
+
+        .profile-role {
+            font-size: 0.85rem;
+            color: #A97B5D;
+            font-weight: 500;
+        }
+
+        .profile-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            cursor: pointer;
+        }
+
+        .notification-icon {
+            font-size: 20px;
+            color: #6B4F3A;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: #E57300;
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 50%;
+            min-width: 16px;
+            height: 16px;
+            text-align: center;
+            line-height: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+         /* Notification Modal */
+         .notification-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            justify-content: flex-end;
+            z-index: 2000;
+        }
+
+        .notification-modal.show {
+            display: flex;
+        }
+
+        .notification-content {
+            width: 380px;
+            background: #fff;
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: -2px 0 12px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .notification-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #4B2E2B;
+        }
+
+        .notification-header button {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            line-height: 1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .notification-header button:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .notification-item {
+            padding: 14px 16px;
+            border-radius: 8px;
+            background: #fafafa;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .notification-item:hover {
+            background: #f5f5f5;
+        }
+
+        .notification-item.unread {
+            background: #FFF6E9;
+            border-left-color: #F28C48;
+        }
+
+        .notification-item h4 {
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .notification-item p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .notification-footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .notification-footer button {
+            background: #F28C48;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .notification-footer button:hover {
+            background: #e07732;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(242, 140, 72, 0.3);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .notification-content {
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .profile-info span {
+                display: none;
+            }
+            
+            .profile-info {
+                padding: 4px;
+                margin-left: 4px;
+            }
+        }
+
 
     /* Responsive: stack under sidebar on smaller screens */
     @media (max-width: 992px) {
@@ -227,16 +500,40 @@
 
     /* Calendar card (mirror dashboard) */
     .calendar-card { background:#FFE0B2; border-radius:24px; padding:28px; box-shadow:0 12px 40px rgba(230,161,93,0.12); margin-bottom:32px; border:1px solid rgba(255,224,178,0.5); }
-    .calendar-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; }
-    .calendar-title span { font-weight:800; font-size:1.4rem; color:#6B4F3A; display:block; }
-    .calendar-subtitle { font-size:0.9rem; color:#A97B5D; font-weight:500; margin-top:4px; }
-    .calendar-actions { display:flex; align-items:center; gap:10px; }
-    .view-toggle { display:flex; background:rgba(255,255,255,0.6); border:1px solid rgba(255,255,255,0.3); border-radius:12px; overflow:hidden; }
-    .toggle-btn { background:transparent; border:none; padding:8px 12px; color:#6B4F3A; font-weight:700; cursor:pointer; }
+    .calendar-section-title { text-align:center; font-weight:900; font-size:2rem; color:#6B4F3A; margin: 6px 0 18px; letter-spacing:-0.02em; position:relative; }
+    .calendar-section-title::after { content:''; display:block; width:140px; height:4px; border-radius:4px; background:linear-gradient(90deg,#E6A35D,#F0C28A); margin:10px auto 0; opacity:0.8; }
+    .calendar-main-title { font-weight:800; font-size:1.6rem; color:#6B4F3A; margin-bottom:16px; letter-spacing:-0.02em; text-align:center; }
+    .calendar-header { display:grid; grid-template-columns: 40px 1fr 40px; align-items:center; margin-bottom:16px; }
+    .calendar-title {
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        text-align:center;
+        background: rgba(255,255,255,0.9);
+        border: 1px solid rgba(169,123,93,0.15);
+        border-radius: 999px;
+        padding: 6px 12px;
+        box-shadow: 0 4px 14px rgba(230,161,93,0.18);
+        justify-self:center;
+    }
+    .calendar-title span {
+        font-weight:900;
+        font-size:1.9rem;
+        color:#6B4F3A;
+        display:inline-block;
+        letter-spacing:-0.02em;
+        line-height:1;
+        white-space: nowrap;
+    }
+    .calendar-subtitle { font-size:1rem; color:#A97B5D; font-weight:600; margin-top:6px; width:100%; text-align:center; }
+    .view-toggle { display:flex; background:rgba(255,255,255,0.7); border:1px solid rgba(255,255,255,0.4); border-radius:12px; overflow:hidden; }
+    .toggle-btn { background:transparent; border:none; padding:10px 14px; color:#6B4F3A; font-weight:700; cursor:pointer; transition:all .2s ease; }
     .toggle-btn.active { background:#fff; }
     .calendar-nav { display:flex; gap:8px; }
-    .nav-btn { background:rgba(255,255,255,0.8); border:none; border-radius:12px; padding:10px; color:#6B4F3A; cursor:pointer; transition:all .3s ease; border:1px solid rgba(255,255,255,0.3); width:40px; height:40px; display:flex; align-items:center; justify-content:center; }
-    .nav-btn:hover { background:rgba(255,255,255,0.95); transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+    .nav-btn { background:transparent; border:none; border-radius:8px; padding:4px; color:#6B4F3A; cursor:pointer; transition:all .15s ease; width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; flex: 0 0 auto; }
+    .nav-btn-compact { width:26px; height:26px; padding:4px; }
+    .nav-img { width:18px; height:18px; object-fit:contain; display:block; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.05)); }
+    .nav-btn:hover { background:rgba(255,255,255,0.85); transform:translateY(-1px); box-shadow:0 2px 8px rgba(0,0,0,0.06); }
     .capacity-btn { background:#E57300; color:#fff; border:none; border-radius:12px; padding:10px 14px; font-weight:700; cursor:pointer; }
 
     .calendar-weekdays { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:8px; }
@@ -375,18 +672,11 @@
         }
     }
 
-    @media (max-width: 768px) {
-        .dashboard-main {
-            padding: 20px 16px;
-        }
-
-        .dashboard-header {
-            flex-direction: column;
-            gap: 16px;
-            text-align: center;
-        }
-
-        .calendar-day { height:60px; padding:6px 6px; }
+    .dashboard-sidebar {
+        width: 100%;
+        border-radius: 0;
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
 
         .content-header { flex-direction:column; gap:16px; align-items:stretch; }
     }
@@ -717,6 +1007,8 @@ document.addEventListener('DOMContentLoaded', function() {
         renderCalendar();
     });
 
+    // No click-to-open calendar behavior
+
     // Filters wiring
     const filterDateEl = document.getElementById('filterDate');
     const filterWeekEl = document.getElementById('filterWeek');
@@ -767,9 +1059,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get form data
         const formData = {
             date: document.getElementById('scheduleDate').value,
-            time: document.getElementById('scheduleTime').value,
-            capacity: parseInt(document.getElementById('petCapacity').value),
-            status: document.getElementById('scheduleStatus').value
+            capacity: parseInt(document.getElementById('petCapacity').value)
         };
 
         console.log('New schedule data:', formData);
@@ -834,10 +1124,56 @@ document.addEventListener('DOMContentLoaded', function() {
     renderCalendar();
     renderScheduleTable();
 
-    // Set current time in modal input
-    const now = new Date();
-    const currentTime = now.toTimeString().slice(0, 5);
-    document.getElementById('scheduleTime').value = currentTime;
+    // No time input; default values handled server-side if needed
+});
+    // Notification Functions
+    const modal = document.getElementById("notificationModal");
+const badge = document.getElementById("notificationBadge");
+let notifications = document.querySelectorAll(".notification-item.unread");
+
+function toggleNotificationModal() {
+    modal.classList.toggle("show");
+    document.body.style.overflow = modal.classList.contains("show") ? "hidden" : "";
+    
+    // Mark notifications as read when opening the modal
+    if (modal.classList.contains("show")) {
+        markAllAsRead();
+    }
+}
+
+function markAllAsRead() {
+    const unreadItems = document.querySelectorAll(".notification-item.unread");
+    unreadItems.forEach(item => {
+        item.classList.remove("unread");
+        item.style.opacity = '0.7';
+    });
+    
+    // Update badge count
+    updateBadgeCount();
+}
+
+function updateBadgeCount() {
+    const unreadCount = document.querySelectorAll(".notification-item.unread").length;
+    if (unreadCount > 0) {
+        badge.textContent = unreadCount;
+        badge.style.display = 'flex';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    if (event.target === modal) {
+        toggleNotificationModal();
+    }
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && modal.classList.contains('show')) {
+        toggleNotificationModal();
+    }
 });
 </script>
 @endsection

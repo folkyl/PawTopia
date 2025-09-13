@@ -30,7 +30,7 @@
 
         .profile-card {
             background: white;
-            width: 340px;
+            width: 850px;
             border-radius: 25px;
             box-shadow:
                 0 20px 40px rgba(0, 0, 0, 0.08),

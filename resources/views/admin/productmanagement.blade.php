@@ -41,6 +41,282 @@
         font-size: 1rem;
         font-weight: 500;
     }
+    .header-profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .notification-icon:hover {
+            background: #f5f5f5;
+        }
+
+        .notification-icon .badge {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background: #E63946;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 16px 6px 6px;
+            border-radius: 50px;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .profile-info:hover {
+            background: #f9f9f9;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-info img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #E57300;
+        }
+
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .profile-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .profile-email {
+            font-size: 0.75rem;
+            color: #888;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        .profile-details {
+            line-height: 1.2;
+        }
+
+        .profile-name {
+            font-weight: 700;
+            color: #6B4F3A;
+            font-size: 1rem;
+            text-transform: capitalize;
+        }
+
+        .profile-role {
+            font-size: 0.85rem;
+            color: #A97B5D;
+            font-weight: 500;
+        }
+
+        .profile-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            cursor: pointer;
+        }
+
+        .notification-icon {
+            font-size: 20px;
+            color: #6B4F3A;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: #E57300;
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 50%;
+            min-width: 16px;
+            height: 16px;
+            text-align: center;
+            line-height: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+         /* Notification Modal */
+         .notification-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            justify-content: flex-end;
+            z-index: 2000;
+        }
+
+        .notification-modal.show {
+            display: flex;
+        }
+
+        .notification-content {
+            width: 380px;
+            background: #fff;
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: -2px 0 12px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .notification-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #4B2E2B;
+        }
+
+        .notification-header button {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            line-height: 1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .notification-header button:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .notification-item {
+            padding: 14px 16px;
+            border-radius: 8px;
+            background: #fafafa;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .notification-item:hover {
+            background: #f5f5f5;
+        }
+
+        .notification-item.unread {
+            background: #FFF6E9;
+            border-left-color: #F28C48;
+        }
+
+        .notification-item h4 {
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .notification-item p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .notification-footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .notification-footer button {
+            background: #F28C48;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .notification-footer button:hover {
+            background: #e07732;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(242, 140, 72, 0.3);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .notification-content {
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .profile-info span {
+                display: none;
+            }
+            
+            .profile-info {
+                padding: 4px;
+                margin-left: 4px;
+            }
+        }
+
+
     .btn-add-product {
         background: #E57300;
         color: #fff;
@@ -171,6 +447,14 @@
         background: #D16500;
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(229, 115, 0, 0.2);
+    }
+    /* Actions toolbar (separate from header) */
+    .actions-toolbar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 12px;
+        margin: -12px 0 20px; /* slightly tuck closer to header */
     }
     /* Modal Style */
     .modal-overlay {
@@ -320,11 +604,14 @@
 <div class="dashboard-root">
     <main class="dashboard-main">
         <!-- Header -->
-        <div class="dashboard-header">
-            <div>
-                <span class="header-title">Product Management</span>
-                <div class="header-subtitle">Kelola produk pet boarding sesuai kategori</div>
-            </div>
+        <x-dashboard-header 
+            title="Product Management"
+            subtitle="Manage pet shop products by category"
+            icon="box"
+        />
+
+        <!-- Toolbar below header -->
+        <div class="actions-toolbar">
             <button class="btn-add-product" onclick="openAddProductModal()">
                 <i class="bi bi-plus-circle"></i> Tambah Produk
             </button>
@@ -590,7 +877,34 @@
         </div>
     </div>
 </div>
+<!-- MODAL NOTIFICATION -->
+<div class="notification-modal" id="notificationModal">
+    <div class="notification-content">
+        <div class="notification-header">
+            <h3>Notifikasi</h3>
+            <button onclick="toggleNotificationModal()">&times;</button>
+        </div>
 
+        <div id="notificationList">
+            <div class="notification-item unread">
+                <h4>Booking Baru</h4>
+                <p>User melakukan booking hari ini</p>
+            </div>
+            <div class="notification-item unread">
+                <h4>Pembayaran Diterima</h4>
+                <p>Transaksi #123 berhasil</p>
+            </div>
+            <div class="notification-item">
+                <h4>Testimoni Baru</h4>
+                <p>Ada ulasan dari pelanggan</p>
+            </div>
+        </div>
+
+        <div class="notification-footer">
+            <button onclick="markAllAsRead()">Tandai Semua Dibaca</button>
+        </div>
+    </div>
+</div>
 <script>
     function openAddProductModal() {
         document.getElementById('addProductForm').reset();
@@ -637,4 +951,53 @@
     document.getElementById('editProductModal').addEventListener('click', function (e) {
         if (e.target === this) closeEditModal();
     });
+        // Notification Functions
+const modal = document.getElementById("notificationModal");
+const badge = document.getElementById("notificationBadge");
+let notifications = document.querySelectorAll(".notification-item.unread");
+
+function toggleNotificationModal() {
+    modal.classList.toggle("show");
+    document.body.style.overflow = modal.classList.contains("show") ? "hidden" : "";
+    
+    // Mark notifications as read when opening the modal
+    if (modal.classList.contains("show")) {
+        markAllAsRead();
+    }
+}
+
+function markAllAsRead() {
+    const unreadItems = document.querySelectorAll(".notification-item.unread");
+    unreadItems.forEach(item => {
+        item.classList.remove("unread");
+        item.style.opacity = '0.7';
+    });
+    
+    // Update badge count
+    updateBadgeCount();
+}
+
+function updateBadgeCount() {
+    const unreadCount = document.querySelectorAll(".notification-item.unread").length;
+    if (unreadCount > 0) {
+        badge.textContent = unreadCount;
+        badge.style.display = 'flex';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    if (event.target === modal) {
+        toggleNotificationModal();
+    }
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && modal.classList.contains('show')) {
+        toggleNotificationModal();
+    }
+});
 </script>

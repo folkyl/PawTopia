@@ -734,6 +734,7 @@
             flex: 1;
             margin-bottom: 20px;
             overflow-y: auto;
+            overflow-x: hidden; /* prevent side scrolling */
             max-height: 240px;
         }
 
@@ -747,9 +748,7 @@
         }
 
         .activity-item:hover {
-            background: rgba(229, 115, 0, 0.02);
-            margin: 0 -16px;
-            padding: 16px;
+            background: rgba(229, 115, 0, 0.05);
             border-radius: 12px;
         }
 
@@ -1061,6 +1060,12 @@
             border-bottom: 2px solid rgba(169, 123, 93, 0.1);
         }
 
+        /* Center Status header and column */
+        .booking-table th:nth-child(8),
+        .booking-table td:nth-child(8) {
+            text-align: center;
+        }
+
         .booking-table td {
             padding: 20px 16px;
             border-bottom: 1px solid rgba(240, 240, 240, 0.8);
@@ -1078,45 +1083,56 @@
         }
 
         .status-badge {
-            padding: 6px 16px;
-            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 34px;              /* uniform height */
+            min-width: 140px;          /* uniform width baseline */
+            padding: 0 16px;           /* horizontal padding */
+            border-radius: 22px;       /* rounded pill */
             font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: capitalize;
-            display: inline-block;
-            min-width: 80px;
-            text-align: center;
-            line-height: 1.2;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            vertical-align: middle;
+            box-sizing: border-box;
         }
 
+        /* Match Manage Booking styles */
         .status-pending {
-            background: #FFF3CD;
+            background: linear-gradient(135deg, #FFF3CD, #FFF8DC);
             color: #856404;
             border: 1px solid #FFEAA7;
         }
 
-        .status-fail {
-            background: #D4EDDA;
-            color: #155724;
-            border: 1px solid #C3E6CB;
-        }
-
-        .status-cancelled {
-            background: #F8D7DA;
-            color: #721C24;
-            border: 1px solid #F5C6CB;
-        }
-
         .status-confirmed {
-            background: #D1ECF1;
+            background: linear-gradient(135deg, #D4EDDA, #C3E6CB);
+            color: #155724;
+            border: 1px solid #B8DAFF;
+        }
+
+        .status-checked-in {
+            background: linear-gradient(135deg, #D1ECF1, #BEE5EB);
             color: #0C5460;
             border: 1px solid #BEE5EB;
         }
 
         .status-completed {
-            background: #D4EDDA;
-            color: #155724;
-            border: 1px solid #C3E6CB;
+            background: linear-gradient(135deg, #E2E3E5, #F8F9FA);
+            color: #383D41;
+            border: 1px solid #DEE2E6;
+        }
+
+        .status-on-pickup {
+            background: linear-gradient(135deg, #FFE0B2, #F9D9A7);
+            color: #6B4F3A;
+            border: 1px solid #F5CBA7;
+        }
+
+        .status-cancelled {
+            background: linear-gradient(135deg, #F8D7DA, #F5C6CB);
+            color: #721C24;
+            border: 1px solid #F5C6CB;
         }
 
         /* Sidebar Hover Effects */
@@ -1627,7 +1643,7 @@
                     endDate: '2025-08-20',
                     animalType: 'Cat',
                     totalPayment: 'Rp 100,000',
-                    status: 'confirmed'
+                    status: 'on-pickup'
                 },
                 {
                     id: 3,
@@ -1666,6 +1682,10 @@
 
             bookings.forEach((booking, index) => {
                 const row = document.createElement('tr');
+                const statusClass = String(booking.status).toLowerCase().replace(/\s+/g, '-');
+                const statusText = String(booking.status)
+                    .replace(/-/g, ' ')
+                    .replace(/\b\w/g, c => c.toUpperCase());
                 row.innerHTML = `
                 <td>${index + 1}.</td>
                 <td>${booking.ownerName}</td>
@@ -1674,7 +1694,7 @@
                 <td>${booking.endDate}</td>
                 <td>${booking.animalType}</td>
                 <td>${booking.totalPayment}</td>
-                <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
+                <td><span class="status-badge status-${statusClass}">${statusText}</span></td>
             `;
                 tableBody.appendChild(row);
             });
