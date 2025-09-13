@@ -19,7 +19,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ url('/calendar') }}" style="text-decoration: none; font-weight: {{ (Request::is('booking') || Request::is('calendar')) ? '700' : '500' }}; 
+            <a href="{{ url('/calendar') }}" style="text-decoration: none; font-weight: {{ (Request::is('booking') || Request::is('calendar2')) ? '700' : '500' }}; 
                       color: {{ (Request::is('booking') || Request::is('calendar')) ? $activeColor : $inactiveColor }};">
                 Booking
             </a>

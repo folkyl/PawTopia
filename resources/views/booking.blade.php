@@ -1,3 +1,5 @@
+@include ('layouts.navbar')
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -289,7 +291,6 @@
 </head>
 <body>
 
-    @include ('layouts.navbar')
 <!-- Header -->
     <section class="hero">
     <div class="hero-text">
@@ -326,6 +327,25 @@
         
     </div>
 
+    <!-- Delivery Options -->
+<div class="section">
+  <div class="section-title">
+    <img src="{{ asset('images/In Transit.svg') }}" alt=""> Delivery Options
+  </div>
+  <div class="form-group">
+    <div class="form-field">
+      <label>Drop-off (Start of boarding)</label>
+      <label><input type="radio" name="dropOff" value="Owner Drop-off" checked> Brought by Owner</label><br>
+      <label><input type="radio" name="dropOff" value="Daycare Pickup"> Picked up by Daycare</label>
+    </div>
+    <div class="form-field">
+      <label>Pick-up (End of boarding)</label>
+      <label><input type="radio" name="pickUp" value="Owner Pickup" checked> Picked up by Owner</label><br>
+      <label><input type="radio" name="pickUp" value="Daycare Delivery"> Delivered by Daycare</label>
+    </div>
+  </div>
+</div>
+
     <!-- Pet Information -->
     <div class="section">
         <div class="section-title"><img src="{{ asset('images/Pets.svg') }}" alt="">Pet Information</div>
@@ -359,8 +379,6 @@
     <button class="submit-btn" onclick="openModal()">Submit Booking</button>
     <div class="note">Our team will contact you within 24 hours for confirmation</div>
 </div>
-</div>
-
 <!-- Modal -->
 <div class="modal" id="bookingModal">
     <div class="modal-content">
@@ -386,6 +404,15 @@
                 <div class="title">Contact</div>
                 <div class="subtitle">+62 1234–5678</div>
             </div>
+            <div class="info-card">
+          <div class="title">Drop-off</div>
+          <div class="subtitle" id="confirmDropOff">-</div>
+        </div>
+        <div class="info-card">
+          <div class="title">Pick-up</div>
+          <div class="subtitle" id="confirmPickUp">-</div>
+        </div>
+      </div>
         </div>
 
         <div class="next-section">
@@ -400,9 +427,13 @@
     </div>
 </div>
 
-
 <script>
     function openModal(){
+        const dropOff = document.querySelector('input[name="dropOff"]:checked').value;
+      const pickUp = document.querySelector('input[name="pickUp"]:checked').value;
+      document.getElementById("confirmDropOff").textContent = dropOff;
+      document.getElementById("confirmPickUp").textContent = pickUp;
+
         document.getElementById("bookingModal").style.display = "flex";
     }
     function closeModal(){
@@ -415,6 +446,5 @@
     }
 </script>
 @include ('layouts.footer')
-
-</body> 
+</body>
 </html>

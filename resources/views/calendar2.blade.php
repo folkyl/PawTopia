@@ -1,4 +1,3 @@
-@include ('layouts.navbar')
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,19 +10,16 @@
         margin: 0;
         padding: 0;
         color: #5a3b2e;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
     }
 .section-title {
     text-align: center;
-    margin: 40px auto 20px;
+    margin-top: 40px;
     padding-bottom: 5px;
     border-bottom: 3px solid #F6A892;
     display: block;
     width: fit-content;
-    font-size: 2.5rem;
-    color: #5a3b2e;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 
@@ -38,12 +34,9 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 40px;
-    margin: 0 auto 60px;
-    flex-wrap: wrap;
-    max-width: 1200px;
-    width: 90%;
-    padding: 0 20px;
+    gap: 40px; /* jarak antar box */
+    margin: 40px auto;
+    flex-wrap: wrap; /* biar responsif di layar kecil */
 }
 
 /* Calendar Container */
@@ -253,7 +246,7 @@ td.full-book::after {
         font-size: 16px;
         margin-bottom: 20px;
     }
-    .modal-content a {
+    .modal-content button {
         background: #d23c5a;
         border: none;
         color: #F6A892;
@@ -271,12 +264,7 @@ td.full-book::after {
 </style>
 </head>
 <body>
-    <div class="hero-section" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/hero-bg.jpg'); background-size: cover; background-position: center; padding: 80px 20px; text-align: center; color: white;">
-    <h1 style="font-size: 3rem; margin-bottom: 20px;">Pawtopia Pet Hotel</h1>
-    <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto;">Pesan hari menginap untuk hewan peliharaan Anda dengan mudah</p>
-</div>
-
-<h2 class="section-title">Pilih Tanggal Menginap</h2>
+    <h2 class="section-title">Calendar</h2>
 
 <!-- Calendar & Tutorial Side by Side -->
 <div class="calendar-wrapper">
@@ -319,7 +307,7 @@ td.full-book::after {
 <div class="modal" id="booking-modal">
     <div class="modal-content">
         <h2>Book Your Appointment Now!</h2>
-        <a href="{{ route('booking') }}" style=" border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; text-decoration: none; display: inline-block;">Book</a>
+        <button onclick="closeModal()">Book</button>
     </div>
 </div>
 
@@ -429,42 +417,5 @@ document.addEventListener('mouseup', () => selecting = false);
 generateCalendar(currentMonth, currentYear);
 </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const bookNowBtn = document.getElementById('bookNowBtn');
-    
-    bookNowBtn.addEventListener('click', function() {
-        // Show loading state
-        bookNowBtn.disabled = true;
-        bookNowBtn.textContent = 'Checking...';
-        
-        // Check authentication status
-        fetch('{{ route("check.auth") }}', {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.authenticated) {
-                // If logged in, go to booking page
-                window.location.href = '{{ route("booking") }}';
-            } else {
-                // If not logged in, go to login page
-                window.location.href = '{{ route("register") }}';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Terjadi kesalahan. Silakan coba lagi.');
-            bookNowBtn.disabled = false;
-            bookNowBtn.textContent = 'Book';
-        });
-    });
-});
-</script>
-
-@include ('layouts.footer')
 </body>
 </html>

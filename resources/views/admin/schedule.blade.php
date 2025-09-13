@@ -892,7 +892,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         container.innerHTML = '';
         // Prev
-        container.appendChild(makeBtn('Prev', 'prev', currentPage === 1));
+        const prevBtn = makeBtn('', 'prev', currentPage === 1);
+        prevBtn.innerHTML = '<img src="{{ asset('images/kiri.svg') }}" alt="Previous" style="width: 16px; height: 16px;">';
+        container.appendChild(prevBtn);
 
         // Simple page buttons (no dots for now, as per Customer page style)
         for (let p = 1; p <= totalPages; p++) {
@@ -900,7 +902,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Next
-        container.appendChild(makeBtn('Next', 'next', currentPage === totalPages));
+        const nextBtn = makeBtn('', 'next', currentPage === totalPages);
+        nextBtn.innerHTML = '<img src="{{ asset('images/kanan.svg') }}" alt="Next" style="width: 16px; height: 16px;">';
+        container.appendChild(nextBtn);
     }
 
     function renderScheduleTable() {

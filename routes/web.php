@@ -31,7 +31,11 @@ Route::post('/logout', [MemberController::class, 'logout'])->name('logout');
 Route::get('/profile', [UserController::class, 'profile'])
     ->middleware('auth:member') // ✅ hanya bisa diakses kalau login
     ->name('profile');
-
+    Route::get('/check-auth', function() {
+        return response()->json([
+            'authenticated' => auth()->check()
+        ]);
+    })->name('check.auth');
 // Admin Pages
 Route::middleware('role:admin')->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');

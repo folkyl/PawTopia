@@ -901,16 +901,16 @@
 }
 
 .pagination-btn {
-    background: linear-gradient(135deg, #FFE0B2, #FFCC99);
-    color: #6B4F3A;
-    border: 1px solid rgba(169, 123, 93, 0.2);
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
     min-width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.06);
+    background: linear-gradient(135deg, #FFE0B2, #F9D9A7);
+    color: #6B4F3A;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(230,161,93,0.14);
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1343,8 +1343,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Previous button
         paginationHTML += `
-            <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
-                <i class="bi bi-chevron-left"></i>
+            <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} title="Previous">
+                <img class="nav-img" src="{{ asset('images/kiri.svg') }}" alt="Previous" style="width: 16px; height: 16px;">
             </button>
         `;
 
@@ -1383,8 +1383,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Next button
         paginationHTML += `
-            <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
-                <i class="bi bi-chevron-right"></i>
+            <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} title="Next">
+                <img class="nav-img" src="{{ asset('images/kanan.svg') }}" alt="Next" style="width: 16px; height: 16px;">
             </button>
         `;
 

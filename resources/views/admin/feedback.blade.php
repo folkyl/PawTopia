@@ -897,6 +897,13 @@
 
 .pagination-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(230,161,93,0.22); }
 
+.pagination-btn i {
+    font-size: 1.1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .pagination-btn.active { background: #E57300; color: #fff; border-color: #D76A00; box-shadow: 0 8px 24px rgba(229,115,0,0.28); }
 
 .pagination-btn:disabled {
@@ -1195,7 +1202,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td>
                             <div class="action-buttons">
                                 <button class="action-btn btn-reply" onclick="replyFeedback(${feedback.id})">
-                                    <i class="bi bi-reply"></i> Reply
+                                    <i class="bi bi-pencil"></i> Edit
                                 </button>
                                 <button class="action-btn btn-delete" onclick="deleteFeedback(${feedback.id})">
                                     <i class="bi bi-trash"></i> Delete
@@ -1289,8 +1296,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Previous button
         paginationHTML += `
-            <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
-                <i class="bi bi-chevron-left"></i>
+            <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} title="Previous">
+                <img class="nav-img" src="{{ asset('images/kiri.svg') }}" alt="Previous" style="width: 16px; height: 16px;">
             </button>
         `;
 
@@ -1329,8 +1336,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Next button
         paginationHTML += `
-            <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
-                <i class="bi bi-chevron-right"></i>
+            <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} title="Next">
+                <img class="nav-img" src="{{ asset('images/kanan.svg') }}" alt="Next" style="width: 16px; height: 16px;">
             </button>
         `;
 

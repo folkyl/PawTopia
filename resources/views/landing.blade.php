@@ -543,6 +543,64 @@
     transform: scale(1.05);
     transition: color 0.3s, transform 0.3s cubic-bezier(.4,2,.6,1);
 }
+   /* Why Choose Section */
+   .why-choose {
+        text-align: center;
+        padding: 40px 20px;
+        background-color: #f9f9f9;
+    }
+    .why-choose h2 {
+        font-size: 25px;
+        font-weight: 780;
+        margin-bottom: 20px;
+    }
+    .why-choose span {
+        color: #F6A892;
+    }
+ .features-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .feature-card {
+        background-color: #fff;
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        box-shadow: 0px 4px 8px rgba(0,0,0,0.05);
+        text-align: left;
+    }
+
+    .feature-icon img {
+    width: 40px;  /* atur sesuai kebutuhan */
+    height: auto; /* supaya proporsinya tetap terjaga */
+}
+
+
+    .feature-title {
+        font-weight: 600;
+        font-size: 18px;
+        color: #674337;
+    }
+
+    .feature-text {
+        font-weight: 400;
+        font-size: 14px;
+        color: #9C6F4B;
+        line-height: 1.5;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .features-container {
+            grid-template-columns: 1fr;
+        }
+    }
     </style>
 </head>
 <body>
@@ -657,7 +715,43 @@
             <button class="carousel-btn next">›</button>
         </div>
     </section>
+<!-- Why Choose Pawtopia -->
+<div class="why-choose">
+    <h2 class="section-title">Why Choose <span>Paw</span>topia ?</h2>
+    <div class="features-container">
+    <div class="feature-card">
+        <div class="feature-icon">
+    <img src="{{ asset('images/Heart with dog paw.svg') }}" alt="Professional Care Icon">
+</div>
+        <div class="feature-title">Professional Care</div>
+        <div class="feature-text">Our trained staff provides professional care and attention to your beloved pets throughout the day</div>
+    </div>
 
+    <div class="feature-card">
+        <div class="feature-icon">
+    <img src="{{ asset('images/Schedule.svg') }}" alt="Flexible Scheduling Icon">
+</div>
+        <div class="feature-title">Flexible Scheduling</div>
+        <div class="feature-text">Book appointments easily with our online system. Choose from various time slots that fit your schedule</div>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">
+    <img src="{{ asset('images/Tennis Ball.svg') }}" alt="Fun Activities Icon">
+</div>
+        <div class="feature-title">Fun Activities</div>
+        <div class="feature-text">Your pets will enjoy various activities, games, and social interaction with other friendly pets</div>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">
+    <img src="{{ asset('images/In Transit.svg') }}" alt="Pet Shuttle Icon">
+</div>
+        <div class="feature-title">Pet Shuttle</div>
+        <div class="feature-text">Pet pick-up and drop-off available for your convenience — safe, easy, and on time!</div>
+    </div>
+</div>
+</div>
 <section class="cozy-container">
     <div class="cozy-left">
         <p>Your pet deserves the best—reserve their cozy stay today!</p>

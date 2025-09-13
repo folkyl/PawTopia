@@ -1816,13 +1816,13 @@ document.addEventListener('keydown', function(event) {
                             <td>
                                 <div class="action-buttons">
                                     <button class="action-btn btn-view" onclick="viewCustomer(${customer.id})">
-                                        <i class="bi bi-eye"></i> Lihat
+                                        <i class=""></i> Lihat
                                     </button>
                                     <button class="action-btn btn-edit" onclick="editCustomer(${customer.id})">
-                                        <i class="bi bi-pencil"></i> Edit
+                                        <i class=""></i> Edit
                                     </button>
                                     <button class="action-btn btn-delete" onclick="deleteCustomer(${customer.id})">
-                                        <i class="bi bi-trash"></i> Hapus
+                                        <i class=""></i> Hapus
                                     </button>
                                 </div>
                             </td>
@@ -1854,9 +1854,9 @@ document.addEventListener('keydown', function(event) {
             const endIndex = Math.min(currentPage * itemsPerPage, filteredCustomers.length);
 
             if (filteredCustomers.length === 0) {
-                pageInfo.innerHTML = 'Tidak ada customer untuk ditampilkan';
+                pageInfo.innerHTML = 'No customers to display';
             } else {
-                pageInfo.innerHTML = `Menampilkan ${startIndex}-${endIndex} dari ${filteredCustomers.length} customer (Halaman ${currentPage} dari ${totalPages})`;
+                pageInfo.innerHTML = `Showing ${startIndex}-${endIndex} of ${filteredCustomers.length} customers (Page ${currentPage} of ${totalPages})`;
             }
         }
 
@@ -1869,10 +1869,10 @@ document.addEventListener('keydown', function(event) {
                 const filters = [];
                 if (searchTerm) filters.push(`"${searchTerm}"`);
                 if (selectedStatus) filters.push(`status ${selectedStatus}`);
-                searchStatus.innerHTML = `Filter diterapkan: ${filters.join(', ')}`;
+                searchStatus.innerHTML = `Filter applied: ${filters.join(', ')}`;
                 searchStatus.style.display = 'inline-block';
             } else {
-                searchStatus.innerHTML = 'Menampilkan semua customer';
+                searchStatus.innerHTML = 'Showing all customers';
                 searchStatus.style.display = 'inline-block';
             }
         }
