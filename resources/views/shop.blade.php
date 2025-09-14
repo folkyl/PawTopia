@@ -518,7 +518,7 @@ body {
                 <div class="product-status status-{{ $p['status'] }}">
                     @if($p['status'] == 'available') Tersedia
                     @elseif($p['status'] == 'coming-soon') Coming Soon
-                    @else Pre-order
+                  
                     @endif
                 </div>
                 <div class="product-price">
@@ -586,9 +586,9 @@ body {
                 <p class="product-description">{{ $p['description'] }}</p>
                 <div class="product-sku">SKU: {{ $p['sku'] }}</div>
                 <div class="product-status status-{{ $p['status'] }}">
-                    @if($p['status'] == 'available') Tersedia
+                    @if($p['status'] == 'available') Available
                     @elseif($p['status'] == 'coming-soon') Coming Soon
-                    @else Pre-order
+                   
                     @endif
                 </div>
                 <div class="product-price">
@@ -749,7 +749,7 @@ body {
                 <div class="product-status status-{{ $p['status'] }}">
                     @if($p['status'] == 'available') Tersedia
                     @elseif($p['status'] == 'coming-soon') Coming Soon
-                    @else Pre-order
+                    
                     @endif
                 </div>
                 <div class="product-price">
@@ -811,7 +811,7 @@ body {
                 'name'=>'TOMLYN Cat Immune Support',
                 'description'=>'Suplemen khusus untuk meningkatkan daya tahan tubuh kucing. Mengandung probiotik dan antioksidan. Isi 30ml dosis 1ml/hari dengan formula cair.',
                 'sku'=>'TCI-019',
-                'status'=>'preorder',
+                'status'=>'available',
                 'price'=>1000,
                 'sale'=>200
             ],
@@ -838,7 +838,7 @@ body {
                 <p class="product-description">{{ $p['description'] }}</p>
                 <div class="product-sku">SKU: {{ $p['sku'] }}</div>
                 <div class="product-status status-{{ $p['status'] }}">
-                    @if($p['status'] == 'available') Tersedia
+                    @if($p['status'] == 'available') Available
                     @elseif($p['status'] == 'coming-soon') Coming Soon
                     @else Pre-order
                     @endif

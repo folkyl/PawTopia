@@ -111,8 +111,7 @@
                 <div id="pageInfo" class="page-info"></div>
             </div>
 
-            <!-- Search Status -->
-            <div id="searchStatus" class="search-status"></div>
+           
         </div>
     </main>
 </div>
@@ -1313,22 +1312,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to render search status
-    function renderSearchStatus() {
-        const searchTerm = searchInput.value.trim();
-        const selectedRating = ratingFilter.value;
-
-        if (searchTerm || selectedRating) {
-            const filters = [];
-            if (searchTerm) filters.push(`"${searchTerm}"`);
-            if (selectedRating) filters.push(`${selectedRating}★ rating`);
-            searchStatus.innerHTML = `Applied filters: ${filters.join(', ')}`;
-            searchStatus.style.display = 'inline-block';
-        } else {
-            searchStatus.innerHTML = 'Showing all testimonials';
-            searchStatus.style.display = 'inline-block';
-        }
-    }
+   
 
     // Function to render pagination
     function renderPagination() {

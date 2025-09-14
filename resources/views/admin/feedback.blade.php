@@ -110,8 +110,7 @@
                 <div id="pageInfo" class="page-info"></div>
             </div>
 
-            <!-- Search Status -->
-            <div id="searchStatus" class="search-status"></div>
+           
         </div>
         <!-- MODAL NOTIFICATION -->
  <div class="notification-modal" id="notificationModal">
@@ -1158,7 +1157,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const noFeedbackMessage = document.getElementById('noFeedbackMessage');
     const paginationContainer = document.getElementById('paginationContainer');
     const pageInfo = document.getElementById('pageInfo');
-    const searchStatus = document.getElementById('searchStatus');
+
     const totalFeedbackElement = document.getElementById('totalFeedback');
 
     let currentPage = 1;
@@ -1223,8 +1222,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Render page info
         renderPageInfo();
 
-        // Render search status
-        renderSearchStatus();
+   
 
         // Update statistics
         updateStatistics();
@@ -1266,23 +1264,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to render search status
-    function renderSearchStatus() {
-        const searchTerm = searchInput.value.trim();
-        const selectedRating = ratingFilter.value;
-
-        if (searchTerm || selectedRating) {
-            const filters = [];
-            if (searchTerm) filters.push(`"${searchTerm}"`);
-            if (selectedRating) filters.push(`${selectedRating}★ rating`);
-            searchStatus.innerHTML = `Applied filters: ${filters.join(', ')}`;
-            searchStatus.style.display = 'inline-block';
-        } else {
-            searchStatus.innerHTML = 'Showing all feedbacks';
-            searchStatus.style.display = 'inline-block';
-        }
-    }
-
+    
     // Function to render pagination
     function renderPagination() {
         const totalPages = Math.ceil(filteredFeedbacks.length / itemsPerPage);

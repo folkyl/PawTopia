@@ -271,12 +271,9 @@ td.full-book::after {
 </style>
 </head>
 <body>
-    <div class="hero-section" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/hero-bg.jpg'); background-size: cover; background-position: center; padding: 80px 20px; text-align: center; color: white;">
-    <h1 style="font-size: 3rem; margin-bottom: 20px;">Pawtopia Pet Hotel</h1>
-    <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto;">Pesan hari menginap untuk hewan peliharaan Anda dengan mudah</p>
-</div>
+   
 
-<h2 class="section-title">Pilih Tanggal Menginap</h2>
+<h2 class="section-title">Choose Stay Dates</h2>
 
 <!-- Calendar & Tutorial Side by Side -->
 <div class="calendar-wrapper">
