@@ -101,37 +101,4 @@ class FeedbackController extends Controller
         }
     }
     
-    /**
-     * Reply to a feedback.
-     */
-    public function reply(Request $request, $id)
-    {
-        try {
-            $request->validate([
-                'message' => 'required|string|max:1000',
-            ]);
-            
-            $feedback = Feedback::findOrFail($id);
-            
-            // Here you would typically send an email to the user
-            // For now, we'll just log the reply
-            \Log::info('Feedback reply sent', [
-                'feedback_id' => $feedback->id,
-                'user_email' => $feedback->email,
-                'reply' => $request->message
-            ]);
-            
-            return response()->json([
-                'success' => true, 
-                'message' => 'Reply sent successfully!'
-            ]);
-            
-        } catch (\Exception $e) {
-            \Log::error('Error sending feedback reply: ' . $e->getMessage());
-            return response()->json([
-                'success' => false, 
-                'message' => 'Failed to send reply: ' . $e->getMessage()
-            ], 500);
-        }
-    }
 }

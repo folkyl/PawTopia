@@ -12,19 +12,14 @@ class Feedback extends Model
     protected $table = 'feedbacks';
 
     protected $fillable = [
-        'user_id',
         'user_name',
         'email',
         'rating',
-        'message',
-        'status',
-        'replied_at',
-        'reply_message'
+        'message'
     ];
 
     protected $casts = [
-        'rating' => 'integer',
-        'replied_at' => 'datetime',
+        'rating' => 'integer'
     ];
     
     /**

@@ -1172,36 +1172,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Simple notification using browser's alert
         alert(`${type === 'success' ? '✅' : '❌'} ${message}`);
     }
-        .catch(error => {
-            console.error('Error loading feedback:', error);
-            if (feedbackTableContainer) {
-                feedbackTableContainer.innerHTML = `
-                    <div class="alert alert-danger">
-                        Error loading feedback. Please try again.
-                    </div>`;
-            }
-        })
-        .finally(() => {
-            isLoading = false;
-        });
-    }
-    }
-
-    // Function to update statistics
-    function updateStatistics() {
-        // This function is now handled server-side
-        // The statistics are part of the initial page load
-        // and will be updated automatically when filters change
-        // since we're doing a full page reload
-    }
-
-    // Action functions
-    window.replyFeedback = function(id) {
-        const feedback = feedbacks.find(f => f.id === id);
-        if (feedback) {
-            alert(`Reply to feedback:\n"${feedback.feedback}"\n\n(This would open a reply modal or redirect to messaging system in a real application)`);
-        }
-    };
 
     // Edit feedback function - simple approach
     window.editFeedback = function(id, message, rating) {

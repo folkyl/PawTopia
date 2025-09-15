@@ -12,7 +12,7 @@
         <tbody id="feedbackTableBody">
             @foreach($feedbacks as $index => $feedback)
                 <tr data-rating="{{ $feedback->rating }}" data-id="{{ $feedback->id }}">
-                    <td>{{ $loop->iteration + (($feedbacks->currentPage() - 1) * $feedbacks->perPage()) }}</td>
+                    <td>{{ $loop->iteration }}</td>
                     <td>
                         <div class="feedback-text">{{ $feedback->message }}</div>
                         @if($feedback->user_name)
@@ -46,17 +46,9 @@
             @endforeach
         </tbody>
     </table>
-    
-    <div class="pagination-wrapper mt-4">
-        <div class="pagination-nav">
-            <div class="d-flex justify-content-center">
-                {{ $feedbacks->appends(request()->query())->links('pagination::bootstrap-4') }}
-            </div>
-        </div>
-    </div>
 @else
     <div class="no-feedback-message text-center py-4">
         <i class="bi bi-inbox" style="font-size: 2rem; color: #8B7355; margin-bottom: 1rem;"></i>
-        <p class="mb-0">No feedback found matching your criteria</p>
+        <p class="mb-0">No feedback has been submitted yet.</p>
     </div>
 @endif
