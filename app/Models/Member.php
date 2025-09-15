@@ -14,6 +14,7 @@ class Member extends Authenticatable
         'email',
         'phone',
         'address',
+        'role',
     ];
 
     protected $hidden = [
@@ -28,5 +29,11 @@ class Member extends Authenticatable
     public function getAuthIdentifierName()
     {
         return 'phone';
+    }
+
+    // Relationship dengan Booking
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 }

@@ -48,7 +48,7 @@
                 <a href="{{ url('/register') }}" style="text-decoration: none; font-weight: {{ Request::is('register') ? '700' : '500' }}; 
                           color: {{ Request::is('member') ? $activeColor : $inactiveColor }};">
                 Member
-                </a>
+            </a>
             </li>
         @endguest
 

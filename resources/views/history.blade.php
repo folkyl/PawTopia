@@ -184,40 +184,53 @@
         <thead>
           <tr>
             <th>No</th>
-            <th>Start Date</th>
-            <th>End Date</th>
+            <th>Service</th>
+            <th>Pet</th>
+            <th>Date</th>
+            <th>Time</th>
             <th>Status</th>
-            <th>Information</th>
-            <th>Review</th>
+            <th>Price</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          @forelse(($bookings ?? []) as $index => $b)
+          @forelse($bookings as $index => $booking)
             @php
-              $start = $b['start_date'] ?? $b['startDate'] ?? '';
-              $end = $b['end_date'] ?? $b['endDate'] ?? '';
-              $status = $b['status'] ?? '';
-              $review = $b['review'] ?? '';
-              $isComplete = strtolower($status) === 'complete' || strtolower($status) === 'completed';
+              $isComplete = strtolower($booking->status) === 'completed';
               $statusClass = $isComplete ? 'complete' : 'ongoing';
             @endphp
             <tr>
               <td data-label="No">{{ $index + 1 }}</td>
-              <td data-label="Start Date">{{ $start }}</td>
-              <td data-label="End Date">{{ $end }}</td>
-              <td data-label="Status"><span class="status {{ $statusClass }}">{{ $status ?: '-' }}</span></td>
-              <td data-label="Information">
-                @if ($isComplete)
-                  <a href="#" class="btn btn-rate">Rate Us</a>
-                @else
-                  <a class="btn btn-disabled">Rate Us</a>
-                @endif
+              <td data-label="Service">{{ ucfirst($booking->service_type) }}</td>
+              <td data-label="Pet">{{ $booking->pet_name }} ({{ ucfirst($booking->pet_type) }})</td>
+              <td data-label="Date">{{ \Carbon\Carbon::parse($booking->booking_date)->format('d M Y') }}</td>
+              <td data-label="Time">{{ \Carbon\Carbon::parse($booking->booking_time)->format('H:i') }}</td>
+              <td data-label="Status">
+                <span class="status {{ $statusClass }}">{{ ucfirst($booking->status) }}</span>
               </td>
-              <td data-label="Review">{{ $review ?: '-' }}</td>
+              <td data-label="Price">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</td>
+              <td data-label="Actions">
+                <div style="display: flex; gap: 8px; justify-content: center;">
+                  <a href="{{ route('booking.show', $booking) }}" class="btn btn-rate" style="background: #17a2b8; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 12px;">View</a>
+                  @if($booking->status === 'pending')
+                    <form action="{{ route('booking.cancel', $booking) }}" method="POST" style="display: inline;">
+                      @csrf
+                      <button type="submit" class="btn btn-disabled" style="background: #dc3545; color: white; padding: 6px 12px; border-radius: 4px; border: none; font-size: 12px; cursor: pointer;" onclick="return confirm('Are you sure you want to cancel this booking?')">Cancel</button>
+                    </form>
+                  @endif
+                </div>
+              </td>
             </tr>
           @empty
             <tr>
-              <td colspan="6" style="text-align:center; padding:20px; color:#9C6F4B;">No booking data.</td>
+              <td colspan="8" style="text-align:center; padding:20px; color:#9C6F4B;">
+                <div style="padding: 40px;">
+                  <img src="{{ asset('images/Time Machine.svg') }}" alt="No bookings" style="width: 60px; height: 60px; margin-bottom: 15px; opacity: 0.5;">
+                  <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">No bookings yet</div>
+                  <div style="font-size: 14px; color: #9C6F4B;">You haven't made any bookings yet. Start by booking a service for your pet!</div>
+                  <a href="{{ route('booking') }}" style="display: inline-block; margin-top: 15px; padding: 10px 20px; background: #E57300; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">Make a Booking</a>
+                </div>
+              </td>
             </tr>
           @endforelse
         </tbody>
