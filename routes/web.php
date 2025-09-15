@@ -3,12 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\MemberController; // ✅ tambahin
-<<<<<<< HEAD
+use App\Http\Controllers\MemberController; 
 use App\Http\Controllers\FeedbackController;
-=======
 use App\Http\Controllers\BookingController;
->>>>>>> 59fd9f095b61ea572bae8457fe2f26dcffe6af06
 
 // Guest Pages
 Route::get('/', [UserController::class, 'home'])->name('home');

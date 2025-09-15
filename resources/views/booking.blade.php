@@ -8,7 +8,6 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <title>Pet Daycare Booking</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-<meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
     body {
         font-family: 'Poppins', sans-serif;
@@ -285,13 +284,27 @@
   </section>
 
 <div class="container">
-    @if(session('success'))
-        <div class="alert alert-success" style="background: #d4edda; color: #155724; padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
-            {{ session('success') }}
-        </div>
-    @endif
+    <!-- Booking Schedule -->
+    <div class="section">
+        <div class="section-title"><img src="{{ asset('images/Schedule.svg') }}" alt="">Booking Schedule</div>
+        <div class="form-group">
+    <div class="form-field">
+        <label>Start Date</label>
+        <input type="date" id="startDate" readonly>
+    </div>
 
-<<<<<<< HEAD
+    <div class="form-field">
+        <label>End Date</label>
+        <input type="date" id="endDate" readonly>
+    </div>
+</div>
+        <div class="form-group">
+            <input type="text" placeholder="Drop-off Time">
+            <input type="text" placeholder="Pick-up Time">
+        </div>
+        
+    </div>
+
     <!-- Delivery Options -->
 <div class="section">
   <div class="section-title">
@@ -322,101 +335,28 @@
             <div class="pet-item">
                 <input type="checkbox" id="pet2">
                 <label for="pet2">Kitty (Persia)</label>
-=======
-    @if($errors->any())
-        <div class="alert alert-danger" style="background: #f8d7da; color: #721c24; padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
-            <ul style="margin: 0; padding-left: 20px;">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    @auth('member')
-    <form action="{{ route('booking.store') }}" method="POST">
-        @csrf
-        <!-- Service Type -->
-        <div class="section">
-            <div class="section-title"><img src="{{ asset('images/Schedule.svg') }}" alt="">Service Type</div>
-            <div class="form-group">
-                <div class="form-field">
-                    <label>Service Type</label>
-                    <select name="service_type" required>
-                        <option value="">Select Service</option>
-                        <option value="grooming">Grooming - Rp 150,000</option>
-                        <option value="boarding">Boarding - Rp 200,000</option>
-                        <option value="veterinary">Veterinary - Rp 300,000</option>
-                        <option value="training">Training - Rp 250,000</option>
-                    </select>
-                </div>
->>>>>>> 59fd9f095b61ea572bae8457fe2f26dcffe6af06
             </div>
         </div>
-
-        <!-- Pet Information -->
-        <div class="section">
-            <div class="section-title"><img src="{{ asset('images/Pets.svg') }}" alt="">Pet Information</div>
-            <div class="form-group">
-                <div class="form-field">
-                    <label>Pet Name</label>
-                    <input type="text" name="pet_name" placeholder="Enter pet name" required>
-                </div>
-                <div class="form-field">
-                    <label>Pet Type</label>
-                    <select name="pet_type" required>
-                        <option value="">Select Pet Type</option>
-                        <option value="dog">Dog</option>
-                        <option value="cat">Cat</option>
-                        <option value="bird">Bird</option>
-                        <option value="rabbit">Rabbit</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- Booking Schedule -->
-        <div class="section">
-            <div class="section-title"><img src="{{ asset('images/Schedule.svg') }}" alt="">Booking Schedule</div>
-            <div class="form-group">
-                <div class="form-field">
-                    <label>Booking Date</label>
-                    <input type="date" name="booking_date" min="{{ date('Y-m-d', strtotime('+1 day')) }}" required>
-                </div>
-                <div class="form-field">
-                    <label>Booking Time</label>
-                    <input type="time" name="booking_time" required>
-                </div>
-            </div>
-        </div>
-
-        <!-- Special Notes -->
-        <div class="section">
-            <div class="section-title"><img src="{{ asset('images/Edit.svg') }}" alt="">Special Notes</div>
-            <div class="form-group">
-                <textarea name="notes" placeholder="Pet Special Instructions: Allergies/Health Issues" rows="5"></textarea>
-            </div>
-        </div>
-
-        <!-- Cost Estimation -->
-        <div class="cost">
-            <div class="cost-title">Cost Estimation</div>
-            <strong id="costDisplay">Select a service to see pricing</strong>
-            <div id="costDetails" style="margin-top: 10px; font-size: 12px; color: #9C6F4B;"></div>
-        </div>
-
-        <!-- Submit Button -->
-        <button type="submit" class="submit-btn">Submit Booking</button>
-        <div class="note">Our team will contact you within 24 hours for confirmation</div>
-    </form>
-    @else
-    <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 12px; margin: 20px 0;">
-        <h3 style="color: #6B4F3A; margin-bottom: 15px;">Please Login First</h3>
-        <p style="color: #9C6F4B; margin-bottom: 20px;">You need to be logged in to make a booking.</p>
-        <a href="{{ route('register.page') }}" style="display: inline-block; padding: 12px 24px; background: #E57300; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">Login / Register</a>
     </div>
-    @endauth
+
+    <!-- Special Notes -->
+    <div class="section">
+        <div class="section-title"><img src="{{ asset('images/Edit.svg') }}" alt="">Special Notes</div>
+        <div class="form-group">
+            <textarea placeholder="Pet Special Instructions: Allergies/Health Issues" rows="5"></textarea>
+        </div>
+    </div>
+
+    <!-- Cost Estimation -->
+    <div class="cost">
+        <div class="cost-title">Cost Estimation</div>
+        <strong>Base Rate: Rp. 50,000/day</strong>
+        Final cost will be calculated based on duration and selected additional services
+    </div>
+
+    <!-- Submit Button -->
+    <button class="submit-btn" onclick="openModal()">Submit Booking</button>
+    <div class="note">Our team will contact you within 24 hours for confirmation</div>
 </div>
 <!-- Modal -->
 <div class="modal" id="bookingModal">
@@ -460,46 +400,22 @@
 </div>
 
 <script>
-    // Service pricing
-    const servicePrices = {
-        'grooming': { price: 150000, name: 'Grooming' },
-        'boarding': { price: 200000, name: 'Boarding' },
-        'veterinary': { price: 300000, name: 'Veterinary' },
-        'training': { price: 250000, name: 'Training' }
-    };
+    function openModal(){
+        const dropOff = document.querySelector('input[name="dropOff"]:checked').value;
+      const pickUp = document.querySelector('input[name="pickUp"]:checked').value;
+      document.getElementById("confirmDropOff").textContent = dropOff;
+      document.getElementById("confirmPickUp").textContent = pickUp;
 
-    // Update cost display when service type changes
-    document.querySelector('select[name="service_type"]').addEventListener('change', function() {
-        const selectedService = this.value;
-        const costDisplay = document.getElementById('costDisplay');
-        const costDetails = document.getElementById('costDetails');
-        
-        if (selectedService && servicePrices[selectedService]) {
-            const service = servicePrices[selectedService];
-            costDisplay.textContent = `${service.name}: Rp ${service.price.toLocaleString('id-ID')}`;
-            costDetails.textContent = 'Final cost will be confirmed after booking review';
-        } else {
-            costDisplay.textContent = 'Select a service to see pricing';
-            costDetails.textContent = '';
+        document.getElementById("bookingModal").style.display = "flex";
+    }
+    function closeModal(){
+        document.getElementById("bookingModal").style.display = "none";
+    }
+    window.onclick = function(e){
+        if(e.target == document.getElementById("bookingModal")){
+            closeModal();
         }
-    });
-
-    // Form validation
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const serviceType = document.querySelector('select[name="service_type"]').value;
-        const petName = document.querySelector('input[name="pet_name"]').value;
-        const petType = document.querySelector('select[name="pet_type"]').value;
-        const bookingDate = document.querySelector('input[name="booking_date"]').value;
-        const bookingTime = document.querySelector('input[name="booking_time"]').value;
-        
-        if (!serviceType || !petName || !petType || !bookingDate || !bookingTime) {
-            e.preventDefault();
-            alert('Please fill in all required fields');
-            return false;
-        }
-        
-        // Form validation passed
-    });
+    }
 </script>
 @include ('layouts.footer')
 
