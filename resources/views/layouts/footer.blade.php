@@ -241,7 +241,7 @@
         <span data-value="4">★</span>
         <span data-value="5">★</span>
       </div>
-      <textarea id="feedbackText" placeholder="What can we do to make your next visit even better?"></textarea>
+      <textarea id="feedbackText" placeholder="What can we do to make your next visit even better?" required></textarea>
       <button class="submit-feedback" id="submitFeedbackBtn">Submit My Feedback</button>
     </div>
   </div>
@@ -293,9 +293,53 @@
       });
     });
 
-    submitBtn.addEventListener("click", () => {
-      modal.style.display = "none";
-      thankYouModal.style.display = "block";
+    submitBtn.addEventListener("click", async () => {
+      const feedbackText = document.getElementById("feedbackText").value;
+      
+      if (!selectedRating || !feedbackText.trim()) {
+        alert("Please provide a rating and feedback message.");
+        return;
+      }
+
+      try {
+        // Get CSRF token from meta tag
+        const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        
+        const response = await fetch('/feedback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token,
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({
+            rating: selectedRating,
+            message: feedbackText
+          })
+        });
+
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+          modal.style.display = "none";
+          thankYouModal.style.display = "block";
+          
+          // Reset form
+          selectedRating = 0;
+          document.getElementById("feedbackText").value = '';
+          stars.forEach(s => {
+            s.classList.remove("active");
+            s.style.color = "#ccc";
+          });
+        } else {
+          console.error('Server response:', data);
+          console.error('Response status:', response.status);
+          alert("Error: " + (data.message || "Something went wrong. Please try again."));
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert("Network error. Please check your connection and try again.");
+      }
     });
     closeThankYou.addEventListener("click", () => {
       thankYouModal.style.display = "none";

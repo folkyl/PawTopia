@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <title>Pet Daycare Booking</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -186,12 +187,16 @@
 
     .modal-content {
         background: white;
-        padding: 30px;
+        padding: 20px;
         border-radius: 15px;
         text-align: center;
-        max-width: 650px;  /* sesuai mockup */
-        width: 100%;
+        max-width: 700px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
         position: relative;
+        margin: 20px;
+        box-sizing: border-box;
     }
 
     .close-btn {
@@ -224,8 +229,8 @@
     .booking-info { 
         display: grid; 
         grid-template-columns: repeat(2, 1fr); 
-        gap: 20px 40px;
-        margin-bottom: 25px; 
+        gap: 15px 20px;
+        margin-bottom: 20px; 
         justify-items: center;
     }
 
@@ -233,11 +238,13 @@
     .info-card { 
         background: #fff; 
         border-radius: 10px;
-        padding: 14px 20px;
+        padding: 12px 16px;
         box-shadow: 2px 2px 0px #f4a28c;
         border: 1px solid #eee;
-        width: 220px;
-        text-align: center;  /* ✅ align kiri sesuai mockup */
+        width: 100%;
+        max-width: 200px;
+        text-align: center;
+        box-sizing: border-box;
     }
 
     .info-card .title { 
@@ -257,36 +264,7 @@
         color: #9C6F4B;
     }
 
-    /* Next Section */
-    .next-section {
-        background: #f4a28c;
-        border-radius: 12px;
-        padding: 20px;
-        text-align: center;
-        width: calc(100% - 60px); /* ✅ sejajar card, tidak overflow */
-        margin: 0 auto;
-    }
-
-    .next-section h3 {
-        font-size: 16px;
-        font-weight: 600;
-        margin-bottom: 12px;
-        color: #674337;
-    }
-
-    .next-steps {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px 20px;
-        font-size: 14px;
-        text-align: center;
-        color: #9C6F4B;
-    }
-
-    .next-steps p {
-        margin: 0;
-        text-align: center;
-    }
+   
 </style>
 </head>
 <body>
@@ -350,13 +328,14 @@
     <div class="section">
         <div class="section-title"><img src="{{ asset('images/Pets.svg') }}" alt="">Pet Information</div>
         <div class="pet-list">
-        <div class="pet-item">
-            <input type="checkbox" id="pet1">
-            <label for="pet1">Buddy (Golden Retriever)</label>
-        </div>
-        <div class="pet-item">
-            <input type="checkbox" id="pet2">
-            <label for="pet2">Kitty (Persia)</label>
+            <div class="pet-item">
+                <input type="checkbox" id="pet1">
+                <label for="pet1">Buddy (Golden Retriever)</label>
+            </div>
+            <div class="pet-item">
+                <input type="checkbox" id="pet2">
+                <label for="pet2">Kitty (Persia)</label>
+            </div>
         </div>
     </div>
 
@@ -405,25 +384,18 @@
                 <div class="subtitle">+62 1234–5678</div>
             </div>
             <div class="info-card">
-          <div class="title">Drop-off</div>
-          <div class="subtitle" id="confirmDropOff">-</div>
-        </div>
-        <div class="info-card">
-          <div class="title">Pick-up</div>
-          <div class="subtitle" id="confirmPickUp">-</div>
-        </div>
-      </div>
-        </div>
-
-        <div class="next-section">
-            <h3>What happens next?</h3>
-            <div class="next-steps">
-                <p>1. Review within 2 hours</p>
-                <p>2. Confirmation call in 24h</p>
-                <p>3. Email preparation guide</p>
-                <p>4. Payment on drop-off</p>
+                <div class="title">Drop-off</div>
+                <div class="subtitle" id="confirmDropOff">-</div>
+            </div>
+            <div class="info-card">
+                <div class="title">Pick-up</div>
+                <div class="subtitle" id="confirmPickUp">-</div>
             </div>
         </div>
+
+       
+
+
     </div>
 </div>
 
@@ -446,5 +418,6 @@
     }
 </script>
 @include ('layouts.footer')
+
 </body>
 </html>
