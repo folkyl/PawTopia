@@ -12,21 +12,32 @@ class Feedback extends Model
     protected $table = 'feedbacks';
 
     protected $fillable = [
+        'rating',
+        'message',
         'user_name',
         'email',
-        'rating',
-        'message'
+        'user_id'
     ];
 
     protected $casts = [
-        'rating' => 'integer'
+        'rating' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
     
     /**
-     * Get the user that owns the feedback.
+     * Scope a query to only include popular feedbacks.
      */
-    public function user()
+    public function scopePopular($query)
     {
-        return $this->belongsTo(User::class);
+        return $query->where('rating', '>=', 4);
+    }
+    
+    /**
+     * Scope a query to only include recent feedbacks.
+     */
+    public function scopeRecent($query, $days = 30)
+    {
+        return $query->where('created_at', '>=', now()->subDays($days));
     }
 }

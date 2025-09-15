@@ -14,12 +14,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // User::factory(10)->create();
+        // Create admin user if not exists
+        User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('password'),
+                'is_admin' => true,
+            ]
+        );
 
-        User::create([
-            'name' => 'admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'), // set password default
+        // Run the feedback seeder
+        $this->call([
+            FeedbackSeeder::class,
         ]);
     }
 }
