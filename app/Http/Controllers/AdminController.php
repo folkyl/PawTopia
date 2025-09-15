@@ -32,7 +32,7 @@ class AdminController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login'); // arahkan ke login page
+        return redirect()->route('admin.login'); // arahkan ke admin login page
     }
 
     // halaman dashboard
@@ -70,11 +70,6 @@ class AdminController extends Controller
     public function feedback() 
     {
         return view('admin.feedback');
-    }
-
-    public function settings()
-    {
-        return view('admin.settings');
     }
 
     public function petfood()

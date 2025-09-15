@@ -11,10 +11,12 @@ class RoleMiddleware
 {
     public function handle($request, Closure $next, $role)
     {
+        // Check if user is authenticated as member
         if (!Auth::guard('member')->check()) {
-            return redirect('/login');
+            return redirect('/register');
         }
 
+        // Check if user has the required role
         if (Auth::guard('member')->user()->role !== $role) {
             abort(403, 'Unauthorized action.');
         }
