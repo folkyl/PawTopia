@@ -692,26 +692,19 @@
             <button class="carousel-btn prev">‹</button>
             <div class="carousel">
                 <div class="carousel-track">
-                    <div class="card"> 
-                        <h4>Rian M.</h4>
-                        <div class="stars">★ ★ ★ ★ ★</div>
-                        <p>"Clean place, caring staff, and great service. Will definitely come back!"</p>
-                    </div>
-                    <div class="card active"> 
-                        <h4>Laras L.</h4>
-                        <div class="stars">★ ★ ★ ★ ★</div>
-                        <p>"Love how they treat every pet like family. Highly recommend Pawtopia!"</p>
-                    </div>
-                    <div class="card"> 
-                        <h4>Ruby B.</h4>
-                        <div class="stars">★ ★ ★ ★ ★</div>
-                        <p>"Booking was super easy and the team took such good care of my senior cat."</p>
-                    </div>
-                    <div class="card"> 
-                        <h4>Andi S.</h4>
-                        <div class="stars">★ ★ ★ ★ ★</div>
-                        <p>"My dog always comes home happy and tired. The staff are so friendly!"</p>
-                    </div>
+                    @forelse($testimonials ?? [] as $fb)
+                        <div class="card">
+                            <h4>{{ $fb->user_name ?? ($fb->email ?? 'Anonymous') }}</h4>
+                            <div class="stars">{!! str_repeat('★ ', (int) $fb->rating) !!}</div>
+                            <p>"{{ $fb->message }}"</p>
+                        </div>
+                    @empty
+                        <div class="card">
+                            <h4>Pawtopia Guest</h4>
+                            <div class="stars">★ ★ ★ ★ ★</div>
+                            <p>"We can't wait to collect more happy stories from our lovely pet parents!"</p>
+                        </div>
+                    @endforelse
                 </div>
             </div>
             <button class="carousel-btn next">›</button>
@@ -773,9 +766,15 @@
         const cards = document.querySelectorAll('.card');
         const prevBtn = document.querySelector('.carousel-btn.prev');
         const nextBtn = document.querySelector('.carousel-btn.next');
-        let activeIndex = 1; // Start from 2nd card (center)
+        let activeIndex = Math.min(1, Math.max(0, cards.length - 1)); // center-ish start, safe for 0/1 cards
 
         function updateCarousel() {
+            if (!cards || cards.length === 0) {
+                // No cards: disable controls and do nothing
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                return;
+            }
             // Update cards
             cards.forEach((card, idx) => {
                 card.classList.toggle('active', idx === activeIndex);
@@ -787,8 +786,6 @@
 
             // Center the active card in the carousel
             const cardElem = cards[activeIndex];
-            const carouselRect = carousel.getBoundingClientRect();
-            const cardRect = cardElem.getBoundingClientRect();
 
             // Calculate position of card relative to track
             const cardCenterInTrack = cardElem.offsetLeft + cardElem.offsetWidth / 2;
@@ -820,6 +817,7 @@
         let autoPlayInterval;
         
         function startAutoPlay() {
+            if (!cards || cards.length <= 1) return; // no autoplay if 0/1 cards
             autoPlayInterval = setInterval(() => {
                 if (activeIndex < cards.length - 1) {
                     activeIndex++;

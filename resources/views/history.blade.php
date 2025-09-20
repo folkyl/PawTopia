@@ -218,6 +218,9 @@
                       <button type="submit" class="btn btn-disabled" style="background: #dc3545; color: white; padding: 6px 12px; border-radius: 4px; border: none; font-size: 12px; cursor: pointer;" onclick="return confirm('Are you sure you want to cancel this booking?')">Cancel</button>
                     </form>
                   @endif
+                  @if($isComplete)
+                    <button type="button" class="btn btn-rate" style="background: #ff8a65; color: #fff; padding: 6px 12px; border-radius: 4px; border: none; font-size: 12px; cursor: pointer;" onclick="openTestimonialModal({{ $booking->id }}, '{{ addslashes(ucfirst($booking->service_type)) }}')">Give Testimonial</button>
+                  @endif
                 </div>
               </td>
             </tr>
@@ -239,5 +242,95 @@
     </div>
     @include('layouts.footer')
     
+    <!-- Testimonial Modal -->
+    <div id="testimonialModal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center;">
+      <div style="background: #fff; width: 90%; max-width: 500px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow: hidden;">
+        <div style="padding: 16px 20px; background: #F6A892; color: #674337; display:flex; align-items:center; justify-content: space-between;">
+          <div style="font-weight: 700;">Give Testimonial</div>
+          <button type="button" onclick="closeTestimonialModal()" style="background: transparent; border: none; font-size: 20px; cursor: pointer; color:#674337;">×</button>
+        </div>
+        <form id="testimonialForm" style="padding: 16px 20px;">
+          @csrf
+          <input type="hidden" name="booking_id" id="t_booking_id" />
+          <div style="margin-bottom: 12px; color:#674337;">
+            <div style="font-size: 13px; margin-bottom: 6px;">Service</div>
+            <input type="text" id="t_service" disabled style="width:100%; padding:10px 12px; border:1px solid #ead9c8; border-radius:10px; background:#fff8f5; color:#674337;" />
+          </div>
+          <div style="margin-bottom: 12px; color:#674337;">
+            <div style="font-size: 13px; margin-bottom: 6px;">Rating</div>
+            <select name="rating" id="t_rating" required style="width:100%; padding:10px 12px; border:1px solid #ead9c8; border-radius:10px; background:#fff; color:#674337;">
+              @for ($i = 5; $i >= 1; $i--)
+                <option value="{{ $i }}">{{ $i }} - {{ str_repeat('★', $i) }}</option>
+              @endfor
+            </select>
+          </div>
+          <div style="margin-bottom: 12px; color:#674337;">
+            <div style="font-size: 13px; margin-bottom: 6px;">Message</div>
+            <textarea name="message" id="t_message" rows="4" maxlength="1000" required placeholder="Tulis pengalaman Anda..." style="width:100%; padding:10px 12px; border:1px solid #ead9c8; border-radius:10px; background:#fff; color:#674337;"></textarea>
+          </div>
+          <div style="display:flex; gap: 10px; justify-content: flex-end;">
+            <button type="button" onclick="closeTestimonialModal()" style="padding: 10px 16px; border-radius: 10px; border:1px solid #ccc; background:#f5f5f5; cursor: pointer;">Cancel</button>
+            <button type="submit" style="padding: 10px 16px; border-radius: 10px; border:none; background:#ff8a65; color:#fff; font-weight:600; cursor: pointer;">Submit</button>
+          </div>
+          <div id="t_error" style="margin-top:10px; color:#b00020; display:none;"></div>
+          <div id="t_success" style="margin-top:10px; color:#2e7d32; display:none;"></div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function openTestimonialModal(bookingId, service) {
+        document.getElementById('t_booking_id').value = bookingId;
+        document.getElementById('t_service').value = service;
+        document.getElementById('t_message').value = '';
+        document.getElementById('t_rating').value = '5';
+        document.getElementById('t_error').style.display = 'none';
+        document.getElementById('t_success').style.display = 'none';
+        document.getElementById('testimonialModal').style.display = 'flex';
+      }
+      function closeTestimonialModal() {
+        document.getElementById('testimonialModal').style.display = 'none';
+      }
+
+      // Handle form submit via AJAX to avoid navigating to JSON response
+      const testimonialForm = document.getElementById('testimonialForm');
+      testimonialForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const rating = document.getElementById('t_rating').value;
+        const message = document.getElementById('t_message').value;
+        const bookingId = document.getElementById('t_booking_id').value;
+        const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const err = document.getElementById('t_error');
+        const ok = document.getElementById('t_success');
+        err.style.display = 'none';
+        ok.style.display = 'none';
+        try {
+          const res = await fetch("{{ route('feedback.store') }}", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': csrf,
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({ rating: parseInt(rating, 10), message, booking_id: parseInt(bookingId, 10) })
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            ok.textContent = data.message || 'Thank you for your feedback!';
+            ok.style.display = 'block';
+            // Optionally refresh after short delay so landing page can show it later
+            setTimeout(() => {
+              closeTestimonialModal();
+            }, 1000);
+          } else {
+            err.textContent = data.message || 'Failed to submit feedback.';
+            err.style.display = 'block';
+          }
+        } catch (ex) {
+          err.textContent = 'Network error. Please try again.';
+          err.style.display = 'block';
+        }
+      });
+    </script>
   </body>
   </html>

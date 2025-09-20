@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Feedback;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
@@ -19,14 +20,23 @@ class FeedbackController extends Controller
                 'message' => 'required|string|max:1000',
                 'user_name' => 'nullable|string|max:255',
                 'email' => 'nullable|email|max:255',
+                // booking_id is optional now; we keep it if sent, but it's not required
+                'booking_id' => 'nullable|integer|exists:bookings,id',
             ]);
 
-            // If user is logged in, use their info
-            if (auth()->check()) {
+            // If member is logged in (member guard), use their info
+            if (auth('member')->check()) {
+                $validated['user_id'] = auth('member')->id();
+                $validated['user_name'] = $validated['user_name'] ?? optional(auth('member')->user())->name;
+                $validated['email'] = $validated['email'] ?? optional(auth('member')->user())->email;
+            } elseif (auth()->check()) {
+                // fallback if default web guard is used
                 $validated['user_id'] = auth()->id();
-                $validated['user_name'] = $validated['user_name'] ?? auth()->user()->name;
-                $validated['email'] = $validated['email'] ?? auth()->user()->email;
+                $validated['user_name'] = $validated['user_name'] ?? optional(auth()->user())->name;
+                $validated['email'] = $validated['email'] ?? optional(auth()->user())->email;
             }
+
+            // Simplified logic: any logged-in member can submit a testimonial (no booking ownership/status checks)
 
             Feedback::create($validated);
 
@@ -88,6 +98,54 @@ class FeedbackController extends Controller
         $positivePercentage = $totalFeedback > 0 ? round(($positiveReviews / $totalFeedback) * 100) : 0;
         
         return view('admin.feedback', [
+            'feedbacks' => $feedbacks,
+            'totalFeedback' => $totalFeedback,
+            'averageRating' => number_format($averageRating, 1),
+            'thisMonth' => $thisMonth,
+            'positivePercentage' => $positivePercentage
+        ]);
+    }
+
+    /**
+     * Display testimonials page with the same dataset but different view.
+     */
+    public function testimonial()
+    {
+        // Get all feedback ordered by latest
+        $query = Feedback::latest();
+
+        // Filter by rating if provided
+        if (request()->has('rating') && !empty(request('rating'))) {
+            $query->where('rating', request('rating'));
+        }
+
+        // Search in message and user_name if search term provided
+        if (request()->has('search') && !empty(request('search'))) {
+            $searchTerm = '%' . request('search') . '%';
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('message', 'like', $searchTerm)
+                  ->orWhere('user_name', 'like', $searchTerm)
+                  ->orWhere('email', 'like', $searchTerm);
+            });
+        }
+
+        // Paginate the results
+        $feedbacks = $query->paginate(10)->appends(request()->query());
+
+        // Calculate statistics
+        $totalFeedback = $feedbacks->total();
+        $averageRating = $feedbacks->avg('rating') ?: 0;
+
+        // Count feedback from current month
+        $thisMonth = Feedback::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+
+        // Calculate positive feedback percentage (4-5 stars)
+        $positiveReviews = Feedback::whereIn('rating', [4, 5])->count();
+        $positivePercentage = $totalFeedback > 0 ? round(($positiveReviews / $totalFeedback) * 100) : 0;
+
+        return view('admin.testimoni', [
             'feedbacks' => $feedbacks,
             'totalFeedback' => $totalFeedback,
             'averageRating' => number_format($averageRating, 1),

@@ -16,7 +16,8 @@ class Feedback extends Model
         'message',
         'user_name',
         'email',
-        'user_id'
+        'user_id',
+        'booking_id'
     ];
 
     protected $casts = [
@@ -24,6 +25,14 @@ class Feedback extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
+
+    /**
+     * Relations
+     */
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
     
     /**
      * Scope a query to only include popular feedbacks.

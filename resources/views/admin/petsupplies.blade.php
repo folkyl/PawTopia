@@ -1,4 +1,5 @@
 @include('layoutadmin.navbar')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>
     body {
@@ -332,17 +333,16 @@
 
     <!-- FILTER -->
     <div class="filter-container">
-        <select>
-            <option>Filter by Category</option>
-            <option>Cat Supplies</option>
-            <option>Dog Supplies</option>
+        <select id="filterCategory">
+            <option value="">All Supplies</option>
+            <option value="Supplies">Supplies</option>
         </select>
-        <select>
-            <option>Sort by Price</option>
-            <option>Lowest to Highest</option>
-            <option>Highest to Lowest</option>
+        <select id="sortPrice">
+            <option value="">Sort by Price</option>
+            <option value="asc">Lowest to Highest</option>
+            <option value="desc">Highest to Lowest</option>
         </select>
-        <input type="text" placeholder="Search product...">
+        <input type="text" id="searchInput" placeholder="Search product...">
     </div>
 
     <!-- TABLE -->
@@ -358,39 +358,13 @@
                     <th style="text-align:center;">Actions</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Whiskas"></td>
-                    <td>Whiskas</td>
-                    <td>Cat Supplies</td>
-                    <td>Rp. 200.000</td>
-                    <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Whiskas','Rp. 200.000','Cat Supplies',10)">Edit</button>
-                        <button class="btn-delete">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="{{ asset('images/whiskas.svg') }}" alt="Pedigree"></td>
-                    <td>Pedigree</td>
-                    <td>Dog Supplies</td>
-                    <td>Rp. 180.000</td>
-                    <td class="action-btns">
-                        <button class="btn-edit" onclick="openEditProductModal('Pedigree','Rp. 180.000','Dog Supplies',10)">Edit</button>
-                        <button class="btn-delete">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
+            <tbody id="suppliesList"></tbody>
         </table>
     </div>
 
     <!-- PAGINATION -->
-    <div class="pagination">
-        <button>&laquo;</button>
-        <button class="active">1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>&raquo;</button>
-    </div>
+    <div id="paginationInfo" style="text-align:center;margin-top:8px;color:#6B4F3A;font-weight:600;"></div>
+    <div class="pagination" id="pagination"></div>
 </div>
 
 <!-- ====== Modal Add Product ====== -->
@@ -440,6 +414,125 @@
 </div>
 
 <script>
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const intToRupiah = (n) => new Intl.NumberFormat('id-ID').format(n);
+async function apiFetch(url, options = {}) {
+  const opts = { ...options };
+  opts.headers = opts.headers || {};
+  if (!(opts.body instanceof FormData)) {
+    opts.headers['Content-Type'] = 'application/json';
+  }
+  // Ensure JSON responses from Laravel including validation
+  opts.headers['Accept'] = 'application/json';
+  opts.headers['X-Requested-With'] = 'XMLHttpRequest';
+  opts.headers['X-CSRF-TOKEN'] = csrfToken;
+  const res = await fetch(url, opts);
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(t || 'Request failed');
+  }
+  const ct = res.headers.get('content-type') || '';
+  return ct.includes('application/json') ? res.json() : res.text();
+}
+
+function rowTemplate(p){
+  const img = p.image_path ? ('/storage/' + p.image_path) : `{{ asset('images/whiskas.svg') }}`;
+  return `
+    <tr data-id="${p.id}">
+      <td><img src="${img}" alt="${p.name}"></td>
+      <td>${p.name}</td>
+      <td>${p.category}</td>
+      <td>Rp. ${intToRupiah(Number(p.price)||0)}</td>
+      <td class="action-btns">
+        <button class="btn-edit" data-action="edit">Edit</button>
+        <button class="btn-delete" data-action="delete">Delete</button>
+      </td>
+    </tr>`;
+}
+
+function bindActions(container, items){
+  container.querySelectorAll('button[data-action]')?.forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      const tr = e.currentTarget.closest('tr');
+      const id = Number(tr.getAttribute('data-id'));
+      const item = items.find(x=>x.id===id);
+      const action = e.currentTarget.getAttribute('data-action');
+      if(action==='delete'){
+        if(!confirm('Hapus produk ini?')) return;
+        const fd = new FormData(); fd.append('_method','DELETE');
+        await apiFetch(`{{ url('/admin/products') }}/${id}`, {method:'POST', body: fd});
+        await loadSupplies();
+      } else if(action==='edit'){
+        window.location.href = `{{ url('/admin/productmanagement') }}`;
+      }
+    })
+  })
+}
+
+let currentPage = 1;
+const perPage = 10;
+let currentCategory = '';
+let currentSearch = '';
+let currentSort = '';
+
+function renderPagination(pageInfo){
+  const pag = document.getElementById('pagination');
+  if (!pag) return;
+  pag.innerHTML = '';
+  if (!pageInfo) return;
+  const { current_page, last_page } = pageInfo;
+  const addBtn = (label, page, disabled=false, active=false) => {
+    const btn = document.createElement('button');
+    btn.textContent = label;
+    if (active) btn.classList.add('active');
+    if (disabled) btn.disabled = true;
+    btn.addEventListener('click', () => { currentPage = page; loadSupplies(); });
+    pag.appendChild(btn);
+  };
+  addBtn('«', Math.max(1, current_page - 1), current_page === 1);
+  const start = Math.max(1, current_page - 2);
+  const end = Math.min(last_page, current_page + 2);
+  for (let p = start; p <= end; p++) addBtn(String(p), p, false, p === current_page);
+  addBtn('»', Math.min(last_page, current_page + 1), current_page === last_page);
+}
+
+function renderPaginationInfo(pageInfo){
+  const info = document.getElementById('paginationInfo');
+  if (!info || !pageInfo) return;
+  const from = pageInfo.from ?? 0;
+  const to = pageInfo.to ?? 0;
+  const total = pageInfo.total ?? 0;
+  info.textContent = total > 0 ? `Showing ${from}–${to} of ${total}` : 'No products found';
+}
+
+async function loadSupplies(){
+  const params = new URLSearchParams();
+  params.set('per_page', String(perPage));
+  params.set('page', String(currentPage));
+  if (currentSearch) params.set('q', currentSearch);
+  if (currentCategory) {
+    params.set('category', currentCategory);
+  } else {
+    params.set('category_group', 'supplies');
+  }
+  if (currentSort === 'asc') { params.set('sort','price'); params.set('direction','asc'); }
+  if (currentSort === 'desc') { params.set('sort','price'); params.set('direction','desc'); }
+
+  const res = await apiFetch(`{{ url('/admin/products') }}?${params.toString()}`);
+  const items = res?.data || [];
+  const tbody = document.getElementById('suppliesList');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  if (items.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;">No products found</td></tr>';
+  } else {
+    items.forEach(p=> tbody.insertAdjacentHTML('beforeend', rowTemplate(p)));
+  }
+  bindActions(tbody, items);
+  renderPagination(res);
+  renderPaginationInfo(res);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const addModal = document.getElementById("addProductModal");
     const editModal = document.getElementById("editProductModal");
@@ -489,5 +582,19 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.classList.add("active");
         });
     });
+    // Bind filters
+    const catSel = document.getElementById('filterCategory');
+    const sortSel = document.getElementById('sortPrice');
+    const searchEl = document.getElementById('searchInput');
+    if (catSel) catSel.addEventListener('change', () => { currentCategory = catSel.value; currentPage = 1; loadSupplies(); });
+    if (sortSel) sortSel.addEventListener('change', () => { currentSort = sortSel.value; currentPage = 1; loadSupplies(); });
+    if (searchEl) {
+      let t;
+      searchEl.addEventListener('input', () => {
+        clearTimeout(t);
+        t = setTimeout(() => { currentSearch = searchEl.value.trim(); currentPage = 1; loadSupplies(); }, 350);
+      });
+    }
+    loadSupplies();
 });
 </script>

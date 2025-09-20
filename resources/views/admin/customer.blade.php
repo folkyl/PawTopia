@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Customer - Pet Boarding</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .dashboard-root {
             display: flex;
@@ -1537,214 +1538,56 @@ document.addEventListener('keydown', function(event) {
         toggleNotificationModal();
     }
 });
-        // Sample customer data
-        const customers = [
-            {
-                id: 1,
-                name: 'Ahmad Rizky',
-                email: 'ahmad.rizky@email.com',
-                phone: '081234567890',
-                address: 'Jl. Merdeka No. 123, Jakarta Pusat',
-                status: 'active',
-                pets: 2,
-                orders: 5
-            },
-            {
-                id: 2,
-                name: 'Siti Nurhaliza',
-                email: 'siti.nurhaliza@email.com',
-                phone: '081298765432',
-                address: 'Jl. Sudirman Kav. 45, Jakarta Selatan',
-                status: 'active',
-                pets: 1,
-                orders: 3
-            },
-            {
-                id: 3,
-                name: 'Budi Santoso',
-                email: 'budi.santoso@email.com',
-                phone: '081312345678',
-                address: 'Jl. Gatot Subroto No. 78, Jakarta Barat',
-                status: 'active',
-                pets: 3,
-                orders: 8
-            },
-            {
-                id: 4,
-                name: 'Dewi Lestari',
-                email: 'dewi.lestari@email.com',
-                phone: '081387654321',
-                address: 'Jl. Thamrin No. 56, Jakarta Pusat',
-                status: 'inactive',
-                pets: 1,
-                orders: 2
-            },
-            {
-                id: 5,
-                name: 'Rudi Hermawan',
-                email: 'rudi.hermawan@email.com',
-                phone: '081512345678',
-                address: 'Jl. Kebon Jeruk Raya No. 99, Jakarta Barat',
-                status: 'active',
-                pets: 2,
-                orders: 4
-            },
-            {
-                id: 6,
-                name: 'Maya Sari',
-                email: 'maya.sari@email.com',
-                phone: '081598765432',
-                address: 'Jl. Panglima Polim No. 34, Jakarta Selatan',
-                status: 'active',
-                pets: 1,
-                orders: 6
-            },
-            {
-                id: 7,
-                name: 'Joko Widodo',
-                email: 'joko.widodo@email.com',
-                phone: '081612345678',
-                address: 'Jl. Rasuna Said No. 67, Jakarta Selatan',
-                status: 'inactive',
-                pets: 2,
-                orders: 3
-            },
-            {
-                id: 8,
-                name: 'Ani Wijaya',
-                email: 'ani.wijaya@email.com',
-                phone: '081698765432',
-                address: 'Jl. Senopati No. 12, Jakarta Selatan',
-                status: 'active',
-                pets: 1,
-                orders: 7
-            },
-            {
-                id: 9,
-                name: 'Hendra Kurniawan',
-                email: 'hendra.kurniawan@email.com',
-                phone: '081712345678',
-                address: 'Jl. Kemang Raya No. 45, Jakarta Selatan',
-                status: 'active',
-                pets: 3,
-                orders: 9
-            },
-            {
-                id: 10,
-                name: 'Rina Melati',
-                email: 'rina.melati@email.com',
-                phone: '081798765432',
-                address: 'Jl. Cipete Raya No. 23, Jakarta Selatan',
-                status: 'inactive',
-                pets: 1,
-                orders: 1
-            },
-            {
-                id: 11,
-                name: 'Fajar Pratama',
-                email: 'fajar.pratama@email.com',
-                phone: '081812345678',
-                address: 'Jl. Pondok Indah No. 78, Jakarta Selatan',
-                status: 'active',
-                pets: 2,
-                orders: 5
-            },
-            {
-                id: 12,
-                name: 'Lina Marlina',
-                email: 'lina.marlina@email.com',
-                phone: '081898765432',
-                address: 'Jl. Kelapa Gading Boulevard No. 56, Jakarta Utara',
-                status: 'active',
-                pets: 1,
-                orders: 4
-            },
-            {
-                id: 13,
-                name: 'Agus Suparman',
-                email: 'agus.suparman@email.com',
-                phone: '081912345678',
-                address: 'Jl. Pluit Raya No. 34, Jakarta Utara',
-                status: 'active',
-                pets: 2,
-                orders: 6
-            },
-            {
-                id: 14,
-                name: 'Dian Pertiwi',
-                email: 'dian.pertiwi@email.com',
-                phone: '081998765432',
-                address: 'Jl. Mangga Besar No. 67, Jakarta Barat',
-                status: 'inactive',
-                pets: 1,
-                orders: 2
-            },
-            {
-                id: 15,
-                name: 'Eko Prasetyo',
-                email: 'eko.prasetyo@email.com',
-                phone: '082112345678',
-                address: 'Jl. Pasar Minggu No. 89, Jakarta Selatan',
-                status: 'active',
-                pets: 3,
-                orders: 8
-            },
-            {
-                id: 16,
-                name: 'Fitri Handayani',
-                email: 'fitri.handayani@email.com',
-                phone: '082198765432',
-                address: 'Jl. Cilandak KKO No. 12, Jakarta Selatan',
-                status: 'active',
-                pets: 1,
-                orders: 3
-            },
-            {
-                id: 17,
-                name: 'Gunawan Wibisono',
-                email: 'gunawan.wibisono@email.com',
-                phone: '082212345678',
-                address: 'Jl. Tanah Abang No. 45, Jakarta Pusat',
-                status: 'inactive',
-                pets: 2,
-                orders: 4
-            },
-            {
-                id: 18,
-                name: 'Hana Safitri',
-                email: 'hana.safitri@email.com',
-                phone: '082298765432',
-                address: 'Jl. Kemayoran No. 78, Jakarta Pusat',
-                status: 'active',
-                pets: 1,
-                orders: 5
-            },
-            {
-                id: 19,
-                name: 'Irfan Maulana',
-                email: 'irfan.maulana@email.com',
-                phone: '082312345678',
-                address: 'Jl. Casablanca No. 56, Jakarta Selatan',
-                status: 'active',
-                pets: 2,
-                orders: 7
-            },
-            {
-                id: 20,
-                name: 'Juliastuti',
-                email: 'juli.astuti@email.com',
-                phone: '082398765432',
-                address: 'Jl. Tebet Barat No. 34, Jakarta Selatan',
-                status: 'active',
-                pets: 1,
-                orders: 4
-            }
-        ];
-
-        // Global variables
-        let filteredCustomers = [...customers];
+        // Data state & API helpers
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        let customers = [];
+        let filteredCustomers = [];
         let currentPage = 1;
-        const itemsPerPage = 8;
+        let itemsPerPage = 10;
+        let totalItems = 0;
+        let lastPage = 1;
+
+        async function fetchCustomers(page = 1) {
+            try {
+                const q = searchInput.value.trim();
+                const params = new URLSearchParams({ per_page: itemsPerPage, q, page });
+                const res = await fetch(`/admin/customers?${params.toString()}`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin'
+                });
+                if (!res.ok) throw new Error('Failed to load customers');
+                const json = await res.json();
+
+                itemsPerPage = json.per_page ?? itemsPerPage;
+                currentPage = json.current_page ?? page;
+                totalItems = json.total ?? 0;
+                lastPage = json.last_page ?? 1;
+
+                // Map server data to UI fields
+                customers = (json.data || []).map(m => ({
+                    id: m.id,
+                    name: m.name,
+                    email: m.email,
+                    phone: m.phone,
+                    address: m.address || '-',
+                    pets: m.pets ?? 0, // not modeled yet
+                    orders: m.bookings_count ?? 0,
+                    status: m.status ?? 'active'
+                }));
+
+                // Apply client-side status filter
+                applyClientFilters();
+                renderCustomers();
+            } catch (e) {
+                console.error(e);
+                alert('Gagal memuat data customer.');
+            }
+        }
+
+        // (globals are defined above alongside fetchCustomers)
 
         // DOM elements
         const statusFilter = document.getElementById('statusFilter');
@@ -1758,13 +1601,14 @@ document.addEventListener('keydown', function(event) {
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function () {
-            renderCustomers();
+            // Event listeners
+            statusFilter.addEventListener('change', () => { applyClientFilters(); renderCustomers(); });
+            searchInput.addEventListener('input', debounce(() => fetchCustomers(1), 300));
 
-            // Add event listeners
-            statusFilter.addEventListener('change', filterCustomers);
-            searchInput.addEventListener('input', debounce(filterCustomers, 300));
+            // Initial fetch
+            fetchCustomers(1);
 
-            // Add some visual feedback for loading
+            // Visual feedback animation
             setTimeout(() => {
                 document.querySelectorAll('.summary-card, .content-card').forEach(card => {
                     card.style.opacity = '0';
@@ -1778,11 +1622,9 @@ document.addEventListener('keydown', function(event) {
             }, 100);
         });
 
-        // Function to render customers
+        // Function to render customers (server-side paging; client-side status filter)
         function renderCustomers() {
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const currentCustomers = filteredCustomers.slice(startIndex, endIndex);
+            const currentCustomers = filteredCustomers;
 
             if (currentCustomers.length === 0) {
                 customerTableBody.innerHTML = '';
@@ -1793,7 +1635,7 @@ document.addEventListener('keydown', function(event) {
                 paginationContainer.parentElement.style.display = 'flex';
 
                 customerTableBody.innerHTML = currentCustomers.map((customer, index) => {
-                    const globalIndex = startIndex + index + 1;
+                    const globalIndex = (currentPage - 1) * itemsPerPage + index + 1;
                     const statusClass = customer.status === 'active' ? 'status-active' : 'status-inactive';
                     const statusText = customer.status === 'active' ? 'Aktif' : 'Tidak Aktif';
 
@@ -1831,8 +1673,8 @@ document.addEventListener('keydown', function(event) {
                 }).join('');
             }
 
-            // Update total customer count
-            totalCustomersElement.textContent = filteredCustomers.length;
+            // Update total customer count (from server)
+            totalCustomersElement.textContent = totalItems;
 
             // Render pagination
             renderPagination();
@@ -1847,16 +1689,16 @@ document.addEventListener('keydown', function(event) {
             updateStatistics();
         }
 
-        // Function to render page info
+        // Function to render page info (server-side)
         function renderPageInfo() {
-            const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
-            const startIndex = (currentPage - 1) * itemsPerPage + 1;
-            const endIndex = Math.min(currentPage * itemsPerPage, filteredCustomers.length);
+            const totalPages = lastPage;
+            const startIndex = (totalItems === 0) ? 0 : ((currentPage - 1) * itemsPerPage + 1);
+            const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
 
-            if (filteredCustomers.length === 0) {
+            if (totalItems === 0) {
                 pageInfo.innerHTML = 'No customers to display';
             } else {
-                pageInfo.innerHTML = `Showing ${startIndex}-${endIndex} of ${filteredCustomers.length} customers (Page ${currentPage} of ${totalPages})`;
+                pageInfo.innerHTML = `Showing ${startIndex}-${endIndex} of ${totalItems} customers (Page ${currentPage} of ${totalPages})`;
             }
         }
 
@@ -1877,9 +1719,9 @@ document.addEventListener('keydown', function(event) {
             }
         }
 
-        // Function to render pagination
+        // Function to render pagination (server-side)
         function renderPagination() {
-            const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
+            const totalPages = lastPage;
 
             if (totalPages <= 1) {
                 paginationContainer.innerHTML = '';
@@ -1938,38 +1780,26 @@ document.addEventListener('keydown', function(event) {
             paginationContainer.innerHTML = paginationHTML;
         }
 
-        // Function to change page
+        // Function to change page (server-side)
         function changePage(page) {
-            const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
+            const totalPages = lastPage;
             if (page >= 1 && page <= totalPages) {
-                currentPage = page;
-                renderCustomers();
-                // Smooth scroll to top of table
-                document.querySelector('.content-card').scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
+                fetchCustomers(page).then(() => {
+                    document.querySelector('.content-card').scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 });
             }
         }
 
-        // Function to filter customers
-        function filterCustomers() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
+        // Apply client-side status filter on current page data
+        function applyClientFilters() {
             const selectedStatus = statusFilter.value;
-
             filteredCustomers = customers.filter(customer => {
-                const matchesSearch = !searchTerm ||
-                    customer.name.toLowerCase().includes(searchTerm) ||
-                    customer.email.toLowerCase().includes(searchTerm) ||
-                    customer.phone.toLowerCase().includes(searchTerm) ||
-                    customer.address.toLowerCase().includes(searchTerm);
                 const matchesStatus = !selectedStatus || customer.status === selectedStatus;
-
-                return matchesSearch && matchesStatus;
+                return matchesStatus;
             });
-
-            currentPage = 1; // Reset to first page when filtering
-            renderCustomers();
         }
 
         // Function to update statistics
@@ -2013,7 +1843,7 @@ document.addEventListener('keydown', function(event) {
             document.body.style.overflow = ''; // Enable scrolling
         }
 
-        function saveCustomer() {
+        async function saveCustomer() {
             const id = parseInt(document.getElementById('editCustomerId').value);
             const name = document.getElementById('editCustomerName').value;
             const email = document.getElementById('editCustomerEmail').value;
@@ -2028,28 +1858,24 @@ document.addEventListener('keydown', function(event) {
                 return;
             }
 
-            // Find customer index
-            const index = customers.findIndex(c => c.id === id);
-            if (index > -1) {
-                // Update customer data
-                customers[index] = {
-                    ...customers[index],
-                    name,
-                    email,
-                    phone,
-                    address,
-                    pets,
-                    status
-                };
-
-                // Re-render table
-                filterCustomers();
-
-                // Show success message
+            try {
+                const res = await fetch(`/admin/customers/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ name, email, phone, address, status })
+                });
+                if (!res.ok) throw new Error('Gagal memperbarui data');
+                await fetchCustomers(currentPage);
                 alert('Data customer berhasil diperbarui!');
-
-                // Close modal
                 closeModal();
+            } catch (e) {
+                console.error(e);
+                alert('Gagal menyimpan perubahan.');
             }
         }
 
@@ -2065,16 +1891,24 @@ document.addEventListener('keydown', function(event) {
             openEditModal(id);
         }
 
-        function deleteCustomer(id) {
+        async function deleteCustomer(id) {
             const customer = customers.find(c => c.id === id);
             if (customer && confirm(`Apakah Anda yakin ingin menghapus customer ini?\n\n${customer.name}\n${customer.email}`)) {
-                // Remove from main array
-                const index = customers.findIndex(c => c.id === id);
-                if (index > -1) {
-                    customers.splice(index, 1);
-                    // Re-filter and re-render
-                    filterCustomers();
+                try {
+                    const res = await fetch(`/admin/customers/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    if (!res.ok) throw new Error('Gagal menghapus');
+                    await fetchCustomers(currentPage);
                     alert('Customer berhasil dihapus!');
+                } catch (e) {
+                    console.error(e);
+                    alert('Gagal menghapus customer.');
                 }
             }
         }
@@ -2091,7 +1925,7 @@ document.addEventListener('keydown', function(event) {
             document.body.style.overflow = '';
         }
         // Save Add Customer
-        function submitAddCustomer() {
+        async function submitAddCustomer() {
             const name = document.getElementById('addCustomerName').value.trim();
             const email = document.getElementById('addCustomerEmail').value.trim();
             const phone = document.getElementById('addCustomerPhone').value.trim();
@@ -2104,23 +1938,25 @@ document.addEventListener('keydown', function(event) {
                 return;
             }
 
-            // Generate new id
-            const newId = customers.length ? Math.max(...customers.map(c => c.id)) + 1 : 1;
-
-            customers.push({
-                id: newId,
-                name,
-                email,
-                phone,
-                address,
-                pets,
-                status,
-                orders: 0 // default order
-            });
-
-            filterCustomers();
-            alert('Customer baru berhasil ditambahkan!');
-            closeAddModal();
+            try {
+                const res = await fetch('/admin/customers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ name, email, phone, address, status })
+                });
+                if (!res.ok) throw new Error('Gagal menambahkan customer');
+                await fetchCustomers(1);
+                alert('Customer baru berhasil ditambahkan!');
+                closeAddModal();
+            } catch (e) {
+                console.error(e);
+                alert('Gagal menambahkan customer.');
+            }
         }
 
         // Close modal when clicking outside

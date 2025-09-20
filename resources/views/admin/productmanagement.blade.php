@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @include('layoutadmin.navbar')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>
     body {
@@ -632,41 +633,29 @@
                             <th style="text-align:center;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><img src="{{ asset('images/whiskas.svg') }}" alt="Whiskas"></td>
-                            <td>Whiskas</td>
-                            <td>Cat Food</td>
-                            <td>Rp. 200.000</td>
-                            <td>10</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-edit" onclick="openEditProductModal('Whiskas','Rp. 200.000','Cat Food',10)">
-                                        <i class="bi bi-pencil"></i> Edit
-                                    </button>
-                                    <button class="action-btn btn-delete">
-                                        <i class="bi bi-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><img src="{{ asset('images/whiskas.svg') }}" alt="Pedigree"></td>
-                            <td>Pedigree</td>
-                            <td>Dog Food</td>
-                            <td>Rp. 180.000</td>
-                            <td>15</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-edit" onclick="openEditProductModal('Pedigree','Rp. 180.000','Dog Food',15)">
-                                        <i class="bi bi-pencil"></i> Edit
-                                    </button>
-                                    <button class="action-btn btn-delete">
-                                        <i class="bi bi-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody id="petFoodTbody">
+                        @isset($petFood)
+                            @forelse($petFood as $p)
+                                <tr data-id="{{ $p->id }}">
+                                    <td>
+                                        @php($img = $p->image_path ? asset('storage/'.$p->image_path) : asset('images/whiskas.svg'))
+                                        <img src="{{ $img }}" alt="{{ $p->name }}">
+                                    </td>
+                                    <td>{{ $p->name }}</td>
+                                    <td>{{ $p->category }}</td>
+                                    <td>Rp. {{ number_format((int) $p->price, 0, ',', '.') }}</td>
+                                    <td>{{ (int) $p->stock }}</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="action-btn btn-edit" data-action="edit"><i class="bi bi-pencil"></i> Edit</button>
+                                            <button class="action-btn btn-delete" data-action="delete"><i class="bi bi-trash"></i> Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="6" style="text-align:center;color:#888;">Belum ada produk Pet Food.</td></tr>
+                            @endforelse
+                        @endisset
                     </tbody>
                 </table>
             </div>
@@ -688,41 +677,29 @@
                             <th style="text-align:center;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><img src="{{ asset('images/whiskas.svg') }}" alt="Pet Shampoo"></td>
-                            <td>Pet Shampoo</td>
-                            <td>Supplies</td>
-                            <td>Rp. 75.000</td>
-                            <td>20</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-edit" onclick="openEditProductModal('Pet Shampoo','Rp. 75.000','Supplies',20)">
-                                        <i class="bi bi-pencil"></i> Edit
-                                    </button>
-                                    <button class="action-btn btn-delete">
-                                        <i class="bi bi-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><img src="{{ asset('images/whiskas.svg') }}" alt="Litter Box"></td>
-                            <td>Litter Box</td>
-                            <td>Supplies</td>
-                            <td>Rp. 150.000</td>
-                            <td>8</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-edit" onclick="openEditProductModal('Litter Box','Rp. 150.000','Supplies',8)">
-                                        <i class="bi bi-pencil"></i> Edit
-                                    </button>
-                                    <button class="action-btn btn-delete">
-                                        <i class="bi bi-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody id="suppliesTbody">
+                        @isset($supplies)
+                            @forelse($supplies as $p)
+                                <tr data-id="{{ $p->id }}">
+                                    <td>
+                                        @php($img = $p->image_path ? asset('storage/'.$p->image_path) : asset('images/whiskas.svg'))
+                                        <img src="{{ $img }}" alt="{{ $p->name }}">
+                                    </td>
+                                    <td>{{ $p->name }}</td>
+                                    <td>{{ $p->category }}</td>
+                                    <td>Rp. {{ number_format((int) $p->price, 0, ',', '.') }}</td>
+                                    <td>{{ (int) $p->stock }}</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="action-btn btn-edit" data-action="edit"><i class="bi bi-pencil"></i> Edit</button>
+                                            <button class="action-btn btn-delete" data-action="delete"><i class="bi bi-trash"></i> Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="6" style="text-align:center;color:#888;">Belum ada produk Supplies.</td></tr>
+                            @endforelse
+                        @endisset
                     </tbody>
                 </table>
             </div>
@@ -744,41 +721,29 @@
                             <th style="text-align:center;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><img src="{{ asset('images/whiskas.svg') }}" alt="Vitamin A"></td>
-                            <td>Vitamin A</td>
-                            <td>Vitamin</td>
-                            <td>Rp. 50.000</td>
-                            <td>12</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-edit" onclick="openEditProductModal('Vitamin A','Rp. 50.000','Vitamin',12)">
-                                        <i class="bi bi-pencil"></i> Edit
-                                    </button>
-                                    <button class="action-btn btn-delete">
-                                        <i class="bi bi-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><img src="{{ asset('images/whiskas.svg') }}" alt="Vitamin B"></td>
-                            <td>Vitamin B Complex</td>
-                            <td>Vitamin</td>
-                            <td>Rp. 85.000</td>
-                            <td>7</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-edit" onclick="openEditProductModal('Vitamin B Complex','Rp. 85.000','Vitamin',7)">
-                                        <i class="bi bi-pencil"></i> Edit
-                                    </button>
-                                    <button class="action-btn btn-delete">
-                                        <i class="bi bi-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody id="vitaminsTbody">
+                        @isset($vitamins)
+                            @forelse($vitamins as $p)
+                                <tr data-id="{{ $p->id }}">
+                                    <td>
+                                        @php($img = $p->image_path ? asset('storage/'.$p->image_path) : asset('images/whiskas.svg'))
+                                        <img src="{{ $img }}" alt="{{ $p->name }}">
+                                    </td>
+                                    <td>{{ $p->name }}</td>
+                                    <td>{{ $p->category }}</td>
+                                    <td>Rp. {{ number_format((int) $p->price, 0, ',', '.') }}</td>
+                                    <td>{{ (int) $p->stock }}</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="action-btn btn-edit" data-action="edit"><i class="bi bi-pencil"></i> Edit</button>
+                                            <button class="action-btn btn-delete" data-action="delete"><i class="bi bi-trash"></i> Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="6" style="text-align:center;color:#888;">Belum ada produk Vitamin.</td></tr>
+                            @endforelse
+                        @endisset
                     </tbody>
                 </table>
             </div>
@@ -803,6 +768,10 @@
                     <input type="text" id="addProductName" class="form-input" placeholder="Nama produk" required>
                 </div>
                 <div class="form-group">
+                    <label for="addProductSku" class="form-label">SKU</label>
+                    <input type="text" id="addProductSku" class="form-input" placeholder="SKU unik" required>
+                </div>
+                <div class="form-group">
                     <label for="addProductCategory" class="form-label">Kategori</label>
                     <select id="addProductCategory" class="form-select" required>
                         <option value="">Pilih kategori</option>
@@ -819,6 +788,18 @@
                 <div class="form-group">
                     <label for="addProductStock" class="form-label">Stok</label>
                     <input type="number" id="addProductStock" class="form-input" placeholder="Stok" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="addProductStatus" class="form-label">Status</label>
+                    <select id="addProductStatus" class="form-select" required>
+                        <option value="available">Available</option>
+                        <option value="coming-soon">Coming Soon</option>
+                        <option value="preorder">Pre-order</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addProductDescription" class="form-label">Deskripsi</label>
+                    <textarea id="addProductDescription" class="form-input" rows="3" placeholder="Deskripsi (opsional)"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="addProductImage" class="form-label">Gambar</label>
@@ -844,9 +825,14 @@
         </div>
         <div class="modal-body">
             <form id="editProductForm">
+                <input type="hidden" id="editProductId">
                 <div class="form-group">
                     <label for="editProductName" class="form-label">Nama Produk</label>
                     <input type="text" id="editProductName" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductSku" class="form-label">SKU</label>
+                    <input type="text" id="editProductSku" class="form-input" required>
                 </div>
                 <div class="form-group">
                     <label for="editProductCategory" class="form-label">Kategori</label>
@@ -864,6 +850,18 @@
                 <div class="form-group">
                     <label for="editProductStock" class="form-label">Stok</label>
                     <input type="number" id="editProductStock" class="form-input" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductStatus" class="form-label">Status</label>
+                    <select id="editProductStatus" class="form-select" required>
+                        <option value="available">Available</option>
+                        <option value="coming-soon">Coming Soon</option>
+                        <option value="preorder">Pre-order</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editProductDescription" class="form-label">Deskripsi</label>
+                    <textarea id="editProductDescription" class="form-input" rows="3"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="editProductImage" class="form-label">Gambar</label>
@@ -906,37 +904,286 @@
     </div>
 </div>
 <script>
+    // ===== Helpers =====
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const currencyToInt = (val) => {
+        if (typeof val !== 'string') return Number(val) || 0;
+        return Number(val.replace(/[^0-9]/g, '')) || 0;
+    };
+    const intToRupiah = (n) => new Intl.NumberFormat('id-ID').format(n);
+
+    async function apiFetch(url, options = {}) {
+        const opts = { credentials: 'same-origin', ...options };
+        opts.headers = opts.headers || {};
+        if (!(opts.body instanceof FormData)) {
+            opts.headers['Content-Type'] = 'application/json';
+        }
+        // Always ask for JSON so Laravel validation returns JSON (even with FormData)
+        opts.headers['Accept'] = 'application/json';
+        opts.headers['X-Requested-With'] = 'XMLHttpRequest';
+        opts.headers['X-CSRF-TOKEN'] = csrfToken;
+        const res = await fetch(url, opts);
+        if (!res.ok) {
+            const ctErr = res.headers.get('content-type') || '';
+            try {
+                if (ctErr.includes('application/json')) {
+                    const errJson = await res.json();
+                    if (errJson?.errors) {
+                        // Flatten validation messages
+                        const messages = Object.values(errJson.errors).flat().join('\n');
+                        throw new Error(messages || errJson.message || `Request failed (${res.status})`);
+                    }
+                    throw new Error(errJson.message || `Request failed (${res.status})`);
+                }
+                const text = await res.text();
+                throw new Error(text || `Request failed (${res.status})`);
+            } catch (e) {
+                throw e instanceof Error ? e : new Error(`Request failed (${res.status})`);
+            }
+        }
+        const ct = res.headers.get('content-type') || '';
+        if (ct.includes('application/json')) return res.json();
+        return res.text();
+    }
+
+    // ===== Rendering =====
+    function productRowTemplate(p) {
+        const imgSrc = p.image_path ? (`/storage/` + p.image_path) : `{{ asset('images/whiskas.svg') }}`;
+        return `
+            <tr data-id="${p.id}">
+                <td><img src="${imgSrc}" alt="${p.name}"></td>
+                <td>${p.name}</td>
+                <td>${p.category}</td>
+                <td>Rp. ${intToRupiah(Number(p.price) || 0)}</td>
+                <td>${p.stock}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="action-btn btn-edit" data-action="edit"><i class="bi bi-pencil"></i> Edit</button>
+                        <button class="action-btn btn-delete" data-action="delete"><i class="bi bi-trash"></i> Delete</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+
+    function bindRowActions() {
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const tr = e.currentTarget.closest('tr');
+                const id = Number(tr.getAttribute('data-id'));
+                const action = e.currentTarget.getAttribute('data-action');
+                
+                if (action === 'edit') {
+                    try {
+                        // Ambil data lengkap produk dari API agar field seperti SKU/description terisi
+                        const p = await apiFetch(`{{ url('/admin/products') }}/${id}`);
+                        if (!p || typeof p !== 'object') throw new Error('Produk tidak ditemukan');
+                        openEditProductModal(p);
+                    } catch (err) {
+                        console.error('Gagal mengambil detail produk:', err);
+                        // fallback minimal jika API gagal
+                        const fallback = {
+                            id,
+                            name: tr.cells[1]?.textContent || '',
+                            sku: '',
+                            category: tr.cells[2]?.textContent || '',
+                            price: currencyToInt(tr.cells[3]?.textContent || '0'),
+                            stock: parseInt(tr.cells[4]?.textContent || '0') || 0,
+                            status: 'available',
+                            description: '',
+                        };
+                        openEditProductModal(fallback);
+                    }
+                } else if (action === 'delete') {
+                    deleteProduct(id);
+                }
+            });
+        });
+    }
+
+    function normalizeCategory(cat) {
+        const c = String(cat || '').trim().toLowerCase();
+        if (c.includes('vitamin')) return 'Vitamin';
+        if (c.includes('suppl')) return 'Supplies';
+        if (c.includes('food') || c === 'cat food' || c === 'dog food' || c === 'pet food') return (c.includes('dog') ? 'Dog Food' : (c.includes('cat') ? 'Cat Food' : 'Pet Food'));
+        return cat || '';
+    }
+
+    function renderTables(all) {
+        const petFoodTbody = document.getElementById('petFoodTbody');
+        const suppliesTbody = document.getElementById('suppliesTbody');
+        const vitaminsTbody = document.getElementById('vitaminsTbody');
+        petFoodTbody.innerHTML = '';
+        suppliesTbody.innerHTML = '';
+        vitaminsTbody.innerHTML = '';
+
+        // Sort by created_at desc if available
+        const sorted = [...all].sort((a,b)=>{
+            const da = new Date(a.created_at || 0).getTime();
+            const db = new Date(b.created_at || 0).getTime();
+            return db - da;
+        });
+
+        const petFood = sorted.filter(p => {
+            const cat = normalizeCategory(p.category);
+            return cat === 'Cat Food' || cat === 'Dog Food' || cat === 'Pet Food' || (String(p.category||'').toLowerCase().includes('food'));
+        }).slice(0,3);
+        const supplies = sorted.filter(p => {
+            const cat = normalizeCategory(p.category);
+            return cat === 'Supplies' || String(p.category||'').toLowerCase().includes('suppl');
+        }).slice(0,3);
+        const vitamins = sorted.filter(p => {
+            const cat = normalizeCategory(p.category);
+            return cat === 'Vitamin' || String(p.category||'').toLowerCase().includes('vitamin');
+        }).slice(0,3);
+
+        petFood.forEach(p => petFoodTbody.insertAdjacentHTML('beforeend', productRowTemplate(p)));
+        supplies.forEach(p => suppliesTbody.insertAdjacentHTML('beforeend', productRowTemplate(p)));
+        vitamins.forEach(p => vitaminsTbody.insertAdjacentHTML('beforeend', productRowTemplate(p)));
+
+        if (!petFood.length) petFoodTbody.insertAdjacentHTML('beforeend', '<tr><td colspan="6" style="text-align:center;color:#888;">Belum ada produk Pet Food.</td></tr>');
+        if (!supplies.length) suppliesTbody.insertAdjacentHTML('beforeend', '<tr><td colspan="6" style="text-align:center;color:#888;">Belum ada produk Supplies.</td></tr>');
+        if (!vitamins.length) vitaminsTbody.insertAdjacentHTML('beforeend', '<tr><td colspan="6" style="text-align:center;color:#888;">Belum ada produk Vitamin.</td></tr>');
+
+        bindRowActions();
+    }
+
+    async function loadProducts() {
+        try {
+            const res = await apiFetch(`{{ url('/admin/products') }}?per_page=1000`, { method: 'GET' });
+            const items = Array.isArray(res) ? res : (res.data || []);
+            if (!Array.isArray(items)) throw new Error('Invalid response');
+            renderTables(items);
+        } catch (err) {
+            console.error('Gagal memuat produk:', err);
+        }
+    }
+
+    // ===== Modal controls =====
     function openAddProductModal() {
         document.getElementById('addProductForm').reset();
         document.getElementById('addProductModal').classList.add('active');
         document.body.style.overflow = 'hidden';
     }
+
     function closeAddModal() {
         document.getElementById('addProductModal').classList.remove('active');
         document.body.style.overflow = '';
     }
-    function openEditProductModal(name, price, category, stock) {
-        document.getElementById('editProductName').value = name;
-        document.getElementById('editProductPrice').value = price;
-        document.getElementById('editProductCategory').value = category;
-        document.getElementById('editProductStock').value = stock;
+
+    function openEditProductModal(p) {
+        document.getElementById('editProductId').value = p.id;
+        document.getElementById('editProductName').value = p.name || '';
+        document.getElementById('editProductSku').value = p.sku || '';
+        document.getElementById('editProductCategory').value = p.category || '';
+        document.getElementById('editProductPrice').value = `Rp. ${intToRupiah(Number(p.price) || 0)}`;
+        document.getElementById('editProductStock').value = p.stock ?? 0;
+        document.getElementById('editProductStatus').value = p.status || 'available';
+        document.getElementById('editProductDescription').value = p.description || '';
         document.getElementById('editProductModal').classList.add('active');
         document.body.style.overflow = 'hidden';
     }
+
     function closeEditModal() {
         document.getElementById('editProductModal').classList.remove('active');
         document.body.style.overflow = '';
     }
-    function submitAddProduct() {
-        // Logic tambah produk (push ke array, refresh tabel, dsb)
-        closeAddModal();
-        alert('Produk baru berhasil ditambahkan!');
+
+    async function submitAddProduct() {
+        try {
+            const btn = document.querySelector('#addProductModal .btn-save');
+            btn.disabled = true; 
+            btn.textContent = 'Menyimpan...';
+            
+            const fd = new FormData();
+            fd.append('name', document.getElementById('addProductName').value.trim());
+            fd.append('sku', document.getElementById('addProductSku').value.trim());
+            fd.append('category', document.getElementById('addProductCategory').value);
+            fd.append('price', String(currencyToInt(document.getElementById('addProductPrice').value)));
+            fd.append('stock', String(Number(document.getElementById('addProductStock').value || 0)));
+            fd.append('status', document.getElementById('addProductStatus').value);
+            fd.append('description', document.getElementById('addProductDescription').value || '');
+            
+            const img = document.getElementById('addProductImage').files[0];
+            if (img) fd.append('image', img);
+            
+            await apiFetch(`{{ url('/admin/products') }}`, { method: 'POST', body: fd });
+            closeAddModal();
+            
+            // Setelah menambah produk, muat ulang data
+            await loadProducts();
+            alert('Produk baru berhasil ditambahkan!');
+        } catch (e) {
+            console.error(e);
+            alert('Gagal menambahkan produk:\n' + (e.message || e));
+        } finally {
+            const btn = document.querySelector('#addProductModal .btn-save');
+            if (btn) { 
+                btn.disabled = false; 
+                btn.textContent = 'Tambah Produk'; 
+            }
+        }
     }
-    function submitEditProduct() {
-        // Logic edit produk (update array, refresh tabel, dsb)
-        closeEditModal();
-        alert('Produk berhasil diupdate!');
+
+    async function submitEditProduct() {
+        try {
+            const btn = document.querySelector('#editProductModal .btn-save');
+            btn.disabled = true; 
+            btn.textContent = 'Menyimpan...';
+            
+            const id = document.getElementById('editProductId').value;
+            const fd = new FormData();
+            fd.append('_method', 'PUT');
+            fd.append('name', document.getElementById('editProductName').value.trim());
+            fd.append('sku', document.getElementById('editProductSku').value.trim());
+            fd.append('category', document.getElementById('editProductCategory').value);
+            fd.append('price', String(currencyToInt(document.getElementById('editProductPrice').value)));
+            fd.append('stock', String(Number(document.getElementById('editProductStock').value || 0)));
+            fd.append('status', document.getElementById('editProductStatus').value);
+            fd.append('description', document.getElementById('editProductDescription').value || '');
+            
+            const img = document.getElementById('editProductImage').files[0];
+            if (img) fd.append('image', img);
+            
+            await apiFetch(`{{ url('/admin/products') }}/${id}`, { method: 'POST', body: fd });
+            closeEditModal();
+            
+            // Setelah mengedit produk, muat ulang data
+            await loadProducts();
+            alert('Produk berhasil diupdate!');
+        } catch (e) {
+            console.error(e);
+            alert('Gagal mengupdate produk:\n' + (e.message || e));
+        } finally {
+            const btn = document.querySelector('#editProductModal .btn-save');
+            if (btn) { 
+                btn.disabled = false; 
+                btn.textContent = 'Simpan Perubahan'; 
+            }
+        }
     }
+
+    async function deleteProduct(id) {
+        if (!confirm('Hapus produk ini?')) return;
+        try {
+            await apiFetch(`{{ url('/admin/products') }}/${id}`, { 
+                method: 'POST', 
+                body: (() => {
+                    const f = new FormData(); 
+                    f.append('_method','DELETE'); 
+                    return f;
+                })() 
+            });
+            
+            // Setelah menghapus produk, muat ulang data
+            await loadProducts();
+            alert('Produk berhasil dihapus!');
+        } catch (e) {
+            console.error(e);
+            alert('Gagal menghapus produk:\n' + (e.message || e));
+        }
+    }
+
     // Close modal with ESC key
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
@@ -944,6 +1191,7 @@
             closeEditModal();
         }
     });
+
     // Close modal when click outside
     document.getElementById('addProductModal').addEventListener('click', function (e) {
         if (e.target === this) closeAddModal();
@@ -951,53 +1199,15 @@
     document.getElementById('editProductModal').addEventListener('click', function (e) {
         if (e.target === this) closeEditModal();
     });
-        // Notification Functions
-const modal = document.getElementById("notificationModal");
-const badge = document.getElementById("notificationBadge");
-let notifications = document.querySelectorAll(".notification-item.unread");
 
-function toggleNotificationModal() {
-    modal.classList.toggle("show");
-    document.body.style.overflow = modal.classList.contains("show") ? "hidden" : "";
-    
-    // Mark notifications as read when opening the modal
-    if (modal.classList.contains("show")) {
-        markAllAsRead();
-    }
-}
-
-function markAllAsRead() {
-    const unreadItems = document.querySelectorAll(".notification-item.unread");
-    unreadItems.forEach(item => {
-        item.classList.remove("unread");
-        item.style.opacity = '0.7';
+    // Bind action buttons setelah DOM selesai dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+        bindRowActions();
+        
+        // Hanya loadProducts jika tidak ada data yang ditampilkan
+        const hasData = document.querySelectorAll('#petFoodTbody tr, #suppliesTbody tr, #vitaminsTbody tr').length > 0;
+        if (!hasData) {
+            loadProducts();
+        }
     });
-    
-    // Update badge count
-    updateBadgeCount();
-}
-
-function updateBadgeCount() {
-    const unreadCount = document.querySelectorAll(".notification-item.unread").length;
-    if (unreadCount > 0) {
-        badge.textContent = unreadCount;
-        badge.style.display = 'flex';
-    } else {
-        badge.style.display = 'none';
-    }
-}
-
-// Close modal when clicking outside
-window.onclick = function(event) {
-    if (event.target === modal) {
-        toggleNotificationModal();
-    }
-}
-
-// Close modal with Escape key
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape' && modal.classList.contains('show')) {
-        toggleNotificationModal();
-    }
-});
 </script>

@@ -9,262 +9,271 @@
 <title>Pet Daycare Booking</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        background-color: #fff;
-        margin: 0;
-        padding: 0;
-        color: #674337;
-    }
-    .container {
-        max-width: 700px;
-        margin: auto;
-        padding: 20px;
-    }
-    /* Header */
-    .hero {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 40px;
-      background: linear-gradient(to right, #fbe1c3, #fff);
-    }
+        /* ===== GLOBAL STYLES ===== */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+            color: #674337;
+        }
 
-    .hero-text {
-  max-width: 60%;
-  text-align: center;   /* ✅ ini yang bikin teks center */
-  margin: 0 auto;       /* ✅ supaya benar-benar ke tengah */
-}
+        .container {
+            max-width: 700px;
+            margin: auto;
+            padding: 20px;
+        }
 
-    .hero-title {
-      font-size: 50px;
-      font-weight: 750;
-      color: #9C6F4B;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+        /* ===== HERO SECTION ===== */
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: linear-gradient(to right, #fbe1c3, #fff);
+        }
 
-    .hero-title img {
-      width: 20px;
-    }
+        .hero-text {
+            max-width: 60%;
+            text-align: center;
+            margin: 0 auto;
+        }
 
-    .hero-subtitle {
-      margin-top: 8px;
-      font-size: 20px;
-      color: #9C6F4B;
-      font-weight: 400;
-    }
+        .hero-title {
+            font-size: 50px;
+            font-weight: 750;
+            color: #8A6552;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    .hero-image img { 
-      display: block;  
-      max-height: 180px;
-    }
+        .hero-title img {
+            width: 20px;
+        }
 
-    /* Section */
-    .section {
-        margin-top: 20px;
-        padding: 20px;
-        border: 1px solid #f0e6e2;
-        border-radius: 10px;
-    }
-    .section-title {
-        display: flex;
-        align-items: center;
-        font-weight: 600;
-        font-size: 16px;
-        margin-bottom: 15px;
-    }
-    .section-title img {
-        width: 30px;
-        height: auto;
-        margin-right: 8px;
-    }
-    .form-group {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 15px;
-    }
+        .hero-subtitle {
+            margin-top: 8px;
+            font-size: 20px;
+            color: #8A6552;
+            font-weight: 400;
+        }
 
-.form-field {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
+        .hero-image img {
+            display: block;
+            max-height: 180px;
+        }
 
-.form-field label {
-    margin-bottom: 5px;
-    font-weight: 500;
-    font-size: 14px;
-    color: #674337;
-}
+        /* ===== FORM SECTIONS ===== */
+        .section {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #f0e6e2;
+            border-radius: 10px;
+        }
 
-.form-field input {
-    padding: 8px;
-    border: 1px solid #9C6F4B;
-    border-radius: 6px;
-    font-size: 14px;
-}
+        .section-title {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
 
-    .form-group input {
-        flex: 1;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        font-family: inherit;
-        font-size: 14px;
-    }
+        .section-title img {
+            width: 30px;
+            height: auto;
+            margin-right: 8px;
+        }
 
-    .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: 'Poppins', sans-serif;
-    resize: none; /* Biar user tidak bisa drag ukuran */
-    box-sizing: border-box;
-}
-.form-group textarea:focus {
-    outline: none;
-    border-color: #ddd;
-}
+        .form-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
 
-    /* Cost Estimation */
-    .cost {
-        margin-top: 20px;
-        text-align: center;
-        padding: 20px;
-        background: #FFE0B5;
-        border-radius: 12px;
-        font-size: 14px;
-    }
-    .cost-title {
-    display: flex;
-    justify-content: center; /* center horizontal */
-    align-items: center;      /* center vertical */
-    font-weight: 600;
-    font-size: 16px;
-    margin-bottom: 15px;
-}
-    .cost strong {
-        font-size: 16px;
-        display: block;
-        margin-bottom: 5px;
-    }
+        .form-field {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
 
-    /* Button */
-    .submit-btn {
-        display: block;
-        margin: 20px auto 10px;
-        padding: 12px 30px;
-        border: none;
-        border-radius: 8px;
-        background: #CA2E55;
-        color: #F6A892;
-        font-weight: 600;
-        font-size: 14px;
-        cursor: pointer;
-    }
+        .form-field label {
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #674337;
+        }
 
-    .note {
-        text-align: center;
-        font-size: 12px;
-        color: #9C6F4B;
-    }
-/* Modal */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0; top: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.5);
-        justify-content: center;
-        align-items: center;
-        font-family: 'Poppins', sans-serif;
-    }
+        .form-field input {
+            padding: 8px;
+            border: 1px solid #8A6552;
+            border-radius: 6px;
+            font-size: 14px;
+        }
 
-    .modal-content {
-        background: white;
-        padding: 20px;
-        border-radius: 15px;
-        text-align: center;
-        max-width: 700px;
-        width: 90%;
-        max-height: 90vh;
-        overflow-y: auto;
-        position: relative;
-        margin: 20px;
-        box-sizing: border-box;
-    }
+        .form-group input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-family: inherit;
+            font-size: 14px;
+        }
 
-    .close-btn {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        cursor: pointer;
-        font-size: 18px;
-        color: #999;
-    }
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            resize: none;
+            box-sizing: border-box;
+        }
 
-    .modal-content img {
-        height: 60px;
-        margin-bottom: 15px;
-    }
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ddd;
+        }
 
-    .modal-title {
-        font-weight: 700;
-        font-size: 18px;
-        margin-bottom: 8px;
-    }
+        /* ===== COST ESTIMATION ===== */
+        .cost {
+            margin-top: 20px;
+            text-align: center;
+            padding: 20px;
+            background: #FFE0B5;
+            border-radius: 12px;
+            font-size: 14px;
+        }
 
-    .modal-desc {
-        font-size: 14px;
-        color: #9C6F4B;
-        margin-bottom: 25px;
-    }
+        .cost-title {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
 
-    /* Booking Info Grid */
-    .booking-info { 
-        display: grid; 
-        grid-template-columns: repeat(2, 1fr); 
-        gap: 15px 20px;
-        margin-bottom: 20px; 
-        justify-items: center;
-    }
+        .cost strong {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 5px;
+        }
 
-    /* Info Card */
-    .info-card { 
-        background: #fff; 
-        border-radius: 10px;
-        padding: 12px 16px;
-        box-shadow: 2px 2px 0px #f4a28c;
-        border: 1px solid #eee;
-        width: 100%;
-        max-width: 200px;
-        text-align: center;
-        box-sizing: border-box;
-    }
+        /* ===== BUTTONS ===== */
+        .submit-btn {
+            display: block;
+            margin: 20px auto 10px;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            background: #E07A5F;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
 
-    .info-card .title { 
-        font-weight: 600;
-        font-size: 13px;
-        margin-bottom: 5px;
-    }
+        .note {
+            text-align: center;
+            font-size: 12px;
+            color: #8A6552;
+        }
+        /* ===== MODAL STYLES ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+        }
 
-    .info-card .subtitle { 
-        font-size: 14px;
-        font-weight: 400;
-        color: #9C6F4B;
-    }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            margin: 20px;
+            box-sizing: border-box;
+        }
 
-    .info-card .subtitle i {
-        font-size: 12px;
-        color: #9C6F4B;
-    }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #999;
+        }
 
-   
+        .modal-content img {
+            height: 60px;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 14px;
+            color: #8A6552;
+            margin-bottom: 25px;
+        }
+
+        /* ===== BOOKING INFO GRID ===== */
+        .booking-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px 20px;
+            margin-bottom: 20px;
+            justify-items: center;
+        }
+
+        .info-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 12px 16px;
+            box-shadow: 2px 2px 0px #f4a28c;
+            border: 1px solid #eee;
+            width: 100%;
+            max-width: 200px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .info-card .title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .info-card .subtitle {
+            font-size: 14px;
+            font-weight: 400;
+            color: #8A6552;
+        }
+
+        .info-card .subtitle i {
+            font-size: 12px;
+            color: #8A6552;
+        }
+    
 </style>
 </head>
 <body>
@@ -284,20 +293,23 @@
   </section>
 
 <div class="container">
+    <form method="POST" action="{{ route('booking.store') }}">
+        @csrf
+        <input type="hidden" name="service_type" value="boarding">
     <!-- Booking Schedule -->
     <div class="section">
         <div class="section-title"><img src="{{ asset('images/Schedule.svg') }}" alt="">Booking Schedule</div>
         <div class="form-group">
-    <div class="form-field">
-        <label>Start Date</label>
-        <input type="date" id="startDate" readonly>
-    </div>
+            <div class="form-field">
+                <label>Booking Date</label>
+                <input type="date" id="booking_date" name="booking_date" required>
+            </div>
 
-    <div class="form-field">
-        <label>End Date</label>
-        <input type="date" id="endDate" readonly>
-    </div>
-</div>
+            <div class="form-field">
+                <label>Time</label>
+                <input type="time" id="booking_time" name="booking_time" required>
+            </div>
+        </div>
         <div class="form-group">
             <input type="text" placeholder="Drop-off Time">
             <input type="text" placeholder="Pick-up Time">
@@ -327,14 +339,20 @@
     <!-- Pet Information -->
     <div class="section">
         <div class="section-title"><img src="{{ asset('images/Pets.svg') }}" alt="">Pet Information</div>
-        <div class="pet-list">
-            <div class="pet-item">
-                <input type="checkbox" id="pet1">
-                <label for="pet1">Buddy (Golden Retriever)</label>
+        <div class="form-group">
+            <div class="form-field">
+                <label>Pet Name</label>
+                <input type="text" name="pet_name" placeholder="e.g., Max" required>
             </div>
-            <div class="pet-item">
-                <input type="checkbox" id="pet2">
-                <label for="pet2">Kitty (Persia)</label>
+            <div class="form-field">
+                <label>Pet Type</label>
+                <select name="pet_type" required style="padding:8px; border: 1px solid #9C6F4B; border-radius: 6px; font-size: 14px;">
+                    <option value="dog">Dog</option>
+                    <option value="cat">Cat</option>
+                    <option value="bird">Bird</option>
+                    <option value="rabbit">Rabbit</option>
+                    <option value="other">Other</option>
+                </select>
             </div>
         </div>
     </div>
@@ -343,7 +361,7 @@
     <div class="section">
         <div class="section-title"><img src="{{ asset('images/Edit.svg') }}" alt="">Special Notes</div>
         <div class="form-group">
-            <textarea placeholder="Pet Special Instructions: Allergies/Health Issues" rows="5"></textarea>
+            <textarea name="notes" placeholder="Pet Special Instructions: Allergies/Health Issues" rows="5"></textarea>
         </div>
     </div>
 
@@ -355,8 +373,9 @@
     </div>
 
     <!-- Submit Button -->
-    <button class="submit-btn" onclick="openModal()">Submit Booking</button>
+    <button type="submit" class="submit-btn">Submit Booking</button>
     <div class="note">Our team will contact you within 24 hours for confirmation</div>
+</form>
 </div>
 <!-- Modal -->
 <div class="modal" id="bookingModal">
@@ -369,19 +388,19 @@
         <div class="booking-info"> 
             <div class="info-card"> 
                 <div class="title">Owner Name</div>
-                <div class="subtitle">Jeremiah</div>
+                <div class="subtitle" id="ownerName">-</div>
             </div> 
             <div class="info-card">
                 <div class="title">Pet Details</div>
-                <div class="subtitle">Max <br><i>(Golden Retriever)</i></div>
+                <div class="subtitle" id="petDetails">-</div>
             </div> 
             <div class="info-card">
-                <div class="title">Service Period</div>
-                <div class="subtitle">Dec 25 – Dec 30, 2025</div> 
+                <div class="title">Service Date</div>
+                <div class="subtitle" id="servicePeriod">-</div> 
             </div>
             <div class="info-card"> 
                 <div class="title">Contact</div>
-                <div class="subtitle">+62 1234–5678</div>
+                <div class="subtitle" id="ownerContact">-</div>
             </div>
             <div class="info-card">
                 <div class="title">Drop-off</div>
@@ -400,13 +419,83 @@
 </div>
 
 <script>
-    function openModal(){
-        const dropOff = document.querySelector('input[name="dropOff"]:checked').value;
-      const pickUp = document.querySelector('input[name="pickUp"]:checked').value;
-      document.getElementById("confirmDropOff").textContent = dropOff;
-      document.getElementById("confirmPickUp").textContent = pickUp;
+    // Make current logged-in member available to JS (name, phone)
+    const currentMember = @json(optional(auth('member')->user())->only(['name','phone']));
 
-        document.getElementById("bookingModal").style.display = "flex";
+    // Intercept form submit to send as AJAX and show success modal instantly
+    (function(){
+      const form = document.querySelector('form[action="{{ route('booking.store') }}"]');
+      if (!form) return;
+      form.addEventListener('submit', async function(e){
+        e.preventDefault();
+        const fd = new FormData(form);
+        const payload = {
+          service_type: fd.get('service_type'),
+          pet_name: fd.get('pet_name'),
+          pet_type: fd.get('pet_type'),
+          booking_date: fd.get('booking_date'),
+          booking_time: fd.get('booking_time'),
+          notes: fd.get('notes') || null,
+        };
+
+        const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        try {
+          const res = await fetch("{{ route('booking.store') }}", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': csrf || '',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          // If not logged in, Laravel may redirect (res.redirected) or return 401/json
+          if (res.redirected) {
+            window.location.href = res.url;
+            return;
+          }
+          if (!res.ok) {
+            const data = await res.json().catch(()=>({ message: 'Failed to submit booking'}));
+            alert(data.message || 'Failed to submit booking');
+            return;
+          }
+
+          // Success -> show success modal with freshly entered data
+          await res.json();
+          openModal(payload);
+          form.reset();
+        } catch (err) {
+          alert('Network error. Please try again.');
+        }
+      });
+    })();
+
+    function capitalize(s){ return (s||'').charAt(0).toUpperCase() + (s||'').slice(1); }
+
+    function formatDate(dateStr){
+        try {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('id-ID', { day:'2-digit', month:'2-digit', year:'numeric' });
+        } catch { return dateStr; }
+    }
+
+    function openModal(payload){
+        const dropOff = document.querySelector('input[name="dropOff"]:checked')?.value || '-';
+        const pickUp = document.querySelector('input[name="pickUp"]:checked')?.value || '-';
+
+        document.getElementById('confirmDropOff').textContent = dropOff;
+        document.getElementById('confirmPickUp').textContent = pickUp;
+
+        // Fill dynamic info
+        document.getElementById('ownerName').textContent = currentMember?.name || '-';
+        document.getElementById('ownerContact').textContent = currentMember?.phone || '-';
+        const petTypeText = capitalize(payload?.pet_type);
+        document.getElementById('petDetails').innerHTML = `${payload?.pet_name || '-'} <br><i>(${petTypeText || '-'})</i>`;
+        const serviceText = `${formatDate(payload?.booking_date)} ${payload?.booking_time || ''}`.trim();
+        document.getElementById('servicePeriod').textContent = serviceText || '-';
+
+        document.getElementById('bookingModal').style.display = 'flex';
     }
     function closeModal(){
         document.getElementById("bookingModal").style.display = "none";

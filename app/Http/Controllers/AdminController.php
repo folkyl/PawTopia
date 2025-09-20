@@ -44,7 +44,24 @@ class AdminController extends Controller
     // dst...
     public function productmanagement()
     {
-        return view('admin.productmanagement');
+        // Preload products from DB so the view can render immediately
+        \App\Models\Product::query(); // ensure model is autoloaded
+        $all = \App\Models\Product::orderByDesc('created_at')->get();
+
+        $petFood = $all->filter(function ($p) {
+            $c = strtolower(trim((string)$p->category));
+            return $c === 'cat food' || $c === 'dog food' || str_contains($c, 'food');
+        })->take(3);
+        $supplies = $all->filter(function ($p) {
+            $c = strtolower(trim((string)$p->category));
+            return $c === 'supplies' || str_contains($c, 'suppl');
+        })->take(3);
+        $vitamins = $all->filter(function ($p) {
+            $c = strtolower(trim((string)$p->category));
+            return $c === 'vitamin' || str_contains($c, 'vitamin');
+        })->take(3);
+
+        return view('admin.productmanagement', compact('petFood', 'supplies', 'vitamins'));
     }
 
     public function customer()
@@ -74,16 +91,31 @@ class AdminController extends Controller
 
     public function petfood()
     {
-        return view('admin.petfood');
+        $all = \App\Models\Product::orderByDesc('created_at')->get();
+        $items = $all->filter(function ($p) {
+            $c = strtolower(trim((string)$p->category));
+            return $c === 'cat food' || $c === 'dog food' || str_contains($c, 'food');
+        });
+        return view('admin.petfood', ['items' => $items]);
     }
 
     public function petsupplies()
     {
-        return view('admin.petsupplies');
+        $all = \App\Models\Product::orderByDesc('created_at')->get();
+        $items = $all->filter(function ($p) {
+            $c = strtolower(trim((string)$p->category));
+            return $c === 'supplies' || str_contains($c, 'suppl');
+        });
+        return view('admin.petsupplies', ['items' => $items]);
     }
 
     public function petvitamins()
     {
-        return view('admin.petvitamins');
+        $all = \App\Models\Product::orderByDesc('created_at')->get();
+        $items = $all->filter(function ($p) {
+            $c = strtolower(trim((string)$p->category));
+            return $c === 'vitamin' || str_contains($c, 'vitamin');
+        });
+        return view('admin.petvitamins', ['items' => $items]);
     }
 }

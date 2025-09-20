@@ -463,68 +463,26 @@ body {
 
     <!-- Cat Food Products -->
     <div class="products-grid" id="cat-food">
-        @foreach([
-            [
-                'id'=>1,
-                'img'=>'wiskas.png',
-                'name'=>'WHISKAS Adult Cat Food',
-                'description'=>'Makanan kucing dewasa dengan nutrisi lengkap dan seimbang. Mengandung protein tinggi untuk menjaga kesehatan dan energi kucing. Kemasan 1.2kg dengan rasa ikan, cocok untuk usia 1+ tahun.',
-                'sku'=>'WHI-001',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>2,
-                'img'=>'catcois.png',
-                'name'=>'CAT CHOIZE Premium',
-                'description'=>'Formula premium untuk kucing aktif. Diperkaya vitamin E dan omega-3 untuk bulu yang sehat dan berkilau. Kemasan 800g rasa ayam & sayuran untuk semua umur.',
-                'sku'=>'CAT-002',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>3,
-                'img'=>'exel.png',
-                'name'=>'EXCEL Cat Nutrition',
-                'description'=>'Nutrisi harian kucing dengan kandungan taurin untuk kesehatan mata dan jantung. Mudah dicerna dengan kemasan 1kg rasa salmon, cocok untuk kitten & adult.',
-                'sku'=>'EXL-003',
-                'status'=>'coming-soon',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>4,
-                'img'=>'f1.png',
-                'name'=>'FELIBITE Dry Food',
-                'description'=>'Makanan kering kucing dengan teknologi advanced nutrition. Menjaga kesehatan saluran kemih kucing. Kemasan 1.5kg rasa tuna dengan pH balanced formula.',
-                'sku'=>'FEL-004',
-                'status'=>'preorder',
-                'price'=>1000,
-                'sale'=>200
-            ],
-        ] as $p)
+        @foreach($catFood as $p)
+        @php
+            $statusClass = $p->status === 'active' ? 'available' : $p->status;
+            $statusText = $statusClass === 'available' ? 'Tersedia' : ($statusClass === 'coming-soon' ? 'Coming Soon' : 'Pre-order');
+            $img = $p->image_path ? asset($p->image_path) : asset('images/1.svg');
+        @endphp
         <div class="product-card"
-             data-name="{{ strtolower($p['name']) }}"
-             data-description="{{ strtolower($p['description']) }}"
-             data-sku="{{ strtolower($p['sku']) }}">
+             data-name="{{ strtolower($p->name) }}"
+             data-description="{{ strtolower((string)$p->description) }}"
+             data-sku="{{ strtolower((string)$p->sku) }}">
             <div class="product-images">
-                <img src="{{ asset('images/'.$p['img']) }}" alt="{{ $p['name'] }}">
+                <img src="{{ $img }}" alt="{{ $p->name }}">
             </div>
             <div class="product-info">
-                <h3 class="product-name">{{ $p['name'] }}</h3>
-                <p class="product-description">{{ $p['description'] }}</p>
-                <div class="product-sku">SKU: {{ $p['sku'] }}</div>
-                <div class="product-status status-{{ $p['status'] }}">
-                    @if($p['status'] == 'available') Tersedia
-                    @elseif($p['status'] == 'coming-soon') Coming Soon
-                  
-                    @endif
-                </div>
+                <h3 class="product-name">{{ $p->name }}</h3>
+                <p class="product-description">{{ $p->description }}</p>
+                <div class="product-sku">SKU: {{ $p->sku }}</div>
+                <div class="product-status status-{{ $statusClass }}">{{ $statusText }}</div>
                 <div class="product-price">
-                    <span class="price-sale">Rp{{ number_format($p['sale'],0,',','.') }}.00</span>
-                    <span class="price-original">Rp{{ number_format($p['price'],0,',','.') }}</span>
+                    <span class="price-sale">Rp{{ number_format($p->price,0,',','.') }}</span>
                 </div>
             </div>
         </div>
@@ -533,68 +491,26 @@ body {
 
     <!-- Dog Food Products -->
     <div class="products-grid" id="dog-food" style="display: none;">
-        @foreach([
-            [
-                'id'=>5,
-                'img'=>'dog1.png',
-                'name'=>'PEDIGREE Adult Complete',
-                'description'=>'Nutrisi lengkap untuk anjing dewasa dengan protein berkualitas tinggi. Mendukung sistem imun yang kuat. Kemasan 1.5kg rasa daging sapi untuk usia 1-7 tahun.',
-                'sku'=>'PED-005',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>6,
-                'img'=>'dog2.png',
-                'name'=>'DOG CHOIZE Premium',
-                'description'=>'Formula premium untuk anjing aktif dan berenergi. Mengandung glukosamin untuk kesehatan sendi. Kemasan 2kg rasa ayam dengan protein 26%.',
-                'sku'=>'DOG-006',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>7,
-                'img'=>'dog3.png',
-                'name'=>'SMARTHEART Gold',
-                'description'=>'Makanan anjing dengan formula gold untuk pertumbuhan optimal. Diperkaya DHA untuk perkembangan otak. Kemasan 1.8kg rasa lamb & rice untuk semua breed.',
-                'sku'=>'SMH-007',
-                'status'=>'coming-soon',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>8,
-                'img'=>'dog4.png',
-                'name'=>'CANIBITE Healthy',
-                'description'=>'Makanan anjing sehat dengan bahan alami pilihan. Bebas pewarna buatan dan pengawet berbahaya. Kemasan 1kg rasa ikan & sayuran dengan formula natural.',
-                'sku'=>'CAN-008',
-                'status'=>'preorder',
-                'price'=>1000,
-                'sale'=>200
-            ],
-        ] as $p)
+        @foreach($dogFood as $p)
+        @php
+            $statusClass = $p->status === 'active' ? 'available' : $p->status;
+            $statusText = $statusClass === 'available' ? 'Available' : ($statusClass === 'coming-soon' ? 'Coming Soon' : 'Pre-order');
+            $img = $p->image_path ? asset($p->image_path) : asset('images/1.svg');
+        @endphp
         <div class="product-card"
-             data-name="{{ strtolower($p['name']) }}"
-             data-description="{{ strtolower($p['description']) }}"
-             data-sku="{{ strtolower($p['sku']) }}">
+             data-name="{{ strtolower($p->name) }}"
+             data-description="{{ strtolower((string)$p->description) }}"
+             data-sku="{{ strtolower((string)$p->sku) }}">
             <div class="product-images">
-                <img src="{{ asset('images/'.$p['img']) }}" alt="{{ $p['name'] }}">
+                <img src="{{ $img }}" alt="{{ $p->name }}">
             </div>
             <div class="product-info">
-                <h3 class="product-name">{{ $p['name'] }}</h3>
-                <p class="product-description">{{ $p['description'] }}</p>
-                <div class="product-sku">SKU: {{ $p['sku'] }}</div>
-                <div class="product-status status-{{ $p['status'] }}">
-                    @if($p['status'] == 'available') Available
-                    @elseif($p['status'] == 'coming-soon') Coming Soon
-                   
-                    @endif
-                </div>
+                <h3 class="product-name">{{ $p->name }}</h3>
+                <p class="product-description">{{ $p->description }}</p>
+                <div class="product-sku">SKU: {{ $p->sku }}</div>
+                <div class="product-status status-{{ $statusClass }}">{{ $statusText }}</div>
                 <div class="product-price">
-                    <span class="price-sale">Rp{{ number_format($p['sale'],0,',','.') }}.00</span>
-                    <span class="price-original">Rp{{ number_format($p['price'],0,',','.') }}</span>
+                    <span class="price-sale">Rp{{ number_format($p->price,0,',','.') }}</span>
                 </div>
             </div>
         </div>
@@ -624,68 +540,26 @@ body {
 
     <!-- Cat Supplies Products -->
     <div class="products-grid" id="cat-supplies">
-        @foreach([
-            [
-                'id'=>9,
-                'img'=>'scop.png',
-                'name'=>'Litter Scoop Premium',
-                'description'=>'Sekop pasir kucing dengan desain ergonomis dan lubang sempurna untuk menyaring pasir bersih. Material plastic ABS dengan panjang 27cm dan anti-stick coating.',
-                'sku'=>'LSC-009',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>10,
-                'img'=>'eat.png',
-                'name'=>'Food Bowl Set',
-                'description'=>'Set mangkuk makan dan minum kucing dengan desain anti-slip. Mudah dibersihkan dan tahan lama. Material stainless steel diameter 15cm set 2pcs.',
-                'sku'=>'FBS-010',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>11,
-                'img'=>'kan.png',
-                'name'=>'Pet Carrier Cage',
-                'description'=>'Kandang travel untuk kucing dengan ventilasi baik. Dilengkapi pegangan yang kuat dan nyaman. Ukuran 45x30x28cm material plastic + metal maksimal 8kg.',
-                'sku'=>'PCC-011',
-                'status'=>'coming-soon',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>12,
-                'img'=>'main.png',
-                'name'=>'Feather Toy Interactive',
-                'description'=>'Mainan bulu interaktif untuk melatih refleks dan memberikan hiburan bagi kucing kesayangan. Panjang 40cm material feather + plastic warna random.',
-                'sku'=>'FTI-012',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-        ] as $p)
+        @foreach($catSupplies as $p)
+        @php
+            $statusClass = $p->status === 'active' ? 'available' : $p->status;
+            $statusText = $statusClass === 'available' ? 'Tersedia' : ($statusClass === 'coming-soon' ? 'Coming Soon' : 'Pre-order');
+            $img = $p->image_path ? asset($p->image_path) : asset('images/1.svg');
+        @endphp
         <div class="product-card"
-             data-name="{{ strtolower($p['name']) }}"
-             data-description="{{ strtolower($p['description']) }}"
-             data-sku="{{ strtolower($p['sku']) }}">
+             data-name="{{ strtolower($p->name) }}"
+             data-description="{{ strtolower((string)$p->description) }}"
+             data-sku="{{ strtolower((string)$p->sku) }}">
             <div class="product-images">
-                <img src="{{ asset('images/'.$p['img']) }}" alt="{{ $p['name'] }}">
+                <img src="{{ $img }}" alt="{{ $p->name }}">
             </div>
             <div class="product-info">
-                <h3 class="product-name">{{ $p['name'] }}</h3>
-                <p class="product-description">{{ $p['description'] }}</p>
-                <div class="product-sku">SKU: {{ $p['sku'] }}</div>
-                <div class="product-status status-{{ $p['status'] }}">
-                    @if($p['status'] == 'available') Tersedia
-                    @elseif($p['status'] == 'coming-soon') Coming Soon
-                    @else Pre-order
-                    @endif
-                </div>
+                <h3 class="product-name">{{ $p->name }}</h3>
+                <p class="product-description">{{ $p->description }}</p>
+                <div class="product-sku">SKU: {{ $p->sku }}</div>
+                <div class="product-status status-{{ $statusClass }}">{{ $statusText }}</div>
                 <div class="product-price">
-                    <span class="price-sale">Rp{{ number_format($p['sale'],0,',','.') }}.00</span>
-                    <span class="price-original">Rp{{ number_format($p['price'],0,',','.') }}</span>
+                    <span class="price-sale">Rp{{ number_format($p->price,0,',','.') }}</span>
                 </div>
             </div>
         </div>
@@ -694,68 +568,26 @@ body {
 
     <!-- Dog Supplies Products -->
     <div class="products-grid" id="dog-supplies" style="display: none;">
-        @foreach([
-            [
-                'id'=>13,
-                'img'=>'psr.png',
-                'name'=>'Animal Sandbox Large',
-                'description'=>'Kotak pasir berukuran besar untuk anjing dengan sistem drainase yang baik dan mudah dibersihkan. Ukuran 60x40x15cm material high-grade plastic dengan non-slip base.',
-                'sku'=>'ASL-013',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>14,
-                'img'=>'drink.png',
-                'name'=>'Water Dispenser Auto',
-                'description'=>'Dispenser air otomatis untuk anjing dengan kapasitas besar. Menjaga air selalu segar dan bersih. Kapasitas 2L material BPA-free plastic dengan auto-refill system.',
-                'sku'=>'WDA-014',
-                'status'=>'preorder',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>15,
-                'img'=>'kuku.png',
-                'name'=>'Pet Nail Clipper Pro',
-                'description'=>'Gunting kuku hewan profesional dengan pisau stainless steel tajam dan pegangan anti-slip. Material stainless steel + rubber panjang 14cm dengan safety lock.',
-                'sku'=>'PNC-015',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>16,
-                'img'=>'scat.png',
-                'name'=>'Cleaning Brush Set',
-                'description'=>'Set sikat pembersih lengkap untuk merawat bulu anjing. Menghilangkan bulu rontok dan kotoran. Set 3pcs material natural bristle dengan handle bamboo.',
-                'sku'=>'CBS-016',
-                'status'=>'coming-soon',
-                'price'=>1000,
-                'sale'=>200
-            ],
-        ] as $p)
+        @foreach($dogSupplies as $p)
+        @php
+            $statusClass = $p->status === 'active' ? 'available' : $p->status;
+            $statusText = $statusClass === 'available' ? 'Tersedia' : ($statusClass === 'coming-soon' ? 'Coming Soon' : 'Pre-order');
+            $img = $p->image_path ? asset($p->image_path) : asset('images/1.svg');
+        @endphp
         <div class="product-card"
-             data-name="{{ strtolower($p['name']) }}"
-             data-description="{{ strtolower($p['description']) }}"
-             data-sku="{{ strtolower($p['sku']) }}">
+             data-name="{{ strtolower($p->name) }}"
+             data-description="{{ strtolower((string)$p->description) }}"
+             data-sku="{{ strtolower((string)$p->sku) }}">
             <div class="product-images">
-                <img src="{{ asset('images/'.$p['img']) }}" alt="{{ $p['name'] }}">
+                <img src="{{ $img }}" alt="{{ $p->name }}">
             </div>
             <div class="product-info">
-                <h3 class="product-name">{{ $p['name'] }}</h3>
-                <p class="product-description">{{ $p['description'] }}</p>
-                <div class="product-sku">SKU: {{ $p['sku'] }}</div>
-                <div class="product-status status-{{ $p['status'] }}">
-                    @if($p['status'] == 'available') Tersedia
-                    @elseif($p['status'] == 'coming-soon') Coming Soon
-                    
-                    @endif
-                </div>
+                <h3 class="product-name">{{ $p->name }}</h3>
+                <p class="product-description">{{ $p->description }}</p>
+                <div class="product-sku">SKU: {{ $p->sku }}</div>
+                <div class="product-status status-{{ $statusClass }}">{{ $statusText }}</div>
                 <div class="product-price">
-                    <span class="price-sale">Rp{{ number_format($p['sale'],0,',','.') }}.00</span>
-                    <span class="price-original">Rp{{ number_format($p['price'],0,',','.') }}</span>
+                    <span class="price-sale">Rp{{ number_format($p->price,0,',','.') }}</span>
                 </div>
             </div>
         </div>
@@ -785,68 +617,26 @@ body {
 
     <!-- Cat Vitamins Products -->
     <div class="products-grid" id="cat-vitamins">
-        @foreach([
-            [
-                'id'=>17,
-                'img'=>'fera.png',
-                'name'=>'FERA PETS Multivitamin',
-                'description'=>'Multivitamin lengkap untuk kucing dengan kombinasi vitamin A, D, E dan mineral penting untuk kesehatan optimal. Isi 60 tablet dosis 1 tablet/hari dengan rasa ikan.',
-                'sku'=>'FPM-017',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>18,
-                'img'=>'zesty.png',
-                'name'=>'ZESTY PAWS Cat Multivitamin',
-                'description'=>'Suplemen premium untuk kesehatan bulu, kulit, dan sistem imun kucing. Formula khusus dari Amerika. Isi 90 chews dosis 2 chews/hari tanpa pengawet.',
-                'sku'=>'ZPC-018',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>19,
-                'img'=>'tomlyn.png',
-                'name'=>'TOMLYN Cat Immune Support',
-                'description'=>'Suplemen khusus untuk meningkatkan daya tahan tubuh kucing. Mengandung probiotik dan antioksidan. Isi 30ml dosis 1ml/hari dengan formula cair.',
-                'sku'=>'TCI-019',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>20,
-                'img'=>'gimcat.png',
-                'name'=>'GIMCAT Multivitamin Paste',
-                'description'=>'Pasta multivitamin dengan rasa yang disukai kucing. Mudah diberikan dan cepat diserap tubuh. Isi 100g rasa malt dalam kemasan tube praktis.',
-                'sku'=>'GMP-020',
-                'status'=>'coming-soon',
-                'price'=>1000,
-                'sale'=>200
-            ],
-        ] as $p)
+        @foreach($catVitamins as $p)
+        @php
+            $statusClass = $p->status === 'active' ? 'available' : $p->status;
+            $statusText = $statusClass === 'available' ? 'Available' : ($statusClass === 'coming-soon' ? 'Coming Soon' : 'Pre-order');
+            $img = $p->image_path ? asset($p->image_path) : asset('images/1.svg');
+        @endphp
         <div class="product-card"
-             data-name="{{ strtolower($p['name']) }}"
-             data-description="{{ strtolower($p['description']) }}"
-             data-sku="{{ strtolower($p['sku']) }}">
+             data-name="{{ strtolower($p->name) }}"
+             data-description="{{ strtolower((string)$p->description) }}"
+             data-sku="{{ strtolower((string)$p->sku) }}">
             <div class="product-images">
-                <img src="{{ asset('images/'.$p['img']) }}" alt="{{ $p['name'] }}">
+                <img src="{{ $img }}" alt="{{ $p->name }}">
             </div>
             <div class="product-info">
-                <h3 class="product-name">{{ $p['name'] }}</h3>
-                <p class="product-description">{{ $p['description'] }}</p>
-                <div class="product-sku">SKU: {{ $p['sku'] }}</div>
-                <div class="product-status status-{{ $p['status'] }}">
-                    @if($p['status'] == 'available') Available
-                    @elseif($p['status'] == 'coming-soon') Coming Soon
-                    @else Pre-order
-                    @endif
-                </div>
+                <h3 class="product-name">{{ $p->name }}</h3>
+                <p class="product-description">{{ $p->description }}</p>
+                <div class="product-sku">SKU: {{ $p->sku }}</div>
+                <div class="product-status status-{{ $statusClass }}">{{ $statusText }}</div>
                 <div class="product-price">
-                    <span class="price-sale">Rp{{ number_format($p['sale'],0,',','.') }}.00</span>
-                    <span class="price-original">Rp{{ number_format($p['price'],0,',','.') }}</span>
+                    <span class="price-sale">Rp{{ number_format($p->price,0,',','.') }}</span>
                 </div>
             </div>
         </div>
@@ -855,68 +645,26 @@ body {
 
     <!-- Dog Vitamins Products -->
     <div class="products-grid" id="dog-vitamins" style="display: none;">
-        @foreach([
-            [
-                'id'=>21,
-                'img'=>'Nutrition.png',
-                'name'=>'NUTRITION STRENGTH Dog Multivitamin',
-                'description'=>'Multivitamin komprehensif untuk anjing dengan formula khusus mendukung kesehatan sendi dan tulang. Isi 120 tablets dosis 2 tablet/hari untuk anjing 20kg+.',
-                'sku'=>'NSD-021',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>22,
-                'img'=>'zestydog.png',
-                'name'=>'ZESTY PAWS Collagen',
-                'description'=>'Suplemen kolagen untuk kesehatan kulit, bulu, dan sendi anjing. Mengandung vitamin C dan E alami. Isi 90 chews rasa bacon dengan hydrolyzed collagen.',
-                'sku'=>'ZPC-022',
-                'status'=>'available',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>23,
-                'img'=>'multi.png',
-                'name'=>'MULTIVITAMIN DOG Premium',
-                'description'=>'Vitamin harian untuk anjing aktif dengan kandungan omega-3 dan 6 untuk bulu yang sehat dan berkilau. Isi 60 softgels dosis 1-2 kapsul/hari omega enriched.',
-                'sku'=>'MDP-023',
-                'status'=>'coming-soon',
-                'price'=>1000,
-                'sale'=>200
-            ],
-            [
-                'id'=>24,
-                'img'=>'ultracal.png',
-                'name'=>'ULTRACAL Suplemen Vitamin',
-                'description'=>'Suplemen kalsium dan vitamin D khusus untuk anjing dalam masa pertumbuhan dan anjing senior. Isi 500g powder dosis 1 sendok/hari high calcium.',
-                'sku'=>'USV-024',
-                'status'=>'preorder',
-                'price'=>1000,
-                'sale'=>200
-            ],
-        ] as $p)
+        @foreach($dogVitamins as $p)
+        @php
+            $statusClass = $p->status === 'active' ? 'available' : $p->status;
+            $statusText = $statusClass === 'available' ? 'Tersedia' : ($statusClass === 'coming-soon' ? 'Coming Soon' : 'Pre-order');
+            $img = $p->image_path ? asset($p->image_path) : asset('images/1.svg');
+        @endphp
         <div class="product-card"
-             data-name="{{ strtolower($p['name']) }}"
-             data-description="{{ strtolower($p['description']) }}"
-             data-sku="{{ strtolower($p['sku']) }}">
+             data-name="{{ strtolower($p->name) }}"
+             data-description="{{ strtolower((string)$p->description) }}"
+             data-sku="{{ strtolower((string)$p->sku) }}">
             <div class="product-images">
-                <img src="{{ asset('images/'.$p['img']) }}" alt="{{ $p['name'] }}">
+                <img src="{{ $img }}" alt="{{ $p->name }}">
             </div>
             <div class="product-info">
-                <h3 class="product-name">{{ $p['name'] }}</h3>
-                <p class="product-description">{{ $p['description'] }}</p>
-                <div class="product-sku">SKU: {{ $p['sku'] }}</div>
-                <div class="product-status status-{{ $p['status'] }}">
-                    @if($p['status'] == 'available') Tersedia
-                    @elseif($p['status'] == 'coming-soon') Coming Soon
-                    @else Pre-order
-                    @endif
-                </div>
+                <h3 class="product-name">{{ $p->name }}</h3>
+                <p class="product-description">{{ $p->description }}</p>
+                <div class="product-sku">SKU: {{ $p->sku }}</div>
+                <div class="product-status status-{{ $statusClass }}">{{ $statusText }}</div>
                 <div class="product-price">
-                    <span class="price-sale">Rp{{ number_format($p['sale'],0,',','.') }}.00</span>
-                    <span class="price-original">Rp{{ number_format($p['price'],0,',','.') }}</span>
+                    <span class="price-sale">Rp{{ number_format($p->price,0,',','.') }}</span>
                 </div>
             </div>
         </div>

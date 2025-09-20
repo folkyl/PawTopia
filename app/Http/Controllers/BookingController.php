@@ -51,8 +51,17 @@ class BookingController extends Controller
             'total_price' => $prices[$request->service_type]
         ]);
 
+        // Jika request dari AJAX/JSON, kembalikan JSON supaya UI bisa menampilkan modal sukses tanpa redirect
+        if ($request->expectsJson() || $request->ajax()) {
+            $booking->load('member');
+            return response()->json([
+                'message' => 'Booking berhasil dibuat! Silakan tunggu konfirmasi dari admin.',
+                'booking' => $booking,
+            ], 201);
+        }
+
         return redirect()->route('booking.success', $booking->id)
-                        ->with('success', 'Booking berhasil dibuat! Silakan tunggu konfirmasi dari admin.');
+                         ->with('success', 'Booking berhasil dibuat! Silakan tunggu konfirmasi dari admin.');
     }
 
     /**
@@ -123,12 +132,168 @@ class BookingController extends Controller
     }
 
     /**
+     * API: Create booking by admin from Manage Booking page.
+     */
+    public function adminStore(Request $request)
+    {
+        $validated = $request->validate([
+            'customer' => 'required|string|max:255',
+            'phone' => 'required|string|max:50',
+            'email' => 'nullable|email',
+            'pet' => 'required|string|max:255',
+            'petType' => 'required|string|max:50',
+            'checkin' => 'required|date',
+            'status' => 'required|in:pending,confirmed,checked-in,completed,cancelled,on-pickup',
+            'service' => 'nullable|string|max:100',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        // Find or create member by phone (primary) or email
+        $member = Member::query()
+            ->when($validated['phone'] ?? null, fn($q) => $q->orWhere('phone', $validated['phone']))
+            ->when($validated['email'] ?? null, fn($q) => $q->orWhere('email', $validated['email']))
+            ->first();
+
+        if (!$member) {
+            $member = Member::create([
+                'name' => $validated['customer'],
+                'phone' => $validated['phone'],
+                'email' => $validated['email'] ?? null,
+                'role' => 'customer',
+            ]);
+        } else {
+            // Update member basic info if changed
+            $member->fill([
+                'name' => $validated['customer'],
+                'phone' => $validated['phone'],
+            ]);
+            if (!empty($validated['email'])) {
+                $member->email = $validated['email'];
+            }
+            $member->save();
+        }
+
+        // Build notes to include delivery/service info if provided
+        $notes = $request->input('notes');
+        if ($validated['service'] ?? null) {
+            $notes = trim(((string) $notes) . (empty($notes) ? '' : "\n") . 'Service: ' . $validated['service']);
+        }
+
+        // Create booking (map checkin -> booking_date, default booking_time)
+        $booking = Booking::create([
+            'member_id' => $member->id,
+            // Treat all admin-created entries here as boarding by default
+            'service_type' => 'boarding',
+            'pet_name' => $validated['pet'],
+            'pet_type' => strtolower($validated['petType']),
+            'booking_date' => $validated['checkin'],
+            'booking_time' => '09:00:00',
+            'notes' => $notes,
+            'status' => $validated['status'],
+            'total_price' => $validated['price'],
+        ]);
+
+        $booking->load('member');
+
+        return response()->json([
+            'message' => 'Booking created successfully',
+            'booking' => $booking,
+        ], 201);
+    }
+
+    /**
+     * API: List bookings untuk admin (JSON) dengan filter & pagination.
+     */
+    public function adminList(Request $request)
+    {
+        $query = Booking::with('member')->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->string('status'));
+        }
+
+        if ($request->filled('q')) {
+            $search = $request->string('q');
+            $query->where(function ($q) use ($search) {
+                $q->where('pet_name', 'like', "%{$search}%")
+                  ->orWhere('pet_type', 'like', "%{$search}%")
+                  ->orWhere('service_type', 'like', "%{$search}%");
+            });
+        }
+
+        $perPage = (int) $request->input('per_page', 10);
+        $bookings = $query->paginate($perPage);
+
+        return response()->json($bookings);
+    }
+
+    /**
+     * API: Detail 1 booking untuk admin (JSON)
+     */
+    public function adminShow(Booking $booking)
+    {
+        $booking->load('member');
+        return response()->json($booking);
+    }
+
+    /**
+     * API: Update booking by admin
+     */
+    public function adminUpdate(Request $request, Booking $booking)
+    {
+        $validated = $request->validate([
+            'customer' => 'required|string|max:255',
+            'phone' => 'required|string|max:50',
+            'email' => 'nullable|email',
+            'pet' => 'required|string|max:255',
+            'petType' => 'required|string|max:50',
+            'checkin' => 'required|date',
+            'status' => 'required|in:pending,confirmed,checked-in,completed,cancelled,on-pickup',
+            'service' => 'nullable|string|max:100',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        // Update linked member (by id)
+        $booking->load('member');
+        $member = $booking->member;
+        if ($member) {
+            $member->name = $validated['customer'];
+            $member->phone = $validated['phone'];
+            if (!empty($validated['email'])) {
+                $member->email = $validated['email'];
+            }
+            $member->save();
+        }
+
+        $notes = $request->input('notes');
+        if ($validated['service'] ?? null) {
+            $notes = trim(((string) $notes) . (empty($notes) ? '' : "\n") . 'Service: ' . $validated['service']);
+        }
+
+        $booking->update([
+            'pet_name' => $validated['pet'],
+            'pet_type' => strtolower($validated['petType']),
+            'booking_date' => $validated['checkin'],
+            'notes' => $notes,
+            'status' => $validated['status'],
+            'total_price' => $validated['price'],
+        ]);
+
+        $booking->load('member');
+
+        return response()->json([
+            'message' => 'Booking updated successfully',
+            'booking' => $booking,
+        ]);
+    }
+
+    /**
      * Update status booking (admin only)
      */
     public function updateStatus(Request $request, Booking $booking)
     {
         $request->validate([
-            'status' => 'required|in:pending,confirmed,completed,cancelled'
+            'status' => 'required|in:pending,confirmed,checked-in,completed,cancelled,on-pickup'
         ]);
 
         $booking->update(['status' => $request->status]);

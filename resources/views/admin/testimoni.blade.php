@@ -18,7 +18,7 @@
                     <img src="{{ asset('images/komen.svg') }}" alt="Reviews Icon" class="icon-image">
                 </div>
                 <div class="summary-content">
-                    <div class="summary-number" id="totalReviews">20</div>
+                    <div class="summary-number" id="totalReviews">{{ number_format($totalFeedback) }}</div>
                     <div class="summary-label">Total Reviews</div>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                     <img src="{{ asset('images/chart.svg') }}" alt="Chart Icon" class="icon-image">
                 </div>
                 <div class="summary-content">
-                    <div class="summary-number">4.6</div>
+                    <div class="summary-number">{{ $averageRating }}</div>
                     <div class="summary-label">Average Rating</div>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                     <img src="{{ asset('images/kalender.svg') }}" alt="Calendar Icon" class="icon-image">
                 </div>
                 <div class="summary-content">
-                    <div class="summary-number">12</div>
+                    <div class="summary-number">{{ $thisMonth }}</div>
                     <div class="summary-label">This Month</div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                     <img src="{{ asset('images/star.svg') }}" alt="Star Icon" class="icon-image">
                 </div>
                 <div class="summary-content">
-                    <div class="summary-number">95%</div>
+                    <div class="summary-number">{{ $positivePercentage }}%</div>
                     <div class="summary-label">Positive Reviews</div>
                 </div>
             </div>
@@ -60,20 +60,23 @@
                     <div class="content-subtitle">Manage and review customer feedback</div>
                 </div>
                 <div class="content-controls">
-                    <!-- Rating Filter -->
-                    <select id="ratingFilter" class="filter-select">
-                        <option value="">All Ratings</option>
-                        <option value="5">★★★★★ 5 Stars</option>
-                        <option value="4">★★★★☆ 4 Stars</option>
-                        <option value="3">★★★☆☆ 3 Stars</option>
-                        <option value="2">★★☆☆☆ 2 Stars</option>
-                        <option value="1">★☆☆☆☆ 1 Star</option>
-                    </select>
-                    <!-- Search Bar -->
-                    <div class="search-box">
-                        <i class="bi bi-search"></i>
-                        <input type="text" id="searchInput" placeholder="Search testimonials..." class="search-input">
-                    </div>
+                    <form method="GET" action="{{ route('admin.testimoni') }}" class="controls-form" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                        <select name="rating" id="ratingFilter" class="filter-select" onchange="this.form.submit()">
+                            <option value="">All Ratings</option>
+                            <option value="5" {{ request('rating') == '5' ? 'selected' : '' }}>★★★★★ 5 Stars</option>
+                            <option value="4" {{ request('rating') == '4' ? 'selected' : '' }}>★★★★☆ 4 Stars</option>
+                            <option value="3" {{ request('rating') == '3' ? 'selected' : '' }}>★★★☆☆ 3 Stars</option>
+                            <option value="2" {{ request('rating') == '2' ? 'selected' : '' }}>★★☆☆☆ 2 Stars</option>
+                            <option value="1" {{ request('rating') == '1' ? 'selected' : '' }}>★☆☆☆☆ 1 Star</option>
+                        </select>
+                        <div class="search-box">
+                            <i class="bi bi-search"></i>
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search testimonials..." class="search-input">
+                        </div>
+                        @if(request('search') || request('rating'))
+                            <a href="{{ route('admin.testimoni') }}" class="action-btn" style="background:#DC3545;color:#fff;">Clear</a>
+                        @endif
+                    </form>
                 </div>
             </div>
 
@@ -91,7 +94,50 @@
                         </tr>
                     </thead>
                     <tbody id="testimonialTableBody">
-                        <!-- Testimonial rows will be populated by JavaScript -->
+                        @forelse($feedbacks as $feedback)
+                            <tr data-rating="{{ $feedback->rating }}">
+                                <td>
+                                    {{ ($feedbacks->currentPage() - 1) * $feedbacks->perPage() + $loop->iteration }}
+                                </td>
+                                <td>
+                                    <div class="customer-name">{{ $feedback->user_name ?? ($feedback->email ?? 'Anonymous') }}</div>
+                                </td>
+                                <td>
+                                    <div class="testimonial-text">{{ $feedback->message }}</div>
+                                </td>
+                                <td class="date-display">
+                                    {{ $feedback->created_at?->format('d/m/Y') }}
+                                </td>
+                                <td>
+                                    <div class="rating-display">
+                                        <div class="rating-score">{{ $feedback->rating }}/5</div>
+                                        <div class="star-rating">
+                                            @for($i=1;$i<=5;$i++)
+                                                <span class="star {{ $i <= $feedback->rating ? 'filled' : 'empty' }}">★</span>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <form id="delete-form-{{ $feedback->id }}" action="{{ route('admin.feedback.destroy', $feedback) }}" method="POST" onsubmit="return confirm('Delete this testimonial?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="action-btn btn-delete">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    <div class="no-data-title">No testimonials found</div>
+                                    <div class="no-data-subtitle">No customer testimonials available at this time.</div>
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -106,10 +152,14 @@
             </div>
 
             <!-- Pagination -->
-            <div class="pagination-wrapper">
-                <div id="paginationContainer" class="pagination-container"></div>
-                <div id="pageInfo" class="page-info"></div>
-            </div>
+            @if($feedbacks->hasPages())
+                <div class="pagination-wrapper">
+                    {{ $feedbacks->appends(request()->query())->links('pagination::bootstrap-4') }}
+                    <div id="pageInfo" class="page-info">
+                        Showing {{ $feedbacks->firstItem() }} to {{ $feedbacks->lastItem() }} of {{ $feedbacks->total() }} entries
+                    </div>
+                </div>
+            @endif
 
            
         </div>
@@ -1171,316 +1221,6 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Sample testimonial data (enhanced with more realistic data)
-    const testimonials = [
-        { id: 1, name: 'Sarah Johnson', testimoni: 'Pawtopia memberikan pelayanan terbaik untuk anjing saya. Staff sangat profesional dan caring terhadap hewan peliharaan.', date: '2025-08-15', rating: 5 },
-        { id: 2, name: 'Michael Chen', testimoni: 'Pelayanan cukup baik, tapi masih ada beberapa hal yang bisa ditingkatkan dalam hal kebersihan kandang.', date: '2025-08-14', rating: 3 },
-        { id: 3, name: 'Amanda Putri', testimoni: 'Luar biasa! Kucing saya sangat senang dan terawat dengan baik. Akan selalu menggunakan jasa Pawtopia.', date: '2025-08-13', rating: 5 },
-        { id: 4, name: 'Robert Williams', testimoni: 'Harga terjangkau dengan kualitas pelayanan yang memuaskan. Recommended untuk pet boarding.', date: '2025-08-12', rating: 4 },
-        { id: 5, name: 'Lisa Maharani', testimoni: 'Staff sangat ramah dan berpengalaman. Fasilitas lengkap dan bersih. Sangat puas dengan layanan mereka.', date: '2025-08-11', rating: 5 },
-        { id: 6, name: 'David Kumar', testimoni: 'Pelayanan excellent! Hewan peliharaan saya mendapat perhatian khusus dan perawatan terbaik.', date: '2025-08-10', rating: 5 },
-        { id: 7, name: 'Jessica Wong', testimoni: 'Layanan bagus dan harga bersaing. Lokasi strategis dan mudah dijangkau.', date: '2025-08-09', rating: 4 },
-        { id: 8, name: 'Andrew Lee', testimoni: 'Staff profesional dan sangat memahami kebutuhan hewan peliharaan. Highly recommended!', date: '2025-08-08', rating: 5 },
-        { id: 9, name: 'Rachel Green', testimoni: 'Pelayanan memuaskan, fasilitas lengkap. Anjing saya selalu senang ketika dititipkan di sini.', date: '2025-08-07', rating: 4 },
-        { id: 10, name: 'Kevin Tan', testimoni: 'Sangat puas dengan hasil perawatan dan pelayanan yang diberikan. Worth every penny!', date: '2025-08-06', rating: 5 },
-        { id: 11, name: 'Maria Santos', testimoni: 'Layanan terpercaya dan berkualitas. Staff sangat care dan detail dalam merawat hewan.', date: '2025-08-05', rating: 5 },
-        { id: 12, name: 'James Miller', testimoni: 'Pelayanan baik, tapi waktu tunggu agak lama. Overall masih recommended.', date: '2025-08-04', rating: 3 },
-        { id: 13, name: 'Sophie Brown', testimoni: 'Fasilitas modern dan bersih. Hewan peliharaan mendapat perhatian optimal.', date: '2025-08-03', rating: 4 },
-        { id: 14, name: 'Daniel Park', testimoni: 'Exceptional service! Pawtopia benar-benar memahami kebutuhan pet owner.', date: '2025-08-02', rating: 5 },
-        { id: 15, name: 'Emily Davis', testimoni: 'Sangat puas dengan layanan grooming dan boarding. Staff ramah dan berpengalaman.', date: '2025-08-01', rating: 5 },
-        { id: 16, name: 'Thomas Wilson', testimoni: 'Pelayanan profesional dengan harga yang fair. Akan terus menggunakan jasa mereka.', date: '2025-07-31', rating: 4 },
-        { id: 17, name: 'Hannah Kim', testimoni: 'Layanan standar, bisa lebih ditingkatkan dalam hal komunikasi dengan customer.', date: '2025-07-30', rating: 3 },
-        { id: 18, name: 'Christopher Lee', testimoni: 'Staff sangat ramah dan profesional. Fasilitas bersih dan terawat dengan baik.', date: '2025-07-29', rating: 4 },
-        { id: 19, name: 'Olivia Martinez', testimoni: 'Pelayanan luar biasa! Kucing saya sangat happy dan sehat setelah boarding di sini.', date: '2025-07-28', rating: 5 },
-        { id: 20, name: 'Ryan Thompson', testimoni: 'Sangat puas dengan layanan Pawtopia. Definitely my go-to place untuk pet care!', date: '2025-07-27', rating: 5 }
-    ];
-
-    const ratingFilter = document.getElementById('ratingFilter');
-    const searchInput = document.getElementById('searchInput');
-    const testimonialTableBody = document.getElementById('testimonialTableBody');
-    const noTestimonialsMessage = document.getElementById('noTestimonialsMessage');
-    const paginationContainer = document.getElementById('paginationContainer');
-    const pageInfo = document.getElementById('pageInfo');
-    const searchStatus = document.getElementById('searchStatus');
-    const totalReviewsElement = document.getElementById('totalReviews');
-
-    let currentPage = 1;
-    const itemsPerPage = 8;
-    let filteredTestimonials = [...testimonials];
-
-    // Function to render testimonials
-    function renderTestimonials() {
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const currentTestimonials = filteredTestimonials.slice(startIndex, endIndex);
-
-        if (currentTestimonials.length === 0) {
-            testimonialTableBody.innerHTML = '';
-            noTestimonialsMessage.style.display = 'block';
-            paginationContainer.parentElement.style.display = 'none';
-        } else {
-            noTestimonialsMessage.style.display = 'none';
-            paginationContainer.parentElement.style.display = 'flex';
-
-            testimonialTableBody.innerHTML = currentTestimonials.map((testimonial, index) => {
-                const globalIndex = startIndex + index + 1;
-                const stars = generateStars(testimonial.rating);
-
-                return `
-                    <tr data-rating="${testimonial.rating}">
-                        <td>${globalIndex}</td>
-                        <td>
-                            <div class="customer-name">${testimonial.name}</div>
-                        </td>
-                        <td>
-                            <div class="testimonial-text">${testimonial.testimoni}</div>
-                        </td>
-                        <td>
-                            <div class="date-display">${formatDate(testimonial.date)}</div>
-                        </td>
-                        <td>
-                            <div class="rating-display">
-                                <div class="rating-score">${testimonial.rating}/5</div>
-                                ${stars}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn btn-edit" onclick="editTestimonial(${testimonial.id})">
-                                    <i class="bi bi-pencil-square"></i> Edit
-                                </button>
-                                <button class="action-btn btn-delete" onclick="deleteTestimonial(${testimonial.id})">
-                                    <i class="bi bi-trash"></i> Delete
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // Update total reviews count
-        totalReviewsElement.textContent = filteredTestimonials.length;
-
-        // Render pagination
-        renderPagination();
-
-        // Render page info
-        renderPageInfo();
-
-        // Render search status
-        renderSearchStatus();
-
-        // Update statistics
-        updateStatistics();
-    }
-
-    // Function to format date
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('id-ID', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
-    }
-
-    // Function to generate star rating HTML
-    function generateStars(rating) {
-        let stars = '';
-        for (let i = 1; i <= 5; i++) {
-            if (i <= rating) {
-                stars += '<span class="star filled">★</span>';
-            } else {
-                stars += '<span class="star empty">☆</span>';
-            }
-        }
-        return `<div class="star-rating">${stars}</div>`;
-    }
-
-    // Function to render page info
-    function renderPageInfo() {
-        const totalPages = Math.ceil(filteredTestimonials.length / itemsPerPage);
-        const startIndex = (currentPage - 1) * itemsPerPage + 1;
-        const endIndex = Math.min(currentPage * itemsPerPage, filteredTestimonials.length);
-
-        if (filteredTestimonials.length === 0) {
-            pageInfo.innerHTML = 'No testimonials to display';
-        } else {
-            pageInfo.innerHTML = `Showing ${startIndex}-${endIndex} of ${filteredTestimonials.length} testimonials (Page ${currentPage} of ${totalPages})`;
-        }
-    }
-
-   
-
-    // Function to render pagination
-    function renderPagination() {
-        const totalPages = Math.ceil(filteredTestimonials.length / itemsPerPage);
-
-        if (totalPages <= 1) {
-            paginationContainer.innerHTML = '';
-            return;
-        }
-
-        let paginationHTML = '';
-
-        // Previous button
-        paginationHTML += `
-            <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} title="Previous">
-                <img class="nav-img" src="{{ asset('images/kiri.svg') }}" alt="Previous" style="width: 16px; height: 16px;">
-            </button>
-        `;
-
-        // First page
-        if (totalPages > 1) {
-            paginationHTML += `
-                <button class="pagination-btn ${currentPage === 1 ? 'active' : ''}" onclick="changePage(1)">1</button>
-            `;
-        }
-
-        // Left dots
-        if (currentPage > 3) {
-            paginationHTML += '<span class="pagination-dots">...</span>';
-        }
-
-        // Pages around current
-        for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-            if (i > 1 && i < totalPages) {
-                paginationHTML += `
-                    <button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>
-                `;
-            }
-        }
-
-        // Right dots
-        if (currentPage < totalPages - 2) {
-            paginationHTML += '<span class="pagination-dots">...</span>';
-        }
-
-        // Last page
-        if (totalPages > 1) {
-            paginationHTML += `
-                <button class="pagination-btn ${currentPage === totalPages ? 'active' : ''}" onclick="changePage(${totalPages})">${totalPages}</button>
-            `;
-        }
-
-        // Next button
-        paginationHTML += `
-            <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} title="Next">
-                <img class="nav-img" src="{{ asset('images/kanan.svg') }}" alt="Next" style="width: 16px; height: 16px;">
-            </button>
-        `;
-
-        paginationContainer.innerHTML = paginationHTML;
-    }
-
-    // Function to change page
-    window.changePage = function(page) {
-        const totalPages = Math.ceil(filteredTestimonials.length / itemsPerPage);
-        if (page >= 1 && page <= totalPages) {
-            currentPage = page;
-            renderTestimonials();
-            // Smooth scroll to top of table
-            document.querySelector('.content-card').scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
-            });
-        }
-    };
-
-    // Function to filter testimonials
-    function filterTestimonials() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
-        const selectedRating = ratingFilter.value;
-
-        filteredTestimonials = testimonials.filter(testimonial => {
-            const matchesSearch = !searchTerm || 
-                testimonial.name.toLowerCase().includes(searchTerm) ||
-                testimonial.testimoni.toLowerCase().includes(searchTerm);
-            const matchesRating = !selectedRating || testimonial.rating === parseInt(selectedRating);
-
-            return matchesSearch && matchesRating;
-        });
-
-        currentPage = 1; // Reset to first page when filtering
-        renderTestimonials();
-    }
-
-    // Function to update statistics
-    function updateStatistics() {
-        // Calculate average rating
-        const totalRating = filteredTestimonials.reduce((sum, testimonial) => sum + testimonial.rating, 0);
-        const averageRating = filteredTestimonials.length > 0 ? (totalRating / filteredTestimonials.length).toFixed(1) : 0;
-        
-        // Count this month's reviews (assuming current month is August 2025)
-        const thisMonth = filteredTestimonials.filter(t => t.date.startsWith('2025-08')).length;
-        
-        // Calculate positive reviews (4-5 stars)
-        const positiveReviews = filteredTestimonials.filter(t => t.rating >= 4).length;
-        const positivePercentage = filteredTestimonials.length > 0 ? 
-            Math.round((positiveReviews / filteredTestimonials.length) * 100) : 0;
-
-        // Update DOM elements
-        document.querySelector('.summary-card:nth-child(2) .summary-number').textContent = averageRating;
-        document.querySelector('.summary-card:nth-child(3) .summary-number').textContent = thisMonth;
-        document.querySelector('.summary-card:nth-child(4) .summary-number').textContent = positivePercentage + '%';
-    }
-
-    // Action functions
-    window.editTestimonial = function(id) {
-        const testimonial = testimonials.find(t => t.id === id);
-        if (testimonial) {
-            alert(`Edit testimonial from ${testimonial.name}:\n"${testimonial.testimoni}"\n\n(This would open an edit modal in a real application)`);
-        }
-    };
-
-    window.deleteTestimonial = function(id) {
-        const testimonial = testimonials.find(t => t.id === id);
-        if (testimonial && confirm(`Are you sure you want to delete the testimonial from ${testimonial.name}?`)) {
-            // Remove from main array
-            const index = testimonials.findIndex(t => t.id === id);
-            if (index > -1) {
-                testimonials.splice(index, 1);
-                // Re-filter and re-render
-                filterTestimonials();
-                alert('Testimonial deleted successfully!');
-            }
-        }
-    };
-
-    // Event listeners
-    ratingFilter.addEventListener('change', filterTestimonials);
-    searchInput.addEventListener('input', debounce(filterTestimonials, 300));
-
-    // Debounce function for search input
-    function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
-
-    // Initial render
-    renderTestimonials();
-
-    // Add some visual feedback for loading
-    setTimeout(() => {
-        document.querySelectorAll('.summary-card, .content-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                card.style.transition = 'all 0.6s ease';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 100);
-        });
-    }, 100);
-});
+// No need for JS-driven table rendering; the table is rendered via Blade and pagination links
 </script>
 @endsection

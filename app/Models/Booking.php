@@ -23,7 +23,8 @@ class Booking extends Model
 
     protected $casts = [
         'booking_date' => 'date',
-        'booking_time' => 'datetime',
+        // time column stored as string (no native time cast in Eloquent)
+        'booking_time' => 'string',
         'total_price' => 'decimal:2'
     ];
 

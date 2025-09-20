@@ -1,27 +1,1194 @@
-@extends('layouts.app')
-@include ('layoutadmin.navbar')
+<!DOCTYPE html>
+<html lang="id">
 
-@section('content')
-<div class="dashboard-root">
-    <!-- Main Content -->
-     
-    <main class="dashboard-main">
-        <!-- Header (reused component with profile + notification) -->
-        <x-dashboard-header 
-            title="Booking Management"
-            subtitle="Pet Boarding Reservations & Bookings"
-            icon="calendar"
-        />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Booking - Pet Boarding</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+        .dashboard-root {
+            display: flex;
+            min-height: 100vh;
+            background: #EAE6E1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-       
-        <!-- Main Content Card -->
-        <div class="content-card">
-            <!-- Header with Search and Filters -->
-            <div class="content-header">
-                <div class="content-info">
-                    <div class="content-title">Booking Management</div>
-                    <div class="content-subtitle">Manage pet boarding reservations and bookings</div>
+        .dashboard-main {
+            flex: 1;
+            padding: 40px 32px 32px 32px;
+            max-width: 100%;
+            margin-left: 250px;
+        }
+
+        /* Header - Same as Customer */
+        .dashboard-header {
+            background: #fff;
+            border-radius: 24px;
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 32px rgba(230, 161, 93, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .header-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #6B4F3A;
+            letter-spacing: -0.02em;
+        }
+
+        .header-subtitle {
+            color: #A97B5D;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .header-profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .notification-icon:hover {
+            background: #f5f5f5;
+        }
+
+        .notification-icon .badge {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background: #E63946;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 16px 6px 6px;
+            border-radius: 50px;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .profile-info:hover {
+            background: #f9f9f9;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-info img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #E57300;
+        }
+
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .profile-name {
+            font-weight: 700;
+            color: #6B4F3A;
+            font-size: 1rem;
+            text-transform: capitalize;
+        }
+
+        .profile-role {
+            font-size: 0.85rem;
+            color: #A97B5D;
+            font-weight: 500;
+        }
+
+        .profile-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: #E57300;
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 50%;
+            min-width: 16px;
+            height: 16px;
+            text-align: center;
+            line-height: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Notification Modal */
+        .notification-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            justify-content: flex-end;
+            z-index: 2000;
+        }
+
+        .notification-modal.show {
+            display: flex;
+        }
+
+        .notification-content {
+            width: 380px;
+            background: #fff;
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: -2px 0 12px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .notification-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #4B2E2B;
+        }
+
+        .notification-header button {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            line-height: 1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .notification-header button:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .notification-item {
+            padding: 14px 16px;
+            border-radius: 8px;
+            background: #fafafa;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .notification-item:hover {
+            background: #f5f5f5;
+        }
+
+        .notification-item.unread {
+            background: #FFF6E9;
+            border-left-color: #F28C48;
+        }
+
+        .notification-item h4 {
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .notification-item p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .notification-footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .notification-footer button {
+            background: #F28C48;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .notification-footer button:hover {
+            background: #e07732;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(242, 140, 72, 0.3);
+        }
+
+        /* Stats Summary */
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #fff 0%, #fefefe 100%);
+            border-radius: 18px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 24px rgba(230, 161, 93, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .summary-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(230, 161, 93, 0.15);
+        }
+
+        .summary-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 100%);
+            border: 2px solid rgba(139, 115, 85, 0.15);
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+            border-radius: 14px;
+        }
+
+        .icon-image {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            opacity: 0.9;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+            z-index: 1;
+            position: relative;
+            margin: auto;
+            display: block;
+        }
+
+        .summary-icon.total {
+            background: linear-gradient(135deg, #F5E6D3 0%, #BBDEFB 100%);
+            border-color: rgba(139, 115, 85, 0.15);
+        }
+
+        .summary-icon.active {
+            background: linear-gradient(135deg, #E8F5E8 0%, #F5E6D3 100%);
+            border-color: rgba(76, 175, 80, 0.15);
+        }
+
+        .summary-icon.pending {
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+            border-color: rgba(255, 193, 7, 0.15);
+        }
+
+        .summary-icon.revenue {
+            background: linear-gradient(135deg, #E3F2FD 0%, #FFF8E1 100%);
+            border-color: rgba(33, 150, 243, 0.15);
+        }
+
+        .summary-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .summary-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #6B4F3A;
+            margin-bottom: 2px;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .summary-label {
+            color: #A97B5D;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            line-height: 1.2;
+        }
+
+        /* Content Card */
+        .content-card {
+            background: linear-gradient(135deg, #fff 0%, #fefefe 100%);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 12px 40px rgba(230, 161, 93, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            margin-bottom: 32px;
+        }
+
+        /* Content Header */
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+            gap: 24px;
+        }
+
+        .content-info {
+            flex: 1;
+        }
+
+        .content-title {
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: #6B4F3A;
+            margin-bottom: 6px;
+        }
+
+        .content-subtitle {
+            color: #A97B5D;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .content-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* Filter Select */
+        .filter-select {
+            background: linear-gradient(135deg, #FFE0B2, #FFCC99);
+            border: 1px solid rgba(169, 123, 93, 0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #6B4F3A;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 160px;
+            font-size: 0.9rem;
+        }
+
+        .filter-select:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 115, 0, 0.2);
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #E57300;
+            box-shadow: 0 0 0 3px rgba(229, 115, 0, 0.1);
+        }
+
+        /* Search Box */
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            color: #A97B5D;
+            z-index: 1;
+            font-size: 1rem;
+        }
+
+        .search-input {
+            background: #F7F5F2;
+            border: 1px solid rgba(169, 123, 93, 0.2);
+            border-radius: 12px;
+            padding: 12px 16px 12px 40px;
+            font-size: 0.9rem;
+            color: #6B4F3A;
+            width: 280px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #E57300;
+            box-shadow: 0 0 0 3px rgba(229, 115, 0, 0.1);
+            background: #fff;
+        }
+
+        .search-input::placeholder {
+            color: #A97B5D;
+            opacity: 0.7;
+        }
+
+        /* Add Button */
+        .btn-add-customer {
+            background: #E57300;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn-add-customer:hover {
+            background: #D16500;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 115, 0, 0.3);
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .booking-table {
+            width: 100%;
+            min-width: 1000px;
+            background: #fff;
+            border-collapse: collapse;
+        }
+
+        .booking-table thead tr {
+            background: linear-gradient(135deg, #FFE0B2, #F9D9A7);
+        }
+
+        .booking-table th {
+            color: #6B4F3A;
+            padding: 20px 16px;
+            font-weight: 700;
+            text-align: left;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid rgba(169, 123, 93, 0.1);
+        }
+
+        .booking-table th:first-child {
+            text-align: center;
+            width: 80px;
+        }
+
+        .booking-table th:nth-child(4),
+        .booking-table th:nth-child(5),
+        .booking-table th:nth-child(6) {
+            text-align: center;
+        }
+
+        .booking-table th:last-child {
+            text-align: center;
+            width: 180px;
+        }
+
+        .booking-table td {
+            padding: 20px 16px;
+            border-bottom: 1px solid rgba(240, 240, 240, 0.8);
+            color: #6B4F3A;
+            vertical-align: middle;
+            font-weight: 500;
+        }
+
+        .booking-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .booking-table tbody tr:hover {
+            background: rgba(229, 115, 0, 0.02);
+            transform: scale(1.002);
+        }
+
+        .booking-table td:first-child {
+            text-align: center;
+            font-weight: 600;
+            color: #E57300;
+        }
+
+        .booking-table td:nth-child(4),
+        .booking-table td:nth-child(5),
+        .booking-table td:nth-child(6) {
+            text-align: center;
+        }
+
+        .booking-table td:last-child {
+            text-align: center;
+        }
+
+        .customer-name {
+            font-weight: 600;
+            color: #6B4F3A;
+            font-size: 0.95rem;
+        }
+
+        .pet-name {
+            font-weight: 600;
+            color: #E57300;
+            font-size: 0.95rem;
+        }
+
+        .date-display {
+            font-weight: 600;
+            color: #6B4F3A;
+            font-size: 0.9rem;
+        }
+
+        .duration-display {
+            font-weight: 600;
+            color: #6B4F3A;
+            font-size: 0.9rem;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #FFF3CD, #FFF8DC);
+            color: #856404;
+            border: 1px solid #FFEAA7;
+        }
+
+        .status-confirmed {
+            background: linear-gradient(135deg, #D4EDDA, #C3E6CB);
+            color: #155724;
+            border: 1px solid #B8DAFF;
+        }
+
+        .status-checked-in {
+            background: linear-gradient(135deg, #D1ECF1, #BEE5EB);
+            color: #0C5460;
+            border: 1px solid #BEE5EB;
+        }
+
+        .status-completed {
+            background: linear-gradient(135deg, #E2E3E5, #F8F9FA);
+            color: #383D41;
+            border: 1px solid #DEE2E6;
+        }
+
+        .status-on-pickup {
+            background: linear-gradient(135deg, #FFE0B2, #F9D9A7);
+            color: #6B4F3A;
+            border: 1px solid #F5CBA7;
+        }
+
+        .status-cancelled {
+            background: linear-gradient(135deg, #F8D7DA, #F5C6CB);
+            color: #721C24;
+            border: 1px solid #F5C6CB;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .action-btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: capitalize;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-view {
+            background: #2196F3;
+            color: #fff;
+        }
+
+        .btn-view:hover {
+            background: #0b7dda;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn-edit {
+            background: #FF9800;
+            color: #fff;
+        }
+
+        .btn-edit:hover {
+            background: #e68a00;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn-delete {
+            background: #DC3545;
+            color: #fff;
+        }
+
+        .btn-delete:hover {
+            background: #C82333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+
+        /* No Data Message */
+        .no-data-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: #A97B5D;
+        }
+
+        .no-data-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+            color: #E57300;
+        }
+
+        .no-data-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #6B4F3A;
+            margin-bottom: 8px;
+        }
+
+        .no-data-subtitle {
+            font-size: 1rem;
+            color: #A97B5D;
+        }
+
+        /* Pagination */
+        .pagination-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pagination-btn {
+            background: linear-gradient(135deg, #FFE0B2, #FFCC99);
+            color: #6B4F3A;
+            border: 1px solid rgba(169, 123, 93, 0.2);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagination-btn:hover {
+            background: linear-gradient(135deg, #F9D9A7, #F0B27A);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 115, 0, 0.2);
+        }
+
+        .pagination-btn.active {
+            background: #E57300;
+            color: #fff;
+            border-color: #E57300;
+            box-shadow: 0 4px 12px rgba(229, 115, 0, 0.3);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f0f0f0;
+            color: #999;
+            border-color: #ddd;
+        }
+
+        .pagination-btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
+            background: #f0f0f0;
+        }
+
+        .pagination-dots {
+            padding: 10px 14px;
+            color: #A97B5D;
+            font-weight: 600;
+        }
+
+        .page-info {
+            text-align: center;
+            color: #A97B5D;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .search-status {
+            text-align: center;
+            color: #6B4F3A;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #F7F5F2, #FFEEE5);
+            border-radius: 20px;
+            border: 1px solid rgba(169, 123, 93, 0.1);
+            display: inline-block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .stats-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .filter-select,
+            .search-input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-main {
+                padding: 20px 16px;
+                margin-left: 0;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .header-title {
+                font-size: 1.8rem;
+            }
+
+            .stats-summary {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .summary-card {
+                padding: 20px;
+            }
+
+            .summary-number {
+                font-size: 1.8rem;
+            }
+
+            .content-card {
+                padding: 24px 20px;
+                border-radius: 16px;
+            }
+
+            .content-header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: stretch;
+            }
+
+            .content-controls {
+                gap: 12px;
+            }
+
+            .booking-table th,
+            .booking-table td {
+                padding: 16px 12px;
+                font-size: 0.85rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .pagination-btn {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1.6rem;
+            }
+
+            .content-title {
+                font-size: 1.4rem;
+            }
+
+            .summary-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .icon-image {
+                width: 24px;
+                height: 24px;
+            }
+
+            .summary-number {
+                font-size: 1.6rem;
+            }
+
+            .booking-table th,
+            .booking-table td {
+                padding: 12px 8px;
+                font-size: 0.8rem;
+            }
+
+            .action-btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .summary-card,
+        .content-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .summary-card:nth-child(1) { animation-delay: 0.1s; }
+        .summary-card:nth-child(2) { animation-delay: 0.2s; }
+        .summary-card:nth-child(3) { animation-delay: 0.3s; }
+        .summary-card:nth-child(4) { animation-delay: 0.4s; }
+        .content-card { animation-delay: 0.5s; }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #FFE0B2, #F9D9A7);
+            padding: 20px 32px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #6B4F3A;
+            margin: 0;
+        }
+
+        .modal-close {
+            font-size: 28px;
+            color: #6B4F3A;
+            cursor: pointer;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #E57300;
+        }
+
+        .modal-body {
+            padding: 32px;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-field label {
+            font-size: 0.85rem;
+            color: #A97B5D;
+            font-weight: 600;
+        }
+
+        .form-field input,
+        .form-field select {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(169, 123, 93, 0.25);
+            background: #F7F5F2;
+            color: #6B4F3A;
+        }
+
+        .form-field input:focus,
+        .form-field select:focus {
+            outline: none;
+            border-color: #E57300;
+            box-shadow: 0 0 0 3px rgba(229, 115, 0, 0.1);
+            background: #fff;
+        }
+
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .btn-add {
+            background: #E57300;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn-add:hover {
+            background: #D16500;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 115, 0, 0.3);
+        }
+
+        
+    </style>
+</head>
+
+<body>
+    @include('layoutadmin.navbar')
+    @extends ('layouts.app')
+    
+    <div class="dashboard-root">
+        <main class="dashboard-main">
+            <!-- Header -->
+            <div class="dashboard-header">
+                <div class="header-left">
+                    <h1 class="header-title">Booking Management</h1>
+                    <p class="header-subtitle">Pet Boarding Reservations & Bookings</p>
                 </div>
+                <div class="header-profile">
+                    <div class="notification-icon" onclick="toggleNotificationModal()">
+                        <img src="{{ asset('images/notifikasi.svg') }}" alt="Notifications" class="notification-img">
+                        <span class="badge" id="notificationBadge">2</span>
+                    </div>
+                    <div class="profile-info">
+                        <img src="{{ asset('images/profile.png') }}" alt="Profile">
+                        <div class="profile-details">
+                            <span class="profile-name">Admin</span>
+                            <span class="profile-role">Administrator</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Summary -->
+            <div class="stats-summary">
+                <div class="summary-card">
+                    <div class="summary-icon total">
+                        <img src="{{ asset('images/total.svg') }}" alt="Total Bookings" class="icon-image">
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-number" id="totalBookings">0</div>
+                        <div class="summary-label">Total Bookings</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon active">
+                        <img src="{{ asset('images/active.svg') }}" alt="Active Pets" class="icon-image">
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-number" id="activePets">0</div>
+                        <div class="summary-label">Pets Boarded</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon pending">
+                        <img src="{{ asset('images/pending.svg') }}" alt="Pending Bookings" class="icon-image">
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-number" id="pendingBookings">0</div>
+                        <div class="summary-label">Pending Bookings</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon revenue">
+                        <img src="{{ asset('images/revenue.svg') }}" alt="Monthly Revenue" class="icon-image">
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-number" id="monthlyRevenue">Rp 0</div>
+                        <div class="summary-label">Monthly Revenue</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Card -->
+            <div class="content-card">
+                <!-- Header with Search and Filters -->
+                <div class="content-header">
+                    <div class="content-info">
+                        <div class="content-title">Booking Management</div>
+                        <div class="content-subtitle">Manage pet boarding reservations and bookings</div>
+                    </div>
                 <div class="content-controls">
                     <!-- Status Filter -->
                     <select id="statusFilter" class="filter-select">
@@ -41,7 +1208,7 @@
                         <input type="text" id="searchInput" placeholder="Cari booking..." class="search-input">
                     </div>
                     <!-- Add Booking Button -->
-                    <button type="button" class="action-btn btn-add" onclick="openAddBookingModal()">
+                    <button type="button" class="btn-add-customer" onclick="openAddBookingModal()">
                         <i class="bi bi-plus-lg"></i> Tambah Booking
                     </button>
                 </div>
@@ -82,87 +1249,6 @@
                 <div id="pageInfo" class="page-info"></div>
             </div>
 
-            <style>
-                /* Pagination */
-                .pagination-wrapper {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    margin-top: 32px;
-                }
-
-                .pagination-container {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    gap: 10px;
-                }
-
-                .pagination-btn {
-                    width: 44px;
-                    height: 44px;
-                    border-radius: 12px;
-                    border: 1px solid rgba(0,0,0,0.1);
-                    background: linear-gradient(135deg, #FFE0B2, #FFCC99);
-                    color: #6B4F3A;
-                    font-weight: 600;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.2s ease;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-                }
-
-                .pagination-btn:hover { 
-                    transform: translateY(-2px); 
-                    box-shadow: 0 8px 24px rgba(230,161,93,0.22);
-                    background: linear-gradient(135deg, #FFE4B5, #FFD1A3);
-                }
-
-                .pagination-btn.active { 
-                    background: linear-gradient(135deg, #E57300, #D76A00); 
-                    color: #fff; 
-                    border-color: #D76A00; 
-                    box-shadow: 0 8px 24px rgba(229,115,0,0.28); 
-                }
-
-                .pagination-btn:disabled {
-                    background: linear-gradient(135deg, #E57300, #D76A00);
-                    color: #fff;
-                    border-color: #D76A00;
-                    cursor: not-allowed;
-                    box-shadow: none;
-                    opacity: 0.6;
-                }
-
-                .pagination-btn:disabled:hover { 
-                    transform: none; 
-                    box-shadow: none; 
-                }
-
-                .pagination-dots {
-                    padding: 10px 14px;
-                    color: #A97B5D;
-                    font-weight: 600;
-                }
-                
-                .page-info {
-                    text-align: center;
-                    margin-top: 15px;
-                    color: #6B4F3A;
-                    font-size: 14px;
-                    line-height: 1.5;
-                }
-
-                @media (max-width: 768px) {
-                    .pagination-btn { 
-                        width: 40px; 
-                        height: 40px; 
-                    }
-                }
-            </style>
 
            
         </div>
@@ -186,11 +1272,13 @@
 <div id="addBookingModal" class="modal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 class="modal-title">Tambah Booking</h3>
+            <h3 class="modal-title" id="addBookingModalTitle">Tambah Booking</h3>
             <span class="modal-close" onclick="closeAddBookingModal()">&times;</span>
         </div>
         <div class="modal-body">
             <form id="addBookingForm" class="form-grid">
+                @csrf
+                <input type="hidden" id="editingId" value="">
                 <div class="form-field">
                     <label>Customer Name</label>
                     <input type="text" name="customer" required />
@@ -245,8 +1333,8 @@
                     <input type="number" name="price" min="0" step="1000" value="0" required />
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="action-btn btn-delete" onclick="closeAddBookingModal()">Batal</button>
-                    <button type="submit" class="action-btn btn-add">Simpan</button>
+                    <button type="button" class="btn-delete" onclick="closeAddBookingModal()">Batal</button>
+                    <button type="submit" id="addBookingSubmitBtn" class="btn-add">Simpan</button>
                 </div>
             </form>
         </div>
@@ -1606,53 +2694,9 @@ document.addEventListener('keydown', function(event) {
         toggleNotificationModal();
     }
 });
-document.addEventListener('DOMContentLoaded', function() {
-    // Sample booking data with more variety
-    const bookings = [
-        { id: 1, customer: 'Sarah Johnson', pet: 'Bella', petType: 'Dog', checkin: '2025-09-20', checkout: '2025-09-25', duration: '5 days', status: 'confirmed', phone: '081234567890', email: 'sarah@email.com', service: 'Pet Pickup', price: 750000 },
-        { id: 2, customer: 'Michael Chen', pet: 'Whiskers', petType: 'Cat', checkin: '2025-09-22', checkout: '2025-09-24', duration: '2 days', status: 'OnPickup', phone: '081234567891', email: 'michael@email.com', service: 'Drop Off', price: 400000 },
-        { id: 3, customer: 'Amanda Putri', pet: 'Rocky', petType: 'Dog', checkin: '2025-09-18', checkout: '2025-09-20', duration: '2 days', status: 'checked-in', phone: '081234567892', email: 'amanda@email.com', service: 'Drop Off', price: 600000 },
-        { id: 4, customer: 'Robert Williams', pet: 'Luna', petType: 'Cat', checkin: '2025-09-15', checkout: '2025-09-18', duration: '3 days', status: 'completed', phone: '081234567893', email: 'robert@email.com', service: 'Pet Pickup', price: 450000 },
-        { id: 5, customer: 'David Kim', pet: 'Max', petType: 'Dog', checkin: '2025-09-10', checkout: '2025-09-12', duration: '2 days', status: 'pending', phone: '081234567894', email: 'david@email.com', service: 'Pet Pickup', price: 300000 },
-        { id: 6, customer: 'Lisa Wong', pet: 'Charlie', petType: 'Rabbit', checkin: '2025-09-05', checkout: '2025-09-10', duration: '5 days', status: 'confirmed', phone: '081234567895', email: 'lisa@email.com', service: 'Drop Off', price: 500000 },
-        { id: 7, customer: 'James Brown', pet: 'Milo', petType: 'Cat', checkin: '2025-09-01', checkout: '2025-09-05', duration: '4 days', status: 'cancelled', phone: '081234567896', email: 'james@email.com', service: 'Pet Pickup', price: 600000 },
-        { id: 8, customer: 'Emma Davis', pet: 'Lucy', petType: 'Dog', checkin: '2025-08-28', checkout: '2025-09-02', duration: '5 days', status: 'completed', phone: '081234567897', email: 'emma@email.com', service: 'Drop Off', price: 750000 },
-        { id: 9, customer: 'Daniel Wilson', pet: 'Bailey', petType: 'Dog', checkin: '2025-08-25', checkout: '2025-08-28', duration: '3 days', status: 'completed', phone: '081234567898', email: 'daniel@email.com', service: 'Pet Pickup', price: 450000 },
-        { id: 10, customer: 'Sophia Martinez', pet: 'Daisy', petType: 'Cat', checkin: '2025-08-20', checkout: '2025-08-25', duration: '5 days', status: 'completed', phone: '081234567899', email: 'sophia@email.com', service: 'Drop Off', price: 625000 },
-        { id: 11, customer: 'William Taylor', pet: 'Molly', petType: 'Dog', checkin: '2025-08-15', checkout: '2025-08-18', duration: '3 days', status: 'completed', phone: '081234567800', email: 'william@email.com', service: 'Pet Pickup', price: 525000 },
-        { id: 12, customer: 'Olivia Anderson', pet: 'Buddy', petType: 'Dog', checkin: '2025-08-10', checkout: '2025-08-15', duration: '5 days', status: 'completed', phone: '081234567801', email: 'olivia@email.com', service: 'Drop Off', price: 700000 },
-        { id: 13, customer: 'Ethan Thomas', pet: 'Lola', petType: 'Cat', checkin: '2025-08-05', checkout: '2025-08-10', duration: '5 days', status: 'completed', phone: '081234567802', email: 'ethan@email.com', service: 'Pet Pickup', price: 750000 },
-        { id: 14, customer: 'Ava Jackson', pet: 'Zoe', petType: 'Rabbit', checkin: '2025-07-28', checkout: '2025-08-05', duration: '7 days', status: 'completed', phone: '081234567803', email: 'ava@email.com', service: 'Drop Off', price: 700000 },
-        { id: 15, customer: 'Noah White', pet: 'Lucky', petType: 'Dog', checkin: '2025-07-25', checkout: '2025-07-28', duration: '3 days', status: 'completed', phone: '081234567804', email: 'noah@email.com', service: 'Pet Pickup', price: 450000 },
-        { id: 16, customer: 'Mia Harris', pet: 'Oreo', petType: 'Cat', checkin: '2025-07-20', checkout: '2025-07-25', duration: '5 days', status: 'completed', phone: '081234567805', email: 'mia@email.com', service: 'Drop Off', price: 625000 },
-        { id: 17, customer: 'Liam Martin', pet: 'Coco', petType: 'Dog', checkin: '2025-07-15', checkout: '2025-07-20', duration: '5 days', status: 'completed', phone: '081234567806', email: 'liam@email.com', service: 'Pet Pickup', price: 750000 },
-        { id: 18, customer: 'Isabella Garcia', pet: 'Toby', petType: 'Dog', checkin: '2025-07-10', checkout: '2025-07-15', duration: '5 days', status: 'completed', phone: '081234567807', email: 'isabella@email.com', service: 'Drop Off', price: 750000 },
-        { id: 19, customer: 'Lucas Martinez', pet: 'Simba', petType: 'Cat', checkin: '2025-07-05', checkout: '2025-07-10', duration: '5 days', status: 'completed', phone: '081234567808', email: 'lucas@email.com', service: 'Pet Pickup', price: 750000 },
-        { id: 20, customer: 'Ryan Thompson', pet: 'Snowball', petType: 'Cat', checkin: '2025-07-01', checkout: '2025-07-05', duration: '4 days', status: 'completed', phone: '081234567809', email: 'ryan@email.com', service: 'Drop Off', price: 600000 },
-        { id: 21, customer: 'Aisha Rahman', pet: 'Milo', petType: 'Dog', checkin: '2025-09-16', checkout: '2025-09-19', duration: '3 days', status: 'confirmed', phone: '081234567810', email: 'aisha@email.com', service: 'Pet Pickup', price: 525000 },
-        { id: 22, customer: 'Budi Santoso', pet: 'Max', petType: 'Dog', checkin: '2025-09-14', checkout: '2025-09-17', duration: '3 days', status: 'pending', phone: '081234567811', email: 'budi@email.com', service: 'Drop Off', price: 450000 },
-        { id: 23, customer: 'Citra Dewi', pet: 'Bella', petType: 'Cat', checkin: '2025-09-12', checkout: '2025-09-15', duration: '3 days', status: 'confirmed', phone: '081234567812', email: 'citra@email.com', service: 'Pet Pickup', price: 375000 },
-        { id: 24, customer: 'Dedi Kurniawan', pet: 'Luna', petType: 'Cat', checkin: '2025-09-10', checkout: '2025-09-13', duration: '3 days', status: 'checked-in', phone: '081234567813', email: 'dedi@email.com', service: 'Drop Off', price: 375000 },
-        { id: 25, customer: 'Eva Nurmalasari', pet: 'Charlie', petType: 'Rabbit', checkin: '2025-09-08', checkout: '2025-09-11', duration: '3 days', status: 'completed', phone: '081234567814', email: 'eva@email.com', service: 'Pet Pickup', price: 300000 },
-        { id: 26, customer: 'Fajar Setiawan', pet: 'Lucy', petType: 'Dog', checkin: '2025-09-05', checkout: '2025-09-10', duration: '5 days', status: 'completed', phone: '081234567815', email: 'fajar@email.com', service: 'Drop Off', price: 625000 },
-        { id: 27, customer: 'Gita Wulandari', pet: 'Bailey', petType: 'Dog', checkin: '2025-09-03', checkout: '2025-09-08', duration: '5 days', status: 'cancelled', phone: '081234567816', email: 'gita@email.com', service: 'Pet Pickup', price: 750000 },
-        { id: 28, customer: 'Hendra Gunawan', pet: 'Daisy', petType: 'Cat', checkin: '2025-09-01', checkout: '2025-09-06', duration: '5 days', status: 'completed', phone: '081234567817', email: 'hendra@email.com', service: 'Drop Off', price: 625000 },
-        { id: 29, customer: 'Indah Permatasari', pet: 'Molly', petType: 'Dog', checkin: '2025-08-28', checkout: '2025-09-02', duration: '5 days', status: 'completed', phone: '081234567818', email: 'indah@email.com', service: 'Pet Pickup', price: 750000 },
-        { id: 30, customer: 'Joko Susilo', pet: 'Buddy', petType: 'Dog', checkin: '2025-08-25', checkout: '2025-08-30', duration: '5 days', status: 'completed', phone: '081234567819', email: 'joko@email.com', service: 'Drop Off', price: 625000 },
-        { id: 31, customer: 'Kartika Sari', pet: 'Lola', petType: 'Cat', checkin: '2025-08-22', checkout: '2025-08-27', duration: '5 days', status: 'completed', phone: '081234567820', email: 'kartika@email.com', service: 'Pet Pickup', price: 750000 },
-        { id: 32, customer: 'Lukman Hakim', pet: 'Zoe', petType: 'Rabbit', checkin: '2025-08-20', checkout: '2025-08-25', duration: '5 days', status: 'completed', phone: '081234567821', email: 'lukman@email.com', service: 'Drop Off', price: 625000 },
-        { id: 33, customer: 'Maya Indah', pet: 'Lucky', petType: 'Dog', checkin: '2025-08-18', checkout: '2025-08-23', duration: '5 days', status: 'completed', phone: '081234567822', email: 'maya@email.com', service: 'Pet Pickup', price: 750000 },
-        { id: 34, customer: 'Nugroho Saputra', pet: 'Oreo', petType: 'Cat', checkin: '2025-08-15', checkout: '2025-08-20', duration: '5 days', status: 'completed', phone: '081234567823', email: 'nugroho@email.com', service: 'Drop Off', price: 625000 },
-        { id: 35, customer: 'Oki Setiawan', pet: 'Coco', petType: 'Dog', checkin: '2025-08-12', checkout: '2025-08-17', duration: '5 days', status: 'completed', phone: '081234567824', email: 'oki@email.com', service: 'Pet Pickup', price: 750000 },
-        { id: 36, customer: 'Putri Ayu', pet: 'Toby', petType: 'Dog', checkin: '2025-08-10', checkout: '2025-08-15', duration: '5 days', status: 'completed', phone: '081234567825', email: 'putri@email.com', service: 'Drop Off', price: 625000 },
-        { id: 37, customer: 'Rudi Hartono', pet: 'Simba', petType: 'Cat', checkin: '2025-08-08', checkout: '2025-08-13', duration: '5 days', status: 'completed', phone: '081234567826', email: 'rudi@email.com', service: 'Pet Pickup', price: 750000 },
-        { id: 38, customer: 'Siti Rahayu', pet: 'Snowball', petType: 'Cat', checkin: '2025-08-05', checkout: '2025-08-10', duration: '5 days', status: 'completed', phone: '081234567827', email: 'siti@email.com', service: 'Drop Off', price: 625000 },
-        { id: 39, customer: 'Teguh Wijaya', pet: 'Milo', petType: 'Dog', checkin: '2025-08-01', checkout: '2025-08-06', duration: '5 days', status: 'completed', phone: '081234567828', email: 'teguh@email.com', service: 'Pet Pickup', price: 750000 },
-        { id: 40, customer: 'Wulan Sari', pet: 'Max', petType: 'Dog', checkin: '2025-07-28', checkout: '2025-08-02', duration: '5 days', status: 'completed', phone: '081234567829', email: 'wulan@email.com', service: 'Drop Off', price: 625000 }
-
-
-        
-    ];
+  document.addEventListener('DOMContentLoaded', function() {
+    // Load bookings from backend API
+    let bookings = [];
 
     const statusFilter = document.getElementById('statusFilter');
     const searchInput = document.getElementById('searchInput');
@@ -1665,13 +2709,51 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add Booking modal elements
     const addBookingModal = document.getElementById('addBookingModal');
     const addBookingForm = document.getElementById('addBookingForm');
+    const addBookingModalTitle = document.getElementById('addBookingModalTitle');
+    const addBookingSubmitBtn = document.getElementById('addBookingSubmitBtn');
+    const editingIdInput = document.getElementById('editingId');
 
     let currentPage = 1;
     const itemsPerPage = 10; // Changed from 8 to 10 items per page
     let filteredBookings = [...bookings];
 
+    // Fetch bookings from backend
+    fetch("{{ route('admin.bookings.index') }}")
+      .then(res => res.json())
+      .then(data => {
+        // data is Laravel pagination object
+        const records = data.data || [];
+        bookings = records.map((b) => ({
+          id: b.id,
+          customer: b.member?.name || '—',
+          pet: b.pet_name,
+          petType: b.pet_type,
+          // Map check-in to booking_date (no checkout in schema)
+          checkin: b.booking_date,
+          // Derive duration if needed; fallback to '-' as not in schema
+          duration: '-',
+          status: b.status,
+          phone: b.member?.phone || '—',
+          email: b.member?.email || '—',
+          // Use service_type as service label
+          service: b.service_type,
+          price: Number(b.total_price || 0)
+        }));
+        filteredBookings = [...bookings];
+        renderBookings();
+      })
+      .catch(err => {
+        console.error('Failed to load bookings', err);
+        // Keep UI graceful even if API fails
+        renderBookings();
+      });
+
     // Open/Close Add Booking Modal
     window.openAddBookingModal = function() {
+        addBookingModalTitle.textContent = 'Tambah Booking';
+        addBookingSubmitBtn.textContent = 'Simpan';
+        editingIdInput.value = '';
+        addBookingForm.reset();
         addBookingModal.style.display = 'flex';
     };
 
@@ -1684,40 +2766,68 @@ document.addEventListener('DOMContentLoaded', function() {
         addBookingForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(addBookingForm);
-            const checkin = formData.get('checkin');
-            const checkout = formData.get('checkout');
-
-            // Calculate duration in days
-            const start = new Date(checkin);
-            const end = new Date(checkout);
-            const msPerDay = 1000 * 60 * 60 * 24;
-            let days = Math.round((end - start) / msPerDay);
-            if (isNaN(days) || days < 1) days = 1; // minimal 1 hari
-
-            // Generate new id
-            const newId = bookings.length ? Math.max(...bookings.map(b => b.id)) + 1 : 1;
-
-            const newBooking = {
-                id: newId,
-                customer: formData.get('customer').trim(),
-                pet: formData.get('pet').trim(),
+            const payload = {
+                customer: (formData.get('customer') || '').toString().trim(),
+                pet: (formData.get('pet') || '').toString().trim(),
                 petType: formData.get('petType'),
-                checkin,
-                checkout,
-                duration: `${days} days`,
+                phone: (formData.get('phone') || '').toString().trim(),
+                email: (formData.get('email') || '').toString().trim() || null,
+                service: formData.get('service') || null,
+                checkin: formData.get('checkin'),
                 status: formData.get('status'),
-                phone: formData.get('phone').trim(),
-                email: formData.get('email').trim(),
-                service: formData.get('service'),
                 price: Number(formData.get('price') || 0)
             };
 
-            bookings.unshift(newBooking); // add to top for visibility
-            // Refresh filters and table
-            filterBookings();
-            // Reset and close modal
-            addBookingForm.reset();
-            closeAddBookingModal();
+            // CSRF token from meta or hidden input
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
+                || addBookingForm.querySelector('input[name="_token"]')?.value;
+
+            const isEditing = !!editingIdInput.value;
+            const url = isEditing ? `{{ url('/admin/bookings') }}/${editingIdInput.value}` : "{{ route('admin.bookings.store') }}";
+            const method = isEditing ? 'PUT' : 'POST';
+            fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken || ''
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(async (res) => {
+                if (!res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    const msg = data.message || 'Failed to create booking';
+                    throw new Error(msg);
+                }
+                return res.json();
+            })
+            .then(({ booking }) => {
+                const mapped = {
+                    id: booking.id,
+                    customer: booking.member?.name || payload.customer,
+                    pet: booking.pet_name,
+                    petType: booking.pet_type,
+                    checkin: booking.booking_date,
+                    duration: '-',
+                    status: booking.status,
+                    phone: booking.member?.phone || payload.phone,
+                    email: booking.member?.email || payload.email || '—',
+                    service: booking.service_type,
+                    price: Number(booking.total_price || payload.price)
+                };
+                if (isEditing) {
+                    const idx = bookings.findIndex(b => b.id === mapped.id);
+                    if (idx > -1) bookings[idx] = mapped;
+                } else {
+                    bookings.unshift(mapped);
+                }
+                filterBookings();
+                addBookingForm.reset();
+                closeAddBookingModal();
+            })
+            .catch((err) => {
+                alert(err.message || 'Failed to create booking');
+            });
         });
     }
 
@@ -2097,24 +3207,61 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     window.editBooking = function(id) {
-        const booking = bookings.find(b => b.id === id);
-        if (booking) {
-            alert(`Edit booking for ${booking.customer} - ${booking.pet}\n\n(This would open an edit form in a real application)`);
-        }
+        // Fetch latest data from backend
+        fetch(`{{ url('/admin/bookings') }}/${id}`)
+            .then(res => res.json())
+            .then(data => {
+                // Populate form
+                addBookingModalTitle.textContent = 'Edit Booking';
+                addBookingSubmitBtn.textContent = 'Update';
+                editingIdInput.value = String(id);
+
+                addBookingForm.customer.value = data.member?.name || '';
+                addBookingForm.pet.value = data.pet_name || '';
+                addBookingForm.petType.value = (data.pet_type || '').charAt(0).toUpperCase() + (data.pet_type || '').slice(1);
+                addBookingForm.phone.value = data.member?.phone || '';
+                if (addBookingForm.email) addBookingForm.email.value = data.member?.email || '';
+                addBookingForm.service.value = data.service_type || '';
+                addBookingForm.checkin.value = data.booking_date || '';
+                addBookingForm.status.value = data.status || 'pending';
+                addBookingForm.price.value = data.total_price || 0;
+
+                addBookingModal.style.display = 'flex';
+            })
+            .catch(err => alert('Gagal memuat data booking'));
     };
 
     window.deleteBooking = function(id) {
         const booking = bookings.find(b => b.id === id);
-        if (booking && confirm(`Are you sure you want to delete the booking for ${booking.customer} - ${booking.pet}?`)) {
-            // Remove from main array
+        if (!booking) return;
+        if (!confirm(`Are you sure you want to delete the booking for ${booking.customer} - ${booking.pet}?`)) return;
+
+        // CSRF token from meta or hidden input
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
+            || document.querySelector('#addBookingForm input[name="_token"]')?.value;
+
+        fetch(`{{ url('/admin/booking') }}/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken || ''
+            }
+        })
+        .then(async (res) => {
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                const msg = data.message || 'Failed to delete booking';
+                throw new Error(msg);
+            }
+            return res.text();
+        })
+        .then(() => {
             const index = bookings.findIndex(b => b.id === id);
             if (index > -1) {
                 bookings.splice(index, 1);
-                // Re-filter and re-render
                 filterBookings();
-                alert('Booking deleted successfully!');
             }
-        }
+        })
+        .catch((err) => alert(err.message || 'Failed to delete booking'));
     };
 
     // Function to show booking modal
@@ -2237,4 +3384,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 100);
 });
 </script>
-@endsection
+
+</body>
+</html>
